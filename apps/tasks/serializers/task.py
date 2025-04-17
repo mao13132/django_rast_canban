@@ -6,28 +6,28 @@ class TaskSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели Task.
     """
-    attachments = TaskAttachmentSerializer(many=True, read_only=True)
+    attachment = TaskAttachmentSerializer(read_only=True)
 
     class Meta:
         model = Task
         fields = [
-            'id', 'title', 'description', 'status', 'category',
-            'priority', 'deadline', 'attachments', 'created_at', 'updated_at'
+            'task_id', 'title', 'description', 'status_id', 'category_id',
+            'priority', 'deadline', 'attachment'
         ]
-        read_only_fields = ['created_at', 'updated_at']
+        read_only_fields = []
 
-    def validate_status(self, value):
+    def validate_status_id(self, value):
         """
         Проверяет, что статус принадлежит текущему пользователю
         """
-        if value.user != self.context['request'].user:
+        if value.user_id != self.context['request'].user:
             raise serializers.ValidationError("Статус должен принадлежать вам")
         return value
 
-    def validate_category(self, value):
+    def validate_category_id(self, value):
         """
         Проверяет, что категория принадлежит текущему пользователю
         """
-        if value and value.user != self.context['request'].user:
+        if value and value.user_id != self.context['request'].user:
             raise serializers.ValidationError("Категория должна принадлежать вам")
         return value 

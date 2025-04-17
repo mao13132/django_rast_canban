@@ -1,22 +1,24 @@
 from django.db import models
 from apps.users.models import User
 
+
 class Folder(models.Model):
     """
-    Модель папки для хранения файлов.
-    Поддерживает иерархическую структуру через parent_id.
+    Модель для хранения папок пользователя.
     """
-    name = models.CharField(
-        max_length=255,
-        help_text='Название папки'
-    )
-    user = models.ForeignKey(
+    folder_id = models.AutoField(primary_key=True, verbose_name='ID папки')
+
+    user_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='folders',
         help_text='Владелец папки'
     )
-    parent = models.ForeignKey(
+    name = models.CharField(
+        max_length=255,
+        help_text='Название папки'
+    )
+    parent_id = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
         null=True,
@@ -32,20 +34,16 @@ class Folder(models.Model):
         default=False,
         help_text='Пометка удаления'
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        help_text='Дата создания'
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        help_text='Дата обновления'
+    size = models.BigIntegerField(
+        default=0,
+        help_text='Размер папки в байтах'
     )
 
     class Meta:
         verbose_name = 'Папка'
         verbose_name_plural = 'Папки'
-        ordering = ['-updated_at']
-        unique_together = ['name', 'parent', 'user']
+        ordering = ['folder_id']
+        unique_together = ['name', 'parent_id', 'user_id']
 
     def __str__(self):
         return self.name
@@ -54,6 +52,6 @@ class Folder(models.Model):
         """
         Возвращает полный путь к папке через родителей
         """
-        if self.parent:
-            return f"{self.parent.get_full_path()}/{self.name}"
-        return self.name 
+        if self.parent_id:
+            return f"{self.parent_id.get_full_path()}/{self.name}"
+        return self.name

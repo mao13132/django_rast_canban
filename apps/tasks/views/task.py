@@ -13,10 +13,10 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         Возвращает только задачи текущего пользователя
         """
-        return Task.objects.filter(user=self.request.user)
+        return Task.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         """
         При создании задачи автоматически устанавливает текущего пользователя
         """
-        serializer.save(user=self.request.user) 
+        serializer.save(user_id=self.request.user) 

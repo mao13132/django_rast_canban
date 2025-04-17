@@ -121,8 +121,8 @@ REST_FRAMEWORK = {
 
 # JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=3600),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
 }
@@ -142,4 +142,4 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API для управления задачами и файлами',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-} 
+}

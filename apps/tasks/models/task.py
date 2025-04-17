@@ -3,16 +3,25 @@ from apps.users.models import User
 from .task_status import TaskStatus
 from .task_category import TaskCategory
 
+
 class Task(models.Model):
     """
     Модель для задач.
     """
+    task_id = models.AutoField(primary_key=True, verbose_name='ID задачи')
+
     PRIORITY_CHOICES = [
         ('low', 'Низкий'),
         ('medium', 'Средний'),
         ('high', 'Высокий'),
     ]
 
+    user_id = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='tasks',
+        help_text='Владелец задачи'
+    )
     title = models.CharField(
         max_length=255,
         help_text='Название задачи'
@@ -21,19 +30,13 @@ class Task(models.Model):
         blank=True,
         help_text='Описание задачи'
     )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='tasks',
-        help_text='Владелец задачи'
-    )
-    status = models.ForeignKey(
+    status_id = models.ForeignKey(
         TaskStatus,
         on_delete=models.CASCADE,
         related_name='tasks',
         help_text='Статус задачи'
     )
-    category = models.ForeignKey(
+    category_id = models.ForeignKey(
         TaskCategory,
         on_delete=models.SET_NULL,
         null=True,
@@ -52,19 +55,11 @@ class Task(models.Model):
         blank=True,
         help_text='Срок выполнения'
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        help_text='Дата создания'
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        help_text='Дата обновления'
-    )
 
     class Meta:
         verbose_name = 'Задача'
         verbose_name_plural = 'Задачи'
-        ordering = ['-updated_at']
+        ordering = ['task_id']
 
     def __str__(self):
-        return self.title 
+        return self.title

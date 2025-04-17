@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from ..models import File
 from ..serializers import FileSerializer
 
+
 class FileViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с файлами.
@@ -24,4 +25,4 @@ class FileViewSet(viewsets.ModelViewSet):
         serializer.save(
             user=self.request.user,
             size=file.size
-        ) 
+        )

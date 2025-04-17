@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from ..models import Folder
 from ..serializers import FolderSerializer
 
+
 class FolderViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с папками.
@@ -19,4 +20,4 @@ class FolderViewSet(viewsets.ModelViewSet):
         """
         При создании папки автоматически устанавливает текущего пользователя
         """
-        serializer.save(user=self.request.user) 
+        serializer.save(user=self.request.user)

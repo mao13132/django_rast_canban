@@ -7,4 +7,4 @@ admin.site.site_header = 'Администрирование Канбан-дос
 admin.site.site_title = 'Канбан-доска'
 admin.site.index_title = 'Панель управления'
 
-print("Настройки админки применены!") 
+print("Настройки админки применены!")

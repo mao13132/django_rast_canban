@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from ..models import User
 from ..serializers import UserSerializer
 
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с пользователями.
@@ -19,4 +20,4 @@ class UserViewSet(viewsets.ModelViewSet):
         """
         Возвращает текущего пользователя
         """
-        return self.request.user 
+        return self.request.user

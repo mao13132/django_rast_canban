@@ -1,11 +1,14 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class User(AbstractUser):
     """
     Кастомная модель пользователя.
     Наследуется от AbstractUser для использования стандартной аутентификации Django.
     """
+    user_id = models.AutoField(primary_key=True, verbose_name='ID пользователя')
+    
     email = models.EmailField(
         'email address',
         unique=True,
@@ -31,4 +34,4 @@ class User(AbstractUser):
         ordering = ['-date_joined']
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name} ({self.email})' 
+        return f'{self.first_name} {self.last_name} ({self.email})'

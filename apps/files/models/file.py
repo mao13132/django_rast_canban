@@ -2,34 +2,35 @@ from django.db import models
 from apps.users.models import User
 from .folder import Folder
 
+
 class File(models.Model):
     """
-    Модель файла.
-    Файлы хранятся в папках и принадлежат пользователям.
+    Модель для хранения файлов пользователя.
     """
-    name = models.CharField(
-        max_length=255,
-        help_text='Название файла'
-    )
-    user = models.ForeignKey(
+    file_id = models.AutoField(primary_key=True, verbose_name='ID файла')
+
+    user_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='files',
         help_text='Владелец файла'
     )
-    folder = models.ForeignKey(
+    name = models.CharField(
+        max_length=255,
+        help_text='Название файла'
+    )
+    folder_id = models.ForeignKey(
         Folder,
         on_delete=models.CASCADE,
         related_name='files',
-        null=True,
-        blank=True,
-        help_text='Папка, в которой находится файл'
+        help_text='Папка файла'
     )
     file = models.FileField(
-        upload_to='files/%Y/%m/%d/',
+        upload_to='files/',
         help_text='Файл'
     )
     size = models.BigIntegerField(
+        default=0,
         help_text='Размер файла в байтах'
     )
     is_favorite = models.BooleanField(
@@ -40,20 +41,12 @@ class File(models.Model):
         default=False,
         help_text='Пометка удаления'
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        help_text='Дата создания'
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        help_text='Дата обновления'
-    )
 
     class Meta:
         verbose_name = 'Файл'
         verbose_name_plural = 'Файлы'
-        ordering = ['-updated_at']
-        unique_together = ['name', 'folder', 'user']
+        ordering = ['file_id']
+        unique_together = ['name', 'folder_id']
 
     def __str__(self):
         return self.name
@@ -64,4 +57,4 @@ class File(models.Model):
         """
         if self.folder:
             return f"{self.folder.get_full_path()}/{self.name}"
-        return self.name 
+        return self.name

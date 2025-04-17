@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from ..models import Note
 from ..serializers import NoteSerializer
 
+
 class NoteViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с заметками.
@@ -19,4 +20,4 @@ class NoteViewSet(viewsets.ModelViewSet):
         """
         При создании заметки автоматически устанавливает текущего пользователя
         """
-        serializer.save(user=self.request.user) 
+        serializer.save(user=self.request.user)

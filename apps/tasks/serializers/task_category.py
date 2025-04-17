@@ -7,5 +7,5 @@ class TaskCategorySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = TaskCategory
-        fields = ['id', 'name', 'color', 'created_at', 'updated_at']
-        read_only_fields = ['created_at', 'updated_at'] 
+        fields = ['category_id', 'name']
+        read_only_fields = [] 

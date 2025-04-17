@@ -3,25 +3,25 @@ from .models import Task, TaskStatus, TaskCategory, TaskAttachment
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'status', 'category', 'priority', 'deadline')
-    list_filter = ('status', 'category', 'priority')
+    list_display = ('title', 'user_id', 'status_id', 'category_id', 'priority', 'deadline')
+    list_filter = ('priority', 'is_favorite', 'is_trashed')
     search_fields = ('title', 'description')
     date_hierarchy = 'created_at'
 
 @admin.register(TaskStatus)
 class TaskStatusAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user', 'order')
-    list_filter = ('user',)
+    list_display = ('name', 'user_id')
+    list_filter = ('user_id',)
     search_fields = ('name',)
 
 @admin.register(TaskCategory)
 class TaskCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user', 'color')
-    list_filter = ('user',)
+    list_display = ('name', 'user_id')
+    list_filter = ('user_id',)
     search_fields = ('name',)
 
 @admin.register(TaskAttachment)
 class TaskAttachmentAdmin(admin.ModelAdmin):
-    list_display = ('task', 'created_at')
-    list_filter = ('created_at',)
-    search_fields = ('task__title',) 
+    list_display = ('task_id', 'name', 'size')
+    search_fields = ('name',) 
+    
