@@ -7,5 +7,5 @@ class TaskAttachmentSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = TaskAttachment
-        fields = ['id', 'name', 'file', 'size', 'created_at']
-        read_only_fields = ['size', 'created_at'] 
+        fields = ['id', 'task', 'file', 'created_at']
+        read_only_fields = ['created_at'] 
