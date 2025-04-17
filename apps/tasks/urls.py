@@ -13,4 +13,4 @@ router.register(r'statuses', TaskStatusViewSet, basename='task-status')
 router.register(r'categories', TaskCategoryViewSet, basename='task-category')
 router.register(r'attachments', TaskAttachmentViewSet, basename='task-attachment')
 
-urlpatterns = router.urls 
+urlpatterns = router.urls
