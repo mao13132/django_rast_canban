@@ -1,0 +1,76 @@
+.mainNavigationContainer {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 31px 35px;
+  background-color: #e7ceff; /* Временный цвет фона вместо изображения */
+  border: none;
+}
+
+.headerNavigation {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.taskboardIcon {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: none;
+}
+
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.navigationMenu {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: row;
+  gap: 38px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 8px;
+}
+
+.mainSectionTitle {
+  flex: 0 0 auto;
+  padding: 0;
+  margin: 0;
+  font: 400 48px Jost, sans-serif;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.authButtons {
+  display: flex;
+  gap: 20px;
+}
+
+.authButton {
+  background: none;
+  border: 2px solid #9481ff;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font: 400 24px Jost, sans-serif;
+  color: black;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.authButton:hover {
+  background-color: #9481ff;
+  color: white;
+}

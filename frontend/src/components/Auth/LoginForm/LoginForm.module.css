@@ -1,0 +1,135 @@
+.formContainer {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: 400px;
+}
+
+.tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.tab {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  padding: 15px;
+  font-family: 'Jost', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #666;
+}
+
+.activeTab {
+  font-weight: 500;
+  color: #333;
+  position: relative;
+}
+
+.activeTab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #7a68e3;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-family: 'Jost', sans-serif;
+  font-size: 16px;
+  transition: border-color 0.2s;
+  background-color: #f7f7f7;
+}
+
+.input:focus {
+  border-color: #9481ff;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #aaa;
+}
+
+.input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #ff4d4f;
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.serverError {
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 4px;
+  color: #ff4d4f;
+  padding: 10px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.submitButton, .registerButton {
+  flex: 1;
+  background-color: #9481ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  font-family: 'Jost', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.registerButton {
+  background-color: transparent;
+  border: 2px solid #9481ff;
+  color: #9481ff;
+}
+
+.submitButton:hover {
+  background-color: #7a68e3;
+}
+
+.registerButton:hover {
+  background-color: rgba(148, 129, 255, 0.1);
+}
+
+.submitButton:disabled, .registerButton:disabled {
+  background-color: #bfbaff;
+  cursor: not-allowed;
+  opacity: 0.7;
+} 
