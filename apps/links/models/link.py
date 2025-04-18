@@ -8,10 +8,11 @@ class Link(models.Model):
     """
     link_id = models.AutoField(primary_key=True, verbose_name='ID ссылки')
 
-    user_id = models.ManyToManyField(
+    user_id = models.ForeignKey(
         User,
+        on_delete=models.CASCADE,
         related_name='links',
-        help_text='Владельцы ссылки'
+        help_text='Владелец ссылки'
     )
     url = models.URLField(
         max_length=2048,

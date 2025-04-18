@@ -11,13 +11,12 @@ class LinkViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Возвращает ссылки, где текущий пользователь является владельцем
+        Возвращает ссылки текущего пользователя
         """
         return Link.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         """
-        При создании ссылки автоматически добавляет текущего пользователя в список владельцев
+        При создании ссылки автоматически устанавливает текущего пользователя как владельца
         """
-        link = serializer.save()
-        link.user_id.add(self.request.user) 
+        serializer.save(user_id=self.request.user) 
