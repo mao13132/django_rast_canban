@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navigation from '../../components/Header/Navigation';
+import heroImage from '../../assets/images/hero-bg.jpeg';
 import styles from './Home.module.css';
 
 const Home = () => {
@@ -18,6 +19,14 @@ const Home = () => {
   return (
     <div className={styles.homePage}>
       <Navigation />
+      
+      <div className={styles.heroSection}>
+        <img 
+          src={heroImage} 
+          alt="Education Helper Background" 
+          className={styles.heroImage}
+        />
+      </div>
       
       <div className={styles.content}>
         <h1 className={styles.heading}>Ваш личный помощник в учебе!</h1>

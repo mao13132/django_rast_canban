@@ -109,17 +109,12 @@ export const AuthProvider = ({ children }) => {
         return false;
       }
       
-      console.log('Отправка запроса на регистрацию:', userData);
-      
       try {
         const registerResponse = await authAPI.register(userData);
-        console.log('Ответ на регистрацию:', registerResponse.data);
         
         // После успешной регистрации входим с новыми данными
         return await login(userData.email, userData.password);
       } catch (registerError) {
-        console.error('Ошибка при регистрации:', registerError);
-        console.error('Данные ошибки:', registerError.response?.data);
         
         const errorMessages = registerError.response?.data;
         

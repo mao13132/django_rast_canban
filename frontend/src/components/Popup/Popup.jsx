@@ -15,14 +15,14 @@ const Popup = () => {
 
     document.addEventListener('keydown', handleEscapeKey);
     
-    // Блокируем прокрутку страницы при открытии модального окна
+/*     // Блокируем прокрутку страницы при открытии модального окна
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-    }
+    } */
 
     return () => {
       document.removeEventListener('keydown', handleEscapeKey);
-      document.body.style.overflow = 'auto';
+      /* document.body.style.overflow = 'auto'; */
     };
   }, [isOpen, closePopup]);
 

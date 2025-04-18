@@ -3,11 +3,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
-  padding: 31px 35px;
-  background-color: #e7ceff; /* Временный цвет фона вместо изображения */
-  border: none;
+  padding: 20px 35px;
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
 .headerNavigation {
@@ -15,7 +17,16 @@
   flex: 0 0 auto;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
 }
 
 .taskboardIcon {
@@ -49,9 +60,15 @@
   padding: 0;
   margin: 0;
   font: 400 48px Jost, sans-serif;
-  color: black;
+  color: #000;
   text-decoration: none;
   cursor: pointer;
+  transition: color 0.3s ease;
+  font-size: 48px;
+}
+
+.mainSectionTitle:hover {
+  color: #9481ff;
 }
 
 .authButtons {
@@ -60,17 +77,116 @@
 }
 
 .authButton {
+  width: max-content;
   background: none;
   border: 2px solid #9481ff;
   border-radius: 8px;
-  padding: 10px 20px;
   font: 400 24px Jost, sans-serif;
-  color: black;
+  color: #000;
   cursor: pointer;
   transition: all 0.3s ease;
+  border: none;
+  font-size: 48px;
 }
 
 .authButton:hover {
-  background-color: #9481ff;
-  color: white;
+  color: #9481ff;
+}
+
+/* Адаптивные стили */
+@media (max-width: 1200px) {
+  .mainSectionTitle,
+  .authButton {
+    font-size: 36px;
+  }
+  
+  .mainNavigationContainer {
+    padding: 15px 25px;
+  }
+}
+
+@media (max-width: 992px) {
+  .mainSectionTitle,
+  .authButton {
+    font-size: 32px;
+  }
+  
+  .taskboardIcon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .authButtons {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainSectionTitle,
+  .authButton {
+    font-size: 24px;
+  }
+  
+  .mainNavigationContainer {
+    padding: 10px 15px;
+  }
+  
+  .taskboardIcon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .navigationMenu {
+    gap: 20px;
+  }
+  
+  .authButtons {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .mainSectionTitle {
+    font-size: 20px;
+  }
+  
+  .authButton {
+    font-size: 18px;
+  }
+  
+  .taskboardIcon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .navigationMenu {
+    gap: 15px;
+  }
+  
+  .mainNavigationContainer {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainSectionTitle {
+    display: none;
+  }
+  
+  .authButton {
+    font-size: 16px;
+  }
+  
+  .taskboardIcon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .navigationMenu {
+    gap: 10px;
+  }
+  
+  .authButtons {
+    gap: 8px;
+  }
 }

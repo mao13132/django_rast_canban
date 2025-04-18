@@ -16,7 +16,7 @@ const Navigation = () => {
   return (
     <div className={styles.mainNavigationContainer}>
       <div className={styles.headerNavigation}>
-        <div className={styles.logoContainer}>
+        <div className={styles.navContainer}>
           <div className={styles.taskboardIcon}>
             <img src="/assets/image_68d8cb1c.png" alt="Логотип" className={styles.logoImage} />
           </div>
