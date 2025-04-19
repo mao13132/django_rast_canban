@@ -1,36 +1,151 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState, useEffect } from 'react';
+import { tasksAPI } from '../../services/api';
+import Header from '../../components/Header';
+import TaskColumn from '../../components/Task/TaskColumn';
+import TaskForm from '../../components/Task/TaskForm';
+import SearchBar from '../../components/UI/SearchBar';
 import styles from './Dashboard.module.css';
 
 const Dashboard = () => {
-  const { isAuthenticated, loading, logout } = useAuth();
-  const navigate = useNavigate();
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Редирект на главную страницу, если пользователь не авторизован
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, loading, navigate]);
+    fetchTasks();
+  }, []);
 
-  if (loading) {
-    return <div className={styles.loading}>Загрузка...</div>;
-  }
+  const fetchTasks = async () => {
+    try {
+      const response = await tasksAPI.getTasks();
+      setTasks(response.data);
+    } catch (err) {
+      setError('Ошибка при загрузке задач');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateTask = async (taskData) => {
+    try {
+      await tasksAPI.createTask(taskData);
+      fetchTasks();
+      setShowCreateForm(false);
+    } catch (err) {
+      setError('Ошибка при создании задачи');
+      console.error(err);
+    }
+  };
+
+  const handleUpdateTask = async (taskId, taskData) => {
+    try {
+      await tasksAPI.updateTask(taskId, taskData);
+      fetchTasks();
+    } catch (err) {
+      setError('Ошибка при обновлении задачи');
+      console.error(err);
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await tasksAPI.deleteTask(taskId);
+      fetchTasks();
+    } catch (err) {
+      setError('Ошибка при удалении задачи');
+      console.error(err);
+    }
+  };
+
+  const filterTasks = (status) => {
+    return tasks.filter(task => {
+      const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          task.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return task.status === status && matchesSearch;
+    });
+  };
+
+  if (loading) return (
+    <>
+      <Header />
+      <div className={styles.loading}>Загрузка...</div>
+    </>
+  );
+  
+  if (error) return (
+    <>
+      <Header />
+      <div className={styles.error}>{error}</div>
+    </>
+  );
 
   return (
-    <div className={styles.dashboard}>
+    <div className={styles.dashboardContainer}>
+      <Header />
+      <main className={styles.dashboard}>
+        <div className={styles.header}>
+          <h1>Доска задач</h1>
+          <div className={styles.actions}>
+            <SearchBar 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Поиск задач"
+            />
+            <button 
+              className={styles.createButton}
+              onClick={() => setShowCreateForm(true)}
+            >
+              Создать
+            </button>
+            <button className={styles.menuButton}>☰</button>
+          </div>
+        </div>
 
-      <div onClick={logout} className={styles.authButton}>
-        Выйти
-      </div>
-      <h1>Панель управления</h1>
-      <p>Добро пожаловать в ваш личный кабинет!</p>
+        <div className={styles.subHeader}>
+          <span>Заметки</span>
+          <span>Архив заметок</span>
+        </div>
 
-      {/* Здесь будет содержимое дашборда */}
-      <div className={styles.dashboardContent}>
-        <p>Здесь будут ваши задачи и проекты</p>
-      </div>
+        <div className={styles.kanbanBoard}>
+          <TaskColumn
+            title="Сделать"
+            tasks={filterTasks('todo')}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+            showForm={showCreateForm}
+            onCreateTask={handleCreateTask}
+            onCancelCreate={() => setShowCreateForm(false)}
+          />
+          <TaskColumn
+            title="В работе"
+            tasks={filterTasks('in_progress')}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+          />
+          <TaskColumn
+            title="Сделано"
+            tasks={filterTasks('done')}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+          />
+          <TaskColumn
+            title="Завершено"
+            tasks={filterTasks('completed')}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+          />
+        </div>
+
+        {showCreateForm && (
+          <TaskForm
+            onSubmit={handleCreateTask}
+            onCancel={() => setShowCreateForm(false)}
+          />
+        )}
+      </main>
     </div>
   );
 };

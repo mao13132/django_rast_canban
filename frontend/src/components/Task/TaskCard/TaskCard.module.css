@@ -1,0 +1,80 @@
+.card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.title h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.2rem;
+  transition: color 0.2s;
+}
+
+.deleteButton:hover {
+  color: #ff4444;
+}
+
+.description {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.priority, .category, .deadline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.priorityIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.highPriority {
+  background-color: #ff4444;
+}
+
+.mediumPriority {
+  background-color: #ffbb33;
+}
+
+.lowPriority {
+  background-color: #00C851;
+}
+
+.categoryIcon, .deadlineIcon {
+  font-size: 1rem;
+} 
