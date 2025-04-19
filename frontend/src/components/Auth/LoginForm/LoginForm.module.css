@@ -4,7 +4,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: 100%;
-  max-width: 400px;
+  height: 100%;
 }
 
 .tabs {
@@ -19,15 +19,16 @@
   border: none;
   padding: 15px;
   font-family: 'Jost', sans-serif;
-  font-size: 16px;
+  font-size: 40px;
   cursor: pointer;
   transition: background-color 0.2s;
   color: #666;
 }
 
 .activeTab {
-  font-weight: 500;
-  color: #333;
+  font-weight: 300;
+  font-size: 40px;
+  color: #000;
   position: relative;
 }
 
@@ -36,16 +37,18 @@
   position: absolute;
   bottom: -1px;
   left: 0;
-  width: 100%;
+  right: 20px !important;
+  width: 90%;
   height: 2px;
-  background-color: #7a68e3;
+  background-color: #000000;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 20px;
+  padding: 31px 20px;
+  gap: 20px;
 }
 
 .formGroup {
@@ -59,13 +62,16 @@
   border-radius: 4px;
   border: 1px solid #ddd;
   font-family: 'Jost', sans-serif;
-  font-size: 16px;
+  border-radius: 20px;
+  height: 80px;
+  font-weight: 400;
+  font-size: 32px;
+  color: rgba(0, 0, 0, 0.31);
   transition: border-color 0.2s;
-  background-color: #f7f7f7;
+  background-color: #dadceb;
 }
 
 .input:focus {
-  border-color: #9481ff;
   outline: none;
 }
 
@@ -101,17 +107,21 @@
   gap: 10px;
 }
 
-.submitButton, .registerButton {
+.submitButton,
+.registerButton {
   flex: 1;
-  background-color: #9481ff;
+  background-color: #dadceb;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   padding: 12px;
   font-family: 'Jost', sans-serif;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-weight: 300;
+  font-size: 40px;
+  color: #000;
 }
 
 .registerButton {
@@ -121,15 +131,16 @@
 }
 
 .submitButton:hover {
-  background-color: #7a68e3;
+  background-color: #b5b8d3;
 }
 
 .registerButton:hover {
   background-color: rgba(148, 129, 255, 0.1);
 }
 
-.submitButton:disabled, .registerButton:disabled {
+.submitButton:disabled,
+.registerButton:disabled {
   background-color: #bfbaff;
   cursor: not-allowed;
   opacity: 0.7;
-} 
+}

@@ -39,7 +39,6 @@ const Popup = () => {
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={styles.popup}>
         <div className={styles.header}>
-          {title && <h2 className={styles.title}>{title}</h2>}
           <button 
             className={styles.closeButton} 
             onClick={closePopup} 

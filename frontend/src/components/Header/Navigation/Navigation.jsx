@@ -33,13 +33,13 @@ const Navigation = () => {
         
         <div className={styles.authButtons}>
           {isAuthenticated ? (
-            <button onClick={logout} className={styles.authButton}>
+            <div onClick={logout} className={styles.authButton}>
               Выйти
-            </button>
+            </div>
           ) : (
-            <button onClick={handleLoginClick} className={styles.authButton}>
+            <div onClick={handleLoginClick} className={styles.authButton}>
               Войти в ЛК
-            </button>
+            </div>
           )}
         </div>
       </div>
