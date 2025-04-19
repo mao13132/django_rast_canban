@@ -1,74 +1,151 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400px;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
 .form {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.field {
-  margin-bottom: 1rem;
-}
-
-.field input,
-.field textarea,
-.field select {
   width: 100%;
-  padding: 0.5rem;
+  background: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+}
+
+.closeButton:hover {
+  color: #333;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 14px;
+  background: #f5f5f5;
 }
 
-.field textarea {
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: white;
+}
+
+.textarea {
+  min-height: 100px;
   resize: vertical;
-  min-height: 80px;
 }
 
-.field select {
-  background-color: white;
+.fileUpload {
+  border: 2px dashed #ddd;
+  padding: 20px;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #666;
 }
 
-.row {
-  display: flex;
-  gap: 1rem;
+.fileUpload:hover {
+  border-color: #2563eb;
+  color: #2563eb;
 }
 
-.row .field {
-  flex: 1;
+.fileInput {
+  display: none;
+}
+
+.deadlineGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.deadlineGroup label {
+  display: block;
+  margin-bottom: 4px;
+  color: #666;
+  font-size: 14px;
+}
+
+.dateInput {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #f5f5f5;
 }
 
 .actions {
+  margin-top: auto;
   display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: 12px;
 }
 
 .submitButton,
 .cancelButton {
-  padding: 0.5rem 1rem;
+  flex: 1;
+  padding: 10px;
+  border: none;
   border-radius: 4px;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 0.9rem;
   transition: all 0.2s;
 }
 
 .submitButton {
-  background-color: #4CAF50;
+  background: #2563eb;
   color: white;
-  border: none;
 }
 
 .submitButton:hover {
-  background-color: #45a049;
+  background: #1d4ed8;
 }
 
 .cancelButton {
-  background-color: transparent;
-  border: 1px solid #ddd;
-  color: #666;
+  background: #f3f4f6;
+  color: #4b5563;
 }
 
 .cancelButton:hover {
-  background-color: #f5f5f5;
+  background: #e5e7eb;
 } 

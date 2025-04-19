@@ -4,14 +4,15 @@ import Header from '../../components/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
 import TaskForm from '../../components/Task/TaskForm';
 import SearchBar from '../../components/UI/SearchBar';
+import { useTaskForm } from '../../context/TaskFormContext';
 import styles from './Dashboard.module.css';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showCreateForm, setShowCreateForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { openCreateForm } = useTaskForm();
 
   useEffect(() => {
     fetchTasks();
@@ -33,7 +34,6 @@ const Dashboard = () => {
     try {
       await tasksAPI.createTask(taskData);
       fetchTasks();
-      setShowCreateForm(false);
     } catch (err) {
       setError('Ошибка при создании задачи');
       console.error(err);
@@ -96,7 +96,7 @@ const Dashboard = () => {
             />
             <button 
               className={styles.createButton}
-              onClick={() => setShowCreateForm(true)}
+              onClick={openCreateForm}
             >
               Создать
             </button>
@@ -115,9 +115,6 @@ const Dashboard = () => {
             tasks={filterTasks('todo')}
             onUpdateTask={handleUpdateTask}
             onDeleteTask={handleDeleteTask}
-            showForm={showCreateForm}
-            onCreateTask={handleCreateTask}
-            onCancelCreate={() => setShowCreateForm(false)}
           />
           <TaskColumn
             title="В работе"
@@ -139,12 +136,7 @@ const Dashboard = () => {
           />
         </div>
 
-        {showCreateForm && (
-          <TaskForm
-            onSubmit={handleCreateTask}
-            onCancel={() => setShowCreateForm(false)}
-          />
-        )}
+        <TaskForm onSubmit={handleCreateTask} />
       </main>
     </div>
   );
