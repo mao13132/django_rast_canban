@@ -3,8 +3,6 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { TaskProvider } from './context/TaskContext';
-import { TaskFilterProvider } from './context/TaskFilterContext';
 import { TaskFormProvider } from './context/TaskFormContext';
 import { AuthProvider } from './context/AuthContext';
 import { PopupProvider } from './context/PopupContext';
@@ -16,13 +14,9 @@ root.render(
     <AuthProvider>
       <NotificationProvider>
         <PopupProvider>
-          <TaskProvider>
-            <TaskFilterProvider>
-              <TaskFormProvider>
-                <App />
-              </TaskFormProvider>
-            </TaskFilterProvider>
-          </TaskProvider>
+          <TaskFormProvider>
+            <App />
+          </TaskFormProvider>
         </PopupProvider>
       </NotificationProvider>
     </AuthProvider>

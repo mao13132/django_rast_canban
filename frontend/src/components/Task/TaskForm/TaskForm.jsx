@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTaskForm } from '../../../context/TaskFormContext';
-import { useTask } from '../../../context/TaskContext';
+import { useTaskStore } from '../../../store/taskStore';
 import { useNotification } from '../../../context/NotificationContext';
 import styles from './TaskForm.module.css';
 
 const TaskForm = () => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
-  const { createTask, updateTask, categories, statuses, fetchCategories, fetchStatuses } = useTask();
+  const { createTask, updateTask, categories, statuses, fetchCategories, fetchStatuses } = useTaskStore();
   const { showNotification } = useNotification();
   
   const [formData, setFormData] = useState({
@@ -32,8 +32,8 @@ const TaskForm = () => {
         title: initialData.title || '',
         description: initialData.description || '',
         priority: initialData.priority || 'medium',
-        category: initialData.category || null,
-        status: initialData.status || null,
+        category: initialData.category?.id || null,
+        status: initialData.status?.id || null,
         deadline: {
           start: initialData.deadline?.start || '',
           end: initialData.deadline?.end || ''
@@ -264,20 +264,11 @@ const TaskForm = () => {
         </div>
 
         <div className={styles.actions}>
-          <button 
-            type="submit" 
-            className={styles.submitButton}
-            disabled={loading}
-          >
-            {loading ? 'Сохранение...' : 'Сохранить'}
-          </button>
-          <button 
-            type="button" 
-            className={styles.cancelButton} 
-            onClick={closeForm}
-            disabled={loading}
-          >
+          <button type="button" onClick={closeForm} className={styles.cancelButton}>
             Отмена
+          </button>
+          <button type="submit" className={styles.submitButton} disabled={loading}>
+            {loading ? 'Сохранение...' : mode === 'create' ? 'Создать' : 'Сохранить'}
           </button>
         </div>
       </form>

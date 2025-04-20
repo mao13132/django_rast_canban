@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { useTask } from '../../context/TaskContext';
 import { useTaskForm } from '../../context/TaskFormContext';
+import { useTaskStore } from '../../store/taskStore';
 import Header from '../../components/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
 import TaskForm from '../../components/Task/TaskForm/TaskForm';
@@ -20,11 +20,11 @@ const Dashboard = () => {
     updateTaskStatus,
     fetchCategories,
     fetchStatuses,
-    statuses
-  } = useTask();
+    statuses,
+    setFilters
+  } = useTaskStore();
 
   const { showNotification } = useNotification();
-
   const { openCreateForm } = useTaskForm();
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -44,16 +44,17 @@ const Dashboard = () => {
     };
 
     loadInitialData();
-  }, []);
+  }, [fetchTasks, fetchCategories, fetchStatuses]);
 
   // Дебаунс для поиска
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery);
+      setFilters({ search: searchQuery });
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, setFilters]);
 
   // Мемоизированная фильтрация задач
   const filteredTasks = useMemo(() => {
@@ -77,7 +78,7 @@ const Dashboard = () => {
   const tasksByStatus = useMemo(() => {
     const result = {};
     statuses.forEach(status => {
-      result[status.id] = filteredTasks.filter(task => task.status.id === status.id);
+      result[status.id] = filteredTasks.filter(task => task.status?.id === status.id);
     });
     return result;
   }, [filteredTasks, statuses]);
@@ -91,7 +92,7 @@ const Dashboard = () => {
       console.error('Ошибка при создании задачи:', err);
       showNotification('Ошибка при создании задачи', 'error');
     }
-  }, [createTask]);
+  }, [createTask, showNotification]);
 
   const handleUpdateTask = useCallback(async (taskId, taskData) => {
     try {
@@ -101,7 +102,7 @@ const Dashboard = () => {
       console.error('Ошибка при обновлении задачи:', err);
       showNotification('Ошибка при обновлении задачи', 'error');
     }
-  }, [updateTask]);
+  }, [updateTask, showNotification]);
 
   const handleDeleteTask = useCallback(async (taskId) => {
     try {
@@ -111,7 +112,7 @@ const Dashboard = () => {
       console.error('Ошибка при удалении задачи:', err);
       showNotification('Ошибка при удалении задачи', 'error');
     }
-  }, [deleteTask]);
+  }, [deleteTask, showNotification]);
 
   const handleUpdateTaskStatus = useCallback(async (taskId, newStatus) => {
     try {
@@ -121,7 +122,7 @@ const Dashboard = () => {
       console.error('Ошибка при обновлении статуса задачи:', err);
       showNotification('Ошибка при обновлении статуса задачи', 'error');
     }
-  }, [updateTaskStatus]);
+  }, [updateTaskStatus, showNotification]);
 
   // Мемоизированный рендеринг колонок
   const renderColumns = useMemo(() => {

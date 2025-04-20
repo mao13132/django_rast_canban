@@ -1,15 +1,24 @@
 import React from 'react';
+import { useTaskStore } from '../../../store/taskStore';
+import { useTaskForm } from '../../../context/TaskFormContext';
 import styles from './TaskCard.module.css';
 
-const TaskCard = ({ task, onUpdate, onDelete }) => {
+const TaskCard = ({ task }) => {
+  const { updateTask, deleteTask } = useTaskStore();
+  const { openEditForm } = useTaskForm();
+
   const handleStatusChange = (e) => {
-    onUpdate(task.id, { status: e.target.value });
+    updateTask(task.id, { status: e.target.value });
   };
 
   const handleDelete = () => {
     if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
-      onDelete(task.id);
+      deleteTask(task.id);
     }
+  };
+
+  const handleEdit = () => {
+    openEditForm(task);
   };
 
   const getPriorityColor = (priority) => {
@@ -41,7 +50,10 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
       <div className={styles.header}>
         <div className={styles.title}>
           <h3>{task.title}</h3>
-          <button onClick={handleDelete} className={styles.deleteButton}>✕</button>
+          <div className={styles.actions}>
+            <button onClick={handleEdit} className={styles.editButton}>✎</button>
+            <button onClick={handleDelete} className={styles.deleteButton}>✕</button>
+          </div>
         </div>
         <p className={styles.description}>{task.description}</p>
       </div>
@@ -54,7 +66,7 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
 
         <div className={styles.category}>
           <span className={styles.categoryIcon}>📁</span>
-          <span>{task.category || 'Без категории'}</span>
+          <span>{task.category?.name || 'Без категории'}</span>
         </div>
 
         {task.due_date && (
