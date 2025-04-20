@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { tasksAPI, categoriesAPI, statusesAPI, attachmentsAPI } from '../services/api';
 
 // Создаем контекст для задач
@@ -71,13 +71,12 @@ export const TaskProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await tasksAPI.getTasks();
-      console.log('Получены задачи:', response.data); // Добавляем лог для отладки
       setTasks(response.data);
       setError(null);
     } catch (err) {
       console.error('Ошибка при загрузке задач:', err);
       setError('Ошибка при загрузке задач');
-      setTasks([]); // Сбрасываем список задач при ошибке
+      setTasks([]);
     } finally {
       setLoading(false);
     }
@@ -88,11 +87,10 @@ export const TaskProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await categoriesAPI.getCategories();
-      console.log('Получены категории:', response.data); // Добавляем лог для отладки
       setCategories(response.data);
     } catch (err) {
       console.error('Ошибка при загрузке категорий:', err);
-      setCategories([]); // Сбрасываем список категорий при ошибке
+      setCategories([]);
     } finally {
       setLoading(false);
     }
@@ -103,11 +101,10 @@ export const TaskProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await statusesAPI.getStatuses();
-      console.log('Получены статусы:', response.data); // Добавляем лог для отладки
       setStatuses(response.data);
     } catch (err) {
       console.error('Ошибка при загрузке статусов:', err);
-      setStatuses([]); // Сбрасываем список статусов при ошибке
+      setStatuses([]);
     } finally {
       setLoading(false);
     }
@@ -116,8 +113,6 @@ export const TaskProvider = ({ children }) => {
   // Создание новой задачи
   const createTask = useCallback(async (taskData) => {
     try {
-      setLoading(true);
-      
       // Преобразуем данные задачи
       const transformedData = transformTaskData(taskData);
       
@@ -125,92 +120,71 @@ export const TaskProvider = ({ children }) => {
       const formData = createFormData(transformedData, taskData.attachments);
 
       const response = await tasksAPI.createTask(formData);
-      console.log('API Response:', response.data); // Добавляем лог для отладки
       
-      // Проверяем, что response.data существует и содержит необходимые данные
-      if (!response.data || !response.data.id) {
-        throw new Error('Неверный формат ответа от сервера');
-      }
-      
-      // Добавляем новую задачу в список задач
+      // Оптимизированное обновление состояния
       setTasks(prevTasks => {
-        console.log('Previous tasks:', prevTasks); // Добавляем лог для отладки
-        // Фильтруем undefined значения
-        const validTasks = prevTasks.filter(task => task && task.id);
-        const newTasks = [...validTasks, response.data];
-        console.log('New tasks:', newTasks); // Добавляем лог для отладки
-        return newTasks;
+        const newTask = response.data;
+        // Проверяем, что задача с таким ID еще не существует
+        if (prevTasks.some(task => task.id === newTask.id)) {
+          return prevTasks;
+        }
+        return [...prevTasks, newTask];
       });
       
-      setError(null);
       return response.data;
     } catch (err) {
-      setError('Ошибка при создании задачи');
       console.error('Ошибка при создании задачи:', err);
       throw err;
-    } finally {
-      setLoading(false);
     }
   }, []);
 
   // Обновление задачи
   const updateTask = useCallback(async (taskId, taskData) => {
     try {
-      setLoading(true);
-      
-      // Преобразуем данные задачи
       const transformedData = transformTaskData(taskData);
-      
-      // Создаем FormData
       const formData = createFormData(transformedData, taskData.attachments);
 
       const response = await tasksAPI.updateTask(taskId, formData);
-      setTasks(prev => prev.map(task => 
-        task.id === taskId ? response.data : task
-      ));
-      setError(null);
+      
+      // Оптимизированное обновление состояния
+      setTasks(prevTasks => 
+        prevTasks.map(task => task.id === taskId ? response.data : task)
+      );
+      
       return response.data;
     } catch (err) {
-      setError('Ошибка при обновлении задачи');
       console.error('Ошибка при обновлении задачи:', err);
       throw err;
-    } finally {
-      setLoading(false);
     }
   }, []);
 
   // Удаление задачи
   const deleteTask = useCallback(async (taskId) => {
     try {
-      setLoading(true);
       await tasksAPI.deleteTask(taskId);
-      setTasks(prev => prev.filter(task => task.id !== taskId));
-      setError(null);
+      
+      // Оптимизированное обновление состояния
+      setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
     } catch (err) {
-      setError('Ошибка при удалении задачи');
       console.error('Ошибка при удалении задачи:', err);
       throw err;
-    } finally {
-      setLoading(false);
     }
   }, []);
 
   // Изменение статуса задачи
   const updateTaskStatus = useCallback(async (taskId, newStatus) => {
     try {
-      setLoading(true);
       const response = await tasksAPI.updateTaskStatus(taskId, newStatus);
-      setTasks(prev => prev.map(task => 
-        task.id === taskId ? response.data : task
-      ));
-      setError(null);
+      
+      // Оптимизированное обновление состояния
+      setTasks(prevTasks => 
+        prevTasks.map(task => task.id === taskId ? response.data : task)
+      );
+      
       return response.data;
     } catch (err) {
-      setError('Ошибка при обновлении статуса задачи');
       console.error('Ошибка при обновлении статуса задачи:', err);
       throw err;
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -265,7 +239,8 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
-  const value = {
+  // Мемоизированные значения для оптимизации
+  const value = useMemo(() => ({
     tasks,
     categories,
     statuses,
@@ -280,7 +255,7 @@ export const TaskProvider = ({ children }) => {
     updateTaskStatus,
     addTaskAttachment,
     deleteTaskAttachment
-  };
+  }), [tasks, categories, statuses, loading, error, fetchTasks, fetchCategories, fetchStatuses, createTask, updateTask, deleteTask, updateTaskStatus]);
 
   return (
     <TaskContext.Provider value={value}>

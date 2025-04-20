@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useTask } from '../../context/TaskContext';
 import { useTaskForm } from '../../context/TaskFormContext';
 import Header from '../../components/Header';
@@ -79,38 +79,52 @@ const Dashboard = () => {
     return result;
   }, [filteredTasks, statuses]);
 
-  // Обработчики для задач
-  const handleCreateTask = async (taskData) => {
+  // Мемоизированные обработчики
+  const handleCreateTask = useCallback(async (taskData) => {
     try {
       await createTask(taskData);
     } catch (err) {
       console.error('Ошибка при создании задачи:', err);
     }
-  };
+  }, [createTask]);
 
-  const handleUpdateTask = async (taskId, taskData) => {
+  const handleUpdateTask = useCallback(async (taskId, taskData) => {
     try {
       await updateTask(taskId, taskData);
     } catch (err) {
       console.error('Ошибка при обновлении задачи:', err);
     }
-  };
+  }, [updateTask]);
 
-  const handleDeleteTask = async (taskId) => {
+  const handleDeleteTask = useCallback(async (taskId) => {
     try {
       await deleteTask(taskId);
     } catch (err) {
       console.error('Ошибка при удалении задачи:', err);
     }
-  };
+  }, [deleteTask]);
 
-  const handleUpdateTaskStatus = async (taskId, newStatus) => {
+  const handleUpdateTaskStatus = useCallback(async (taskId, newStatus) => {
     try {
       await updateTaskStatus(taskId, newStatus);
     } catch (err) {
       console.error('Ошибка при обновлении статуса задачи:', err);
     }
-  };
+  }, [updateTaskStatus]);
+
+  // Мемоизированный рендеринг колонок
+  const renderColumns = useMemo(() => {
+    return statuses.map(status => (
+      <TaskColumn
+        key={status.id}
+        title={status.name}
+        tasks={tasksByStatus[status.id] || []}
+        onUpdateTask={handleUpdateTask}
+        onDeleteTask={handleDeleteTask}
+        onUpdateStatus={handleUpdateTaskStatus}
+      />
+    ));
+  }, [statuses, tasksByStatus, handleUpdateTask, handleDeleteTask, handleUpdateTaskStatus]);
 
   if (loading) return (
     <>
@@ -154,16 +168,7 @@ const Dashboard = () => {
         </div>
 
         <div className={styles.kanbanBoard}>
-          {statuses.map(status => (
-            <TaskColumn
-              key={status.id}
-              title={status.name}
-              tasks={tasksByStatus[status.id] || []}
-              onUpdateTask={handleUpdateTask}
-              onDeleteTask={handleDeleteTask}
-              onUpdateStatus={handleUpdateTaskStatus}
-            />
-          ))}
+          {renderColumns}
         </div>
 
         <TaskFormWrapper onSubmit={handleCreateTask} />
