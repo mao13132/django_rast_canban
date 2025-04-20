@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { tasksAPI } from '../services/api';
 
 // Создаем контекст фильтрации
 export const TaskFilterContext = createContext(null);
@@ -10,34 +11,69 @@ export const useTaskFilter = () => useContext(TaskFilterContext);
 export const TaskFilterProvider = ({ children }) => {
   // Состояние фильтров
   const [filters, setFilters] = useState({
-    status: null,      // Статус задачи
-    priority: null,    // Приоритет
-    search: '',        // Поисковая строка
-    category: null,    // Категория
-    dateRange: null,   // Диапазон дат
+    status: '',
+    priority: '',
+    search: '',
+    category: '',
+    dateRange: {
+      start: '',
+      end: ''
+    }
   });
 
-  // Функция для обновления фильтров
-  const updateFilters = (newFilters) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+
+  // Обновление фильтров
+  const updateFilters = useCallback((newFilters) => {
     setFilters(prev => ({
       ...prev,
       ...newFilters
     }));
-  };
+  }, []);
 
-  // Функция для сброса всех фильтров
-  const resetFilters = () => {
+  // Сброс фильтров
+  const resetFilters = useCallback(() => {
     setFilters({
-      status: null,
-      priority: null,
+      status: '',
+      priority: '',
       search: '',
-      category: null,
-      dateRange: null,
+      category: '',
+      dateRange: {
+        start: '',
+        end: ''
+      }
     });
-  };
+  }, []);
 
-  // Функция для фильтрации списка задач
-  const filterTasks = (tasks) => {
+  // Получение отфильтрованных задач с сервера
+  const fetchFilteredTasks = useCallback(async () => {
+    try {
+      setLoading(true);
+      
+      const params = {
+        ...(filters.status && { status: filters.status }),
+        ...(filters.priority && { priority: filters.priority }),
+        ...(filters.search && { search: filters.search }),
+        ...(filters.category && { category: filters.category }),
+        ...(filters.dateRange.start && { start_date: filters.dateRange.start }),
+        ...(filters.dateRange.end && { end_date: filters.dateRange.end })
+      };
+
+      const response = await tasksAPI.getFilteredTasks(params);
+      setFilteredTasks(response.data);
+      setError(null);
+    } catch (err) {
+      setError('Ошибка при получении отфильтрованных задач');
+      console.error('Ошибка при получении отфильтрованных задач:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters]);
+
+  // Локальная фильтрация задач (если нужно)
+  const filterTasks = useCallback((tasks) => {
     return tasks.filter(task => {
       // Фильтрация по статусу
       if (filters.status && task.status !== filters.status) {
@@ -50,8 +86,13 @@ export const TaskFilterProvider = ({ children }) => {
       }
 
       // Фильтрация по поисковой строке
-      if (filters.search && !task.title.toLowerCase().includes(filters.search.toLowerCase())) {
-        return false;
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const matchesTitle = task.title.toLowerCase().includes(searchLower);
+        const matchesDescription = task.description.toLowerCase().includes(searchLower);
+        if (!matchesTitle && !matchesDescription) {
+          return false;
+        }
       }
 
       // Фильтрация по категории
@@ -60,21 +101,36 @@ export const TaskFilterProvider = ({ children }) => {
       }
 
       // Фильтрация по диапазону дат
-      if (filters.dateRange) {
+      if (filters.dateRange.start || filters.dateRange.end) {
         const taskDate = new Date(task.deadline);
-        if (taskDate < filters.dateRange.start || taskDate > filters.dateRange.end) {
-          return false;
+        
+        if (filters.dateRange.start) {
+          const startDate = new Date(filters.dateRange.start);
+          if (taskDate < startDate) {
+            return false;
+          }
+        }
+        
+        if (filters.dateRange.end) {
+          const endDate = new Date(filters.dateRange.end);
+          if (taskDate > endDate) {
+            return false;
+          }
         }
       }
 
       return true;
     });
-  };
+  }, [filters]);
 
   const value = {
     filters,
+    loading,
+    error,
+    filteredTasks,
     updateFilters,
     resetFilters,
+    fetchFilteredTasks,
     filterTasks
   };
 

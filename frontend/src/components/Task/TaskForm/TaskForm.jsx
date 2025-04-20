@@ -1,19 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTaskForm } from '../../../context/TaskFormContext';
+import { useTask } from '../../../context/TaskContext';
+import { useNotification } from '../../../context/NotificationContext';
 import styles from './TaskForm.module.css';
 
 const TaskForm = () => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
-  const [formData, setFormData] = useState(initialData || {
+  const { createTask, updateTask, categories, statuses, fetchCategories, fetchStatuses } = useTask();
+  const { showNotification } = useNotification();
+  
+  const [formData, setFormData] = useState({
     title: '',
     description: '',
     priority: 'medium',
-    category: 'study',
+    category: null,
+    status: null,
     deadline: {
       start: '',
       end: ''
-    }
+    },
+    attachments: []
   });
+
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchCategories();
+      fetchStatuses();
+      
+      if (initialData) {
+        setFormData({
+          title: initialData.title || '',
+          description: initialData.description || '',
+          priority: initialData.priority || 'medium',
+          category: initialData.category || null,
+          status: initialData.status || null,
+          deadline: {
+            start: initialData.deadline?.start || '',
+            end: initialData.deadline?.end || ''
+          },
+          attachments: initialData.attachments || []
+        });
+      }
+    }
+  }, [isOpen, initialData, fetchCategories, fetchStatuses]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,10 +67,63 @@ const TaskForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setFiles(prev => [...prev, ...selectedFiles]);
+  };
+
+  const removeFile = (index) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Здесь будет логика сохранения
-    closeForm();
+    setLoading(true);
+    setError(null);
+
+    // Проверяем обязательные поля
+    if (!formData.title) {
+      showNotification('Название задачи обязательно', 'error');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.status) {
+      showNotification('Статус задачи обязателен', 'error');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const taskData = {
+        ...formData,
+        attachments: files
+      };
+
+      console.log('Submitting task data:', taskData);
+
+      if (mode === 'create') {
+        await createTask(taskData);
+        showNotification('Задача успешно создана', 'success');
+      } else {
+        await updateTask(initialData.id, taskData);
+        showNotification('Задача успешно обновлена', 'success');
+      }
+
+      closeForm();
+    } catch (err) {
+      console.error('Error saving task:', err);
+      if (err.response?.data) {
+        const errorMessage = Object.entries(err.response.data)
+          .map(([field, errors]) => `${field}: ${errors.join(', ')}`)
+          .join('\n');
+        showNotification(errorMessage, 'error');
+      } else {
+        showNotification('Ошибка при сохранении задачи', 'error');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -50,6 +136,8 @@ const TaskForm = () => {
           <button type="button" className={styles.closeButton} onClick={closeForm}>×</button>
         </div>
 
+        {error && <div className={styles.error}>{error}</div>}
+
         <div className={styles.formGroup}>
           <input
             type="text"
@@ -58,6 +146,7 @@ const TaskForm = () => {
             onChange={handleChange}
             placeholder="Название задачи"
             className={styles.input}
+            required
           />
         </div>
 
@@ -67,6 +156,7 @@ const TaskForm = () => {
             value={formData.priority}
             onChange={handleChange}
             className={styles.select}
+            required
           >
             <option value="">Приоритет</option>
             <option value="low">Низкий</option>
@@ -88,8 +178,29 @@ const TaskForm = () => {
         <div className={styles.formGroup}>
           <div className={styles.fileUpload}>
             <span>Прикрепить файл</span>
-            <input type="file" className={styles.fileInput} />
+            <input
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              className={styles.fileInput}
+            />
           </div>
+          {files.length > 0 && (
+            <div className={styles.fileList}>
+              {files.map((file, index) => (
+                <div key={index} className={styles.fileItem}>
+                  <span>{file.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeFile(index)}
+                    className={styles.removeFile}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className={styles.formGroup}>
@@ -98,11 +209,31 @@ const TaskForm = () => {
             value={formData.category}
             onChange={handleChange}
             className={styles.select}
+            required
           >
             <option value="">Категория</option>
-            <option value="study">Учеба</option>
-            <option value="work">Работа</option>
-            <option value="personal">Личное</option>
+            {categories.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.formGroup}>
+          <select
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            className={styles.select}
+            required
+          >
+            <option value="">Статус</option>
+            {statuses.map(status => (
+              <option key={status.id} value={status.id}>
+                {status.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -132,10 +263,19 @@ const TaskForm = () => {
         </div>
 
         <div className={styles.actions}>
-          <button type="submit" className={styles.submitButton}>
-            Сохранить
+          <button 
+            type="submit" 
+            className={styles.submitButton}
+            disabled={loading}
+          >
+            {loading ? 'Сохранение...' : 'Сохранить'}
           </button>
-          <button type="button" className={styles.cancelButton} onClick={closeForm}>
+          <button 
+            type="button" 
+            className={styles.cancelButton} 
+            onClick={closeForm}
+            disabled={loading}
+          >
             Отмена
           </button>
         </div>

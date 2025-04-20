@@ -7,5 +7,5 @@ class TaskStatusSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = TaskStatus
-        fields = ['status_id', 'name']
-        read_only_fields = [] 
+        fields = ['status_id', 'name', 'user_id']
+        read_only_fields = ['status_id', 'user_id'] 

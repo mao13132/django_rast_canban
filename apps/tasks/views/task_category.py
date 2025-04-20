@@ -13,10 +13,10 @@ class TaskCategoryViewSet(viewsets.ModelViewSet):
         """
         Возвращает только категории текущего пользователя
         """
-        return TaskCategory.objects.filter(user=self.request.user)
+        return TaskCategory.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         """
         При создании категории автоматически устанавливает текущего пользователя
         """
-        serializer.save(user=self.request.user) 
+        serializer.save(user_id=self.request.user) 

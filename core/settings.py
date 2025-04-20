@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+from .logging import LOGGING  # Импортируем настройки логгера
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -199,3 +200,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React development server
     "http://127.0.0.1:3000",
 ]
+
+# Добавляем настройки логгера
+LOGGING = LOGGING

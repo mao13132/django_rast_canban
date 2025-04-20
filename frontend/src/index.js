@@ -3,14 +3,20 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { TaskProvider } from './context/TaskContext';
+import { TaskFilterProvider } from './context/TaskFilterContext';
 import { TaskFormProvider } from './context/TaskFormContext';
 
 const root = createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <TaskFormProvider>
-      <App />
-    </TaskFormProvider>
+    <TaskProvider>
+      <TaskFilterProvider>
+        <TaskFormProvider>
+          <App />
+        </TaskFormProvider>
+      </TaskFilterProvider>
+    </TaskProvider>
   </React.StrictMode>
 );
 

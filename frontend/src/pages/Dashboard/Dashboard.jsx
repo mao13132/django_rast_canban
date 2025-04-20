@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { tasksAPI } from '../../services/api';
 import Header from '../../components/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
-import TaskForm from '../../components/Task/TaskForm';
+import TaskFormWrapper from '../../components/Task/TaskForm/TaskFormWrapper';
 import SearchBar from '../../components/UI/SearchBar';
 import { useTaskForm } from '../../context/TaskFormContext';
 import styles from './Dashboard.module.css';
@@ -136,7 +136,7 @@ const Dashboard = () => {
           />
         </div>
 
-        <TaskForm onSubmit={handleCreateTask} />
+        <TaskFormWrapper onSubmit={handleCreateTask} />
       </main>
     </div>
   );

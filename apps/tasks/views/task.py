@@ -1,6 +1,10 @@
 from rest_framework import viewsets, permissions
 from ..models import Task
 from ..serializers import TaskSerializer
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     """
@@ -19,4 +23,12 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         При создании задачи автоматически устанавливает текущего пользователя
         """
-        serializer.save(user_id=self.request.user) 
+        logger.info(f"Creating task with data: {serializer.validated_data}")
+        serializer.save(user_id=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        """
+        Переопределяем метод create для логирования входящих данных
+        """
+        logger.info(f"Received request data: {request.data}")
+        return super().create(request, *args, **kwargs)

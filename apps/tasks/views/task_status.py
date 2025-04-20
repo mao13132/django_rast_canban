@@ -13,10 +13,10 @@ class TaskStatusViewSet(viewsets.ModelViewSet):
         """
         Возвращает только статусы текущего пользователя
         """
-        return TaskStatus.objects.filter(user=self.request.user)
+        return TaskStatus.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         """
         При создании статуса автоматически устанавливает текущего пользователя
         """
-        serializer.save(user=self.request.user) 
+        serializer.save(user_id=self.request.user) 
