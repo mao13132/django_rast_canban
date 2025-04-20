@@ -125,7 +125,23 @@ export const TaskProvider = ({ children }) => {
       const formData = createFormData(transformedData, taskData.attachments);
 
       const response = await tasksAPI.createTask(formData);
-      setTasks(prev => [...prev, response.data]);
+      console.log('API Response:', response.data); // Добавляем лог для отладки
+      
+      // Проверяем, что response.data существует и содержит необходимые данные
+      if (!response.data || !response.data.id) {
+        throw new Error('Неверный формат ответа от сервера');
+      }
+      
+      // Добавляем новую задачу в список задач
+      setTasks(prevTasks => {
+        console.log('Previous tasks:', prevTasks); // Добавляем лог для отладки
+        // Фильтруем undefined значения
+        const validTasks = prevTasks.filter(task => task && task.id);
+        const newTasks = [...validTasks, response.data];
+        console.log('New tasks:', newTasks); // Добавляем лог для отладки
+        return newTasks;
+      });
+      
       setError(null);
       return response.data;
     } catch (err) {

@@ -103,3 +103,53 @@ class TaskSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"priority": "Приоритет задачи обязателен"})
             
         return data
+
+    def create(self, validated_data):
+        """
+        Создает новую задачу и возвращает её в нужном формате
+        """
+        logger.info(f"Creating task with data: {validated_data}")
+        
+        # Создаем задачу
+        task = Task.objects.create(
+            user_id=self.context['request'].user,
+            title=validated_data['title'],
+            description=validated_data.get('description', ''),
+            status_id=validated_data['status_id'],
+            category_id=validated_data.get('category_id'),
+            priority=validated_data.get('priority', 'medium'),
+            deadline=validated_data.get('deadline')
+        )
+        
+        logger.info(f"Created task: {task}")
+        return task
+
+    def to_representation(self, instance):
+        """
+        Преобразует объект в словарь для сериализации.
+        Обеспечивает единообразный формат данных при создании/обновлении и получении задач.
+        """
+        data = super().to_representation(instance)
+        
+        # Добавляем ID в корень объекта
+        data['id'] = instance.task_id
+        
+        # Форматируем статус
+        if instance.status_id:
+            data['status'] = {
+                'id': instance.status_id.status_id,
+                'name': instance.status_id.name
+            }
+        
+        # Форматируем категорию
+        if instance.category_id:
+            data['category'] = {
+                'id': instance.category_id.category_id,
+                'name': instance.category_id.name
+            }
+        
+        # Форматируем вложения
+        if hasattr(instance, 'attachments'):
+            data['attachments'] = TaskAttachmentSerializer(instance.attachments.all(), many=True).data
+        
+        return data

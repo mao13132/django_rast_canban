@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useTask } from '../../context/TaskContext';
 import { useTaskForm } from '../../context/TaskFormContext';
 import Header from '../../components/Header';
@@ -41,7 +41,7 @@ const Dashboard = () => {
     };
 
     loadInitialData();
-  }, []); // Убираем зависимости, так как функции мемоизированы
+  }, []);
 
   // Дебаунс для поиска
   useEffect(() => {
@@ -52,24 +52,32 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Загрузка задач при изменении поискового запроса
-  useEffect(() => {
-    const params = {};
-    if (debouncedSearch) {
-      params.search = debouncedSearch;
-    }
-    fetchTasks(params);
-  }, [debouncedSearch, fetchTasks]);
-
-  // Фильтрация задач по статусу
-  const filterTasks = (status) => {
+  // Мемоизированная фильтрация задач
+  const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
-      // Проверяем, что task и task.status существуют
       if (!task || !task.status) return false;
-      // Сравниваем ID статуса
-      return task.status.id === status;
+      
+      // Фильтрация по поисковому запросу
+      if (debouncedSearch) {
+        const searchLower = debouncedSearch.toLowerCase();
+        const matchesSearch = 
+          task.title.toLowerCase().includes(searchLower) ||
+          task.description?.toLowerCase().includes(searchLower);
+        if (!matchesSearch) return false;
+      }
+      
+      return true;
     });
-  };
+  }, [tasks, debouncedSearch]);
+
+  // Мемоизированное распределение задач по статусам
+  const tasksByStatus = useMemo(() => {
+    const result = {};
+    statuses.forEach(status => {
+      result[status.id] = filteredTasks.filter(task => task.status.id === status.id);
+    });
+    return result;
+  }, [filteredTasks, statuses]);
 
   // Обработчики для задач
   const handleCreateTask = async (taskData) => {
@@ -150,7 +158,7 @@ const Dashboard = () => {
             <TaskColumn
               key={status.id}
               title={status.name}
-              tasks={filterTasks(status.id)}
+              tasks={tasksByStatus[status.id] || []}
               onUpdateTask={handleUpdateTask}
               onDeleteTask={handleDeleteTask}
               onUpdateStatus={handleUpdateTaskStatus}

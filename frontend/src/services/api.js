@@ -111,26 +111,22 @@ export const tasksAPI = {
     })),
   createTask: async (formData) => {
     try {
-      console.log('Submitting formData:', formData);
-      
-      // Логируем содержимое FormData перед отправкой
-      console.log('FormData contents before sending:');
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-      }
-      
       const response = await axiosInstance.post('/tasks/tasks/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       
-      return response.data;
+      // Проверяем и логируем ответ
+      console.log('Create task response:', response.data);
+      
+      if (!response.data || !response.data.id) {
+        throw new Error('Неверный формат ответа от сервера');
+      }
+      
+      return response;
     } catch (error) {
       console.error('Error creating task:', error);
-      if (error.response) {
-        console.error('Error response:', error.response.data);
-      }
       throw error;
     }
   },
