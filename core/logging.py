@@ -30,6 +30,7 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': os.path.join(LOG_DIR, 'django.log'),
             'formatter': 'verbose',
+            'encoding': 'utf-8',
         },
     },
     'loggers': {

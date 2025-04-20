@@ -7,23 +7,23 @@ export const TaskContext = createContext(null);
 // Хук для использования контекста задач
 export const useTask = () => useContext(TaskContext);
 
+// Вспомогательные функции для определения статуса и категории
+const getStatusId = (status) => {
+  if (!status) return null;
+  if (typeof status === 'object' && status.id) return status.id;
+  if (typeof status === 'string') return status;
+  return null;
+};
+
+const getCategoryId = (category) => {
+  if (!category) return null;
+  if (typeof category === 'object' && category.id) return category.id;
+  if (typeof category === 'string') return category;
+  return null;
+};
+
 // Вспомогательная функция для преобразования данных задачи
 const transformTaskData = (taskData) => {
-  // Преобразуем статус и категорию в ID
-  const getStatusId = (status) => {
-    if (!status) return null;
-    if (typeof status === 'object' && status.id) return status.id;
-    if (typeof status === 'string') return status;
-    return null;
-  };
-
-  const getCategoryId = (category) => {
-    if (!category) return null;
-    if (typeof category === 'object' && category.id) return category.id;
-    if (typeof category === 'string') return category;
-    return null;
-  };
-
   const newData = {
     title: taskData.title,
     description: taskData.description,
@@ -40,21 +40,21 @@ const transformTaskData = (taskData) => {
 // Вспомогательная функция для создания FormData
 const createFormData = (data, files = []) => {
   const formData = new FormData();
-  
+
   // Добавляем все поля в FormData
   Object.entries(data).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       formData.append(key, value);
     }
   });
-  
+
   // Добавляем файлы
   if (files && files.length > 0) {
     files.forEach((file) => {
       formData.append('attachments', file);
     });
   }
-  
+
   return formData;
 };
 
@@ -115,12 +115,12 @@ export const TaskProvider = ({ children }) => {
     try {
       // Преобразуем данные задачи
       const transformedData = transformTaskData(taskData);
-      
+
       // Создаем FormData
       const formData = createFormData(transformedData, taskData.attachments);
 
       const response = await tasksAPI.createTask(formData);
-      
+
       // Оптимизированное обновление состояния
       setTasks(prevTasks => {
         const newTask = response.data;
@@ -130,7 +130,7 @@ export const TaskProvider = ({ children }) => {
         }
         return [...prevTasks, newTask];
       });
-      
+
       return response.data;
     } catch (err) {
       console.error('Ошибка при создании задачи:', err);
@@ -141,17 +141,43 @@ export const TaskProvider = ({ children }) => {
   // Обновление задачи
   const updateTask = useCallback(async (taskId, taskData) => {
     try {
+
       const transformedData = transformTaskData(taskData);
+
       const formData = createFormData(transformedData, taskData.attachments);
 
       const response = await tasksAPI.updateTask(taskId, formData);
-      
-      // Оптимизированное обновление состояния
-      setTasks(prevTasks => 
-        prevTasks.map(task => task.id === taskId ? response.data : task)
-      );
-      
-      return response.data;
+
+      // Получаем обновленные данные из ответа
+      const updatedTask = response;
+
+      // Обновляем локальное состояние, сохраняя существующие данные
+      setTasks(prevTasks => {
+        const newTasks = prevTasks.map(task => {
+          if (task && task.id === taskId) {
+            const updatedTaskData = {
+              ...task,  // Сохраняем существующие данные
+              ...updatedTask,  // Добавляем обновленные данные
+              status: {
+                id: getStatusId(updatedTask?.status || task?.status),
+                name: (updatedTask?.status || task?.status)?.name || ''
+              },
+              category: {
+                id: getCategoryId(updatedTask?.category || task?.category),
+                name: (updatedTask?.category || task?.category)?.name || ''
+              },
+              attachments: updatedTask?.attachments || task?.attachments || []
+            };
+            return updatedTaskData;
+          }
+          return task;
+        });
+        return newTasks;
+      });
+
+      // Добавляем проверку после обновления состояния
+
+      return updatedTask;
     } catch (err) {
       console.error('Ошибка при обновлении задачи:', err);
       throw err;
@@ -162,7 +188,7 @@ export const TaskProvider = ({ children }) => {
   const deleteTask = useCallback(async (taskId) => {
     try {
       await tasksAPI.deleteTask(taskId);
-      
+
       // Оптимизированное обновление состояния
       setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
     } catch (err) {
@@ -175,12 +201,12 @@ export const TaskProvider = ({ children }) => {
   const updateTaskStatus = useCallback(async (taskId, newStatus) => {
     try {
       const response = await tasksAPI.updateTaskStatus(taskId, newStatus);
-      
+
       // Оптимизированное обновление состояния
-      setTasks(prevTasks => 
+      setTasks(prevTasks =>
         prevTasks.map(task => task.id === taskId ? response.data : task)
       );
-      
+
       return response.data;
     } catch (err) {
       console.error('Ошибка при обновлении статуса задачи:', err);
@@ -197,14 +223,14 @@ export const TaskProvider = ({ children }) => {
       formData.append('task', taskId);
 
       const response = await attachmentsAPI.createAttachment(formData);
-      
+
       // Обновляем задачу с новым вложением
-      setTasks(prev => prev.map(task => 
-        task.id === taskId 
+      setTasks(prev => prev.map(task =>
+        task.id === taskId
           ? { ...task, attachments: [...task.attachments, response.data] }
           : task
       ));
-      
+
       return response.data;
     } catch (err) {
       setError('Ошибка при добавлении вложения');
@@ -220,14 +246,14 @@ export const TaskProvider = ({ children }) => {
     try {
       setLoading(true);
       await attachmentsAPI.deleteAttachment(attachmentId);
-      
+
       // Обновляем задачу, удаляя вложение
-      setTasks(prev => prev.map(task => 
-        task.id === taskId 
-          ? { 
-              ...task, 
-              attachments: task.attachments.filter(att => att.id !== attachmentId)
-            }
+      setTasks(prev => prev.map(task =>
+        task.id === taskId
+          ? {
+            ...task,
+            attachments: task.attachments.filter(att => att.id !== attachmentId)
+          }
           : task
       ));
     } catch (err) {

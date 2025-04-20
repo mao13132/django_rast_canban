@@ -48,6 +48,29 @@ class TaskViewSet(viewsets.ModelViewSet):
         logger.info(f"Received request data: {request.data}")
         return super().create(request, *args, **kwargs)
 
+    def update(self, request, *args, **kwargs):
+        """
+        Переопределяем метод update для логирования и возврата обновленных данных
+        """
+        logger.info(f"Updating task with data: {request.data}")
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        updated_instance = serializer.save()
+        
+        # Получаем обновленные данные
+        response_data = self.get_serializer(updated_instance).data
+        logger.info(f"Response data: {response_data}")
+        
+        return Response(response_data)
+
+    def perform_update(self, serializer):
+        """
+        Сохраняет обновленные данные задачи
+        """
+        serializer.save()
+
     @action(detail=True, methods=['patch'])
     def update_status(self, request, pk=None):
         """

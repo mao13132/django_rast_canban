@@ -4,6 +4,7 @@ from ..models.task_status import TaskStatus
 from ..models.task_category import TaskCategory
 from .task_attachment import TaskAttachmentSerializer
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -124,32 +125,35 @@ class TaskSerializer(serializers.ModelSerializer):
         logger.info(f"Created task: {task}")
         return task
 
+    def update(self, instance, validated_data):
+        """
+        Обновляет существующую задачу
+        """
+        logger.info(f"Updating task {instance.task_id} with data: {validated_data}")
+        
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.status_id = validated_data.get('status_id', instance.status_id)
+        instance.category_id = validated_data.get('category_id', instance.category_id)
+        instance.priority = validated_data.get('priority', instance.priority)
+        instance.deadline = validated_data.get('deadline', instance.deadline)
+        
+        instance.save()
+        logger.info(f"Updated task: {instance}")
+        return instance
+
     def to_representation(self, instance):
         """
-        Преобразует объект в словарь для сериализации.
-        Обеспечивает единообразный формат данных при создании/обновлении и получении задач.
+        Преобразует объект задачи в словарь
         """
-        data = super().to_representation(instance)
-        
-        # Добавляем ID в корень объекта
-        data['id'] = instance.task_id
-        
-        # Форматируем статус
-        if instance.status_id:
-            data['status'] = {
-                'id': instance.status_id.status_id,
-                'name': instance.status_id.name
-            }
-        
-        # Форматируем категорию
-        if instance.category_id:
-            data['category'] = {
-                'id': instance.category_id.category_id,
-                'name': instance.category_id.name
-            }
-        
-        # Форматируем вложения
-        if hasattr(instance, 'attachments'):
-            data['attachments'] = TaskAttachmentSerializer(instance.attachments.all(), many=True).data
-        
-        return data
+        try:
+            data = super().to_representation(instance)
+            # Добавляем ID в корень объекта
+            data['id'] = instance.task_id
+            
+            # Логируем полные данные для отладки
+            logger.info("Full task representation: %s", json.dumps(data, ensure_ascii=False))
+            return data
+        except Exception as e:
+            logger.error("Error in to_representation: %s", str(e))
+            raise

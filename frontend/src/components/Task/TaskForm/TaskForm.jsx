@@ -95,8 +95,6 @@ const TaskForm = () => {
         attachments: files
       };
 
-      console.log('Submitting task data:', taskData);
-
       if (mode === 'create') {
         await createTask(taskData);
         showNotification('Задача успешно создана', 'success');

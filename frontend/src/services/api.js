@@ -117,8 +117,6 @@ export const tasksAPI = {
         },
       });
       
-      // Проверяем и логируем ответ
-      console.log('Create task response:', response.data);
       
       if (!response.data || !response.data.id) {
         throw new Error('Неверный формат ответа от сервера');
@@ -130,17 +128,39 @@ export const tasksAPI = {
       throw error;
     }
   },
-  updateTask: (taskId, taskData) => 
-    axiosInstance.put(`tasks/tasks/${taskId}/`, taskData).then(response => ({
-      id: response.data.task_id,
-      title: response.data.title,
-      description: response.data.description,
-      status: response.data.status_id,
-      category: response.data.category_id,
-      priority: response.data.priority,
-      deadline: response.data.deadline,
-      attachments: response.data.attachments
-    })),
+  updateTask: async (taskId, taskData) => {
+    try {
+      const response = await axiosInstance.put(`tasks/tasks/${taskId}/`, taskData);
+      
+      if (!response.data) {
+        throw new Error('No data in response');
+      }
+
+      // Преобразуем ответ в нужный формат
+      const transformedData = {
+        id: response.data.task_id,
+        title: response.data.title,
+        description: response.data.description,
+        status: {
+          id: response.data.status_id,
+          name: response.data.status.name
+        },
+        category: {
+          id: response.data.category_id,
+          name: response.data.category.name
+        },
+        priority: response.data.priority,
+        deadline: response.data.deadline,
+        attachments: response.data.attachments || [],
+        user_id: response.data.user_id
+      };
+
+      return transformedData;
+    } catch (error) {
+      console.error('Error in updateTask:', error);
+      throw error;
+    }
+  },
   deleteTask: (taskId) => 
     axiosInstance.delete(`tasks/tasks/${taskId}/`),
   updateTaskStatus: (taskId, status) => 
