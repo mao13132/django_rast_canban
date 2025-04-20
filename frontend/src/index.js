@@ -7,17 +7,20 @@ import { TaskFormProvider } from './context/TaskFormContext';
 import { AuthProvider } from './context/AuthContext';
 import { PopupProvider } from './context/PopupContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { FilterProvider } from './context/FilterContext';
 
 const root = createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
       <NotificationProvider>
+      <FilterProvider>
         <PopupProvider>
           <TaskFormProvider>
             <App />
           </TaskFormProvider>
         </PopupProvider>
+      </FilterProvider>
       </NotificationProvider>
     </AuthProvider>
   </React.StrictMode>

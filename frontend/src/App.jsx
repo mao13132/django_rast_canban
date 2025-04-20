@@ -12,11 +12,11 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <NotificationProvider>
-          <TaskProvider>
-            <TaskFormProvider>
-              <AppRoutes />
-            </TaskFormProvider>
-          </TaskProvider>
+            <TaskProvider>
+              <TaskFormProvider>
+                <AppRoutes />
+              </TaskFormProvider>
+            </TaskProvider>
         </NotificationProvider>
       </AuthProvider>
     </BrowserRouter>

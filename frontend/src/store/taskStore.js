@@ -10,6 +10,7 @@ export const useTaskStore = create((set, get) => ({
   statuses: [],
   loading: false,
   error: null,
+  sortBy: null,
   filters: {
     status: '',
     priority: '',
@@ -24,7 +25,17 @@ export const useTaskStore = create((set, get) => ({
   // Действия
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
-  setFilters: (filters) => set({ filters }),
+  setSortBy: (field) => set({ sortBy: field }),
+  setFilters: (newFilters) => set((state) => ({
+    filters: {
+      ...state.filters,
+      ...newFilters,
+      dateRange: {
+        ...state.filters.dateRange,
+        ...(newFilters.dateRange || {})
+      }
+    }
+  })),
 
   // Получение всех задач
   fetchTasks: async () => {

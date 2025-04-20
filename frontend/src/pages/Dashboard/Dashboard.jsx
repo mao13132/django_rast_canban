@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useTaskForm } from '../../context/TaskFormContext';
+import { useFilter } from '../../context/FilterContext';
 import { useTaskStore } from '../../store/taskStore';
 import Header from '../../components/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
 import TaskForm from '../../components/Task/TaskForm/TaskForm';
+import Filter from '../../components/Filter/Filter';
 import SearchBar from '../../components/UI/SearchBar';
 import styles from './Dashboard.module.css';
 import { useNotification } from '../../context/NotificationContext';
@@ -21,11 +23,13 @@ const Dashboard = () => {
     fetchCategories,
     fetchStatuses,
     statuses,
-    setFilters
+    setFilters,
+    sortBy
   } = useTaskStore();
 
   const { showNotification } = useNotification();
   const { openCreateForm } = useTaskForm();
+  const { toggleFilter } = useFilter();
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
@@ -77,11 +81,30 @@ const Dashboard = () => {
   // Мемоизированное распределение задач по статусам
   const tasksByStatus = useMemo(() => {
     const result = {};
+    
+    // Сортируем задачи если выбран критерий сортировки
+    let sortedTasks = [...filteredTasks];
+    if (sortBy) {
+      sortedTasks.sort((a, b) => {
+        switch (sortBy) {
+          case 'name':
+            return a.title.localeCompare(b.title);
+          case 'priority':
+            const priorityOrder = { high: 3, medium: 2, low: 1 };
+            return priorityOrder[b.priority] - priorityOrder[a.priority];
+          case 'status':
+            return a.status.name.localeCompare(b.status.name);
+          default:
+            return 0;
+        }
+      });
+    }
+
     statuses.forEach(status => {
-      result[status.id] = filteredTasks.filter(task => task.status?.id === status.id);
+      result[status.id] = sortedTasks.filter(task => task.status?.id === status.id);
     });
     return result;
-  }, [filteredTasks, statuses]);
+  }, [filteredTasks, statuses, sortBy]);
 
   // Мемоизированные обработчики
   const handleCreateTask = useCallback(async (taskData) => {
@@ -170,7 +193,15 @@ const Dashboard = () => {
             >
               Создать
             </button>
-            <button className={styles.menuButton}>☰</button>
+            <div className={styles.menuContainer}>
+              <button 
+                className={styles.menuButton}
+                onClick={toggleFilter}
+              >
+                ☰
+              </button>
+              <Filter />
+            </div>
           </div>
         </div>
 
