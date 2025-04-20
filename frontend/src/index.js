@@ -6,17 +6,26 @@ import reportWebVitals from './reportWebVitals';
 import { TaskProvider } from './context/TaskContext';
 import { TaskFilterProvider } from './context/TaskFilterContext';
 import { TaskFormProvider } from './context/TaskFormContext';
+import { AuthProvider } from './context/AuthContext';
+import { PopupProvider } from './context/PopupContext';
+import { NotificationProvider } from './context/NotificationContext';
 
 const root = createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <TaskProvider>
-      <TaskFilterProvider>
-        <TaskFormProvider>
-          <App />
-        </TaskFormProvider>
-      </TaskFilterProvider>
-    </TaskProvider>
+    <AuthProvider>
+      <NotificationProvider>
+        <PopupProvider>
+          <TaskProvider>
+            <TaskFilterProvider>
+              <TaskFormProvider>
+                <App />
+              </TaskFormProvider>
+            </TaskFilterProvider>
+          </TaskProvider>
+        </PopupProvider>
+      </NotificationProvider>
+    </AuthProvider>
   </React.StrictMode>
 );
 

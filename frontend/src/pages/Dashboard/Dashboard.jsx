@@ -3,9 +3,10 @@ import { useTask } from '../../context/TaskContext';
 import { useTaskForm } from '../../context/TaskFormContext';
 import Header from '../../components/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
-import TaskFormWrapper from '../../components/Task/TaskForm/TaskFormWrapper';
+import TaskForm from '../../components/Task/TaskForm/TaskForm';
 import SearchBar from '../../components/UI/SearchBar';
 import styles from './Dashboard.module.css';
+import { useNotification } from '../../context/NotificationContext';
 
 const Dashboard = () => {
   const {
@@ -21,6 +22,8 @@ const Dashboard = () => {
     fetchStatuses,
     statuses
   } = useTask();
+
+  const { showNotification } = useNotification();
 
   const { openCreateForm } = useTaskForm();
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,32 +86,40 @@ const Dashboard = () => {
   const handleCreateTask = useCallback(async (taskData) => {
     try {
       await createTask(taskData);
+      showNotification('Задача успешно создана', 'success');
     } catch (err) {
       console.error('Ошибка при создании задачи:', err);
+      showNotification('Ошибка при создании задачи', 'error');
     }
   }, [createTask]);
 
   const handleUpdateTask = useCallback(async (taskId, taskData) => {
     try {
       await updateTask(taskId, taskData);
+      showNotification('Задача успешно обновлена', 'success');
     } catch (err) {
       console.error('Ошибка при обновлении задачи:', err);
+      showNotification('Ошибка при обновлении задачи', 'error');
     }
   }, [updateTask]);
 
   const handleDeleteTask = useCallback(async (taskId) => {
     try {
       await deleteTask(taskId);
+      showNotification('Задача успешно удалена', 'success');
     } catch (err) {
       console.error('Ошибка при удалении задачи:', err);
+      showNotification('Ошибка при удалении задачи', 'error');
     }
   }, [deleteTask]);
 
   const handleUpdateTaskStatus = useCallback(async (taskId, newStatus) => {
     try {
       await updateTaskStatus(taskId, newStatus);
+      showNotification('Статус задачи обновлен', 'success');
     } catch (err) {
       console.error('Ошибка при обновлении статуса задачи:', err);
+      showNotification('Ошибка при обновлении статуса задачи', 'error');
     }
   }, [updateTaskStatus]);
 
@@ -171,7 +182,7 @@ const Dashboard = () => {
           {renderColumns}
         </div>
 
-        <TaskFormWrapper onSubmit={handleCreateTask} />
+        <TaskForm onSubmit={handleCreateTask} />
       </main>
     </div>
   );
