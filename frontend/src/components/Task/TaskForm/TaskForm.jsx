@@ -2,26 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useTaskForm } from '../../../context/TaskFormContext';
 import { useTaskStore } from '../../../store/taskStore';
 import { useNotification } from '../../../context/NotificationContext';
+import * as TaskDTO from '../../../dto/TaskDTO';
 import styles from './TaskForm.module.css';
 
 const TaskForm = () => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
-  const { createTask, updateTask, categories, statuses, fetchCategories, fetchStatuses } = useTaskStore();
+  const { createTask, updateTask, categories, statuses } = useTaskStore();
   const { showNotification } = useNotification();
   
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    priority: 'medium',
-    category: null,
-    status: null,
-    deadline: {
-      start: '',
-      end: ''
-    },
-    attachments: []
-  });
-
+  const [formData, setFormData] = useState(TaskDTO.createEmptyForm());
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,36 +18,10 @@ const TaskForm = () => {
   useEffect(() => {
     if (isOpen) {
       if (mode === 'create') {
-        // Сбрасываем форму при создании новой задачи
-        const emptyFormData = {
-          title: '',
-          description: '',
-          priority: 'medium',
-          category: '',
-          status: '',
-          deadline: {
-            start: '',
-            end: ''
-          },
-          attachments: []
-        };
-        setFormData(emptyFormData);
+        setFormData(TaskDTO.createEmptyForm());
         setFiles([]);
       } else if (initialData) {
-        // Заполняем форму данными при редактировании
-        const newFormData = {
-          title: initialData.title || '',
-          description: initialData.description || '',
-          priority: initialData.priority || 'medium',
-          category: initialData.category?.id || '',
-          status: initialData.status?.id || '',
-          deadline: {
-            start: initialData.deadline?.start || '',
-            end: initialData.deadline?.end || ''
-          },
-          attachments: initialData.attachments || []
-        };
-        setFormData(newFormData);
+        setFormData(TaskDTO.toForm(initialData));
       }
     }
   }, [isOpen, mode, initialData]);
@@ -127,16 +90,13 @@ const TaskForm = () => {
     } catch (err) {
       console.error('Error saving task:', err);
       if (err.response?.data) {
-        // Обрабатываем ошибки валидации
         const errorData = err.response.data;
         if (typeof errorData === 'object') {
-          // Если ошибка в формате {field: [error1, error2]}
           const errorMessages = Object.entries(errorData)
             .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
             .join('\n');
           showNotification(errorMessages, 'error');
         } else {
-          // Если ошибка в формате строки
           showNotification(errorData, 'error');
         }
       } else {

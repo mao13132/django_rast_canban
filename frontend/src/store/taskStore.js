@@ -1,54 +1,6 @@
 import { create } from 'zustand';
-import { tasksAPI, categoriesAPI, statusesAPI, attachmentsAPI } from '../services/api';
-
-// Вспомогательные функции для определения статуса и категории
-const getStatusId = (status) => {
-  if (!status) return null;
-  if (typeof status === 'object' && status.id) return status.id;
-  if (typeof status === 'string') return status;
-  return null;
-};
-
-const getCategoryId = (category) => {
-  if (!category) return null;
-  if (typeof category === 'object' && category.id) return category.id;
-  if (typeof category === 'string') return category;
-  return null;
-};
-
-// Вспомогательная функция для преобразования данных задачи
-const transformTaskData = (taskData) => {
-  const newData = {
-    title: taskData.title,
-    description: taskData.description,
-    priority: taskData.priority,
-    status_id: getStatusId(taskData.status),
-    category_id: getCategoryId(taskData.category),
-    deadline_start: taskData.deadline?.start,
-    deadline_end: taskData.deadline?.end
-  };
-
-  return newData;
-};
-
-// Вспомогательная функция для создания FormData
-const createFormData = (data, files = []) => {
-  const formData = new FormData();
-
-  Object.entries(data).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      formData.append(key, value);
-    }
-  });
-
-  if (files && files.length > 0) {
-    files.forEach((file) => {
-      formData.append('attachments', file);
-    });
-  }
-
-  return formData;
-};
+import { tasksAPI, categoriesAPI, statusesAPI } from '../services/api';
+import * as TaskDTO from '../dto/TaskDTO';
 
 export const useTaskStore = create((set, get) => ({
   // Состояние
@@ -79,7 +31,8 @@ export const useTaskStore = create((set, get) => ({
     try {
       set({ loading: true });
       const response = await tasksAPI.getTasks();
-      set({ tasks: response.data, error: null });
+      const normalizedTasks = response.data.map(TaskDTO.fromBackend);
+      set({ tasks: normalizedTasks, error: null });
     } catch (err) {
       console.error('Ошибка при загрузке задач:', err);
       set({ error: 'Ошибка при загрузке задач', tasks: [] });
@@ -119,19 +72,15 @@ export const useTaskStore = create((set, get) => ({
   // Создание задачи
   createTask: async (taskData) => {
     try {
-      const transformedData = transformTaskData(taskData);
-      const formData = createFormData(transformedData, taskData.attachments);
+      const formData = TaskDTO.toBackend(taskData, taskData.attachments);
       const response = await tasksAPI.createTask(formData);
+      const normalizedTask = TaskDTO.fromBackend(response.data);
 
-      set((state) => {
-        const newTask = response.data;
-        if (state.tasks.some(task => task.id === newTask.id)) {
-          return state;
-        }
-        return { tasks: [...state.tasks, newTask] };
-      });
+      set((state) => ({
+        tasks: [...state.tasks, normalizedTask]
+      }));
 
-      return response.data;
+      return normalizedTask;
     } catch (err) {
       console.error('Ошибка при создании задачи:', err);
       throw err;
@@ -141,32 +90,17 @@ export const useTaskStore = create((set, get) => ({
   // Обновление задачи
   updateTask: async (taskId, taskData) => {
     try {
-      const transformedData = transformTaskData(taskData);
-      const formData = createFormData(transformedData, taskData.attachments);
+      const formData = TaskDTO.toBackend(taskData, taskData.attachments);
       const response = await tasksAPI.updateTask(taskId, formData);
+      const normalizedTask = TaskDTO.fromBackend(response);
 
       set((state) => ({
-        tasks: state.tasks.map(task => {
-          if (task.id === taskId) {
-            return {
-              ...task,
-              ...response,
-              status: {
-                id: getStatusId(response?.status || task?.status),
-                name: (response?.status || task?.status)?.name || ''
-              },
-              category: {
-                id: getCategoryId(response?.category || task?.category),
-                name: (response?.category || task?.category)?.name || ''
-              },
-              attachments: response?.attachments || task?.attachments || []
-            };
-          }
-          return task;
-        })
+        tasks: state.tasks.map(task => 
+          task.id === taskId ? normalizedTask : task
+        )
       }));
 
-      return response;
+      return normalizedTask;
     } catch (err) {
       console.error('Ошибка при обновлении задачи:', err);
       throw err;
@@ -189,13 +123,15 @@ export const useTaskStore = create((set, get) => ({
   // Обновление статуса задачи
   updateTaskStatus: async (taskId, newStatus) => {
     try {
-      const response = await tasksAPI.updateTaskStatus(taskId, newStatus);
-      set((state) => ({
-        tasks: state.tasks.map(task => 
-          task.id === taskId ? response.data : task
-        )
-      }));
-      return response.data;
+      const task = get().tasks.find(t => t.id === taskId);
+      if (!task) throw new Error('Задача не найдена');
+
+      const updatedTask = {
+        ...task,
+        status: newStatus
+      };
+
+      return await get().updateTask(taskId, updatedTask);
     } catch (err) {
       console.error('Ошибка при обновлении статуса задачи:', err);
       throw err;
