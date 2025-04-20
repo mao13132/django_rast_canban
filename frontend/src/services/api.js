@@ -83,14 +83,14 @@ export const usersAPI = {
 
 // API методы для работы с задачами
 export const tasksAPI = {
-  getTasks: () => 
-    axiosInstance.get('tasks/tasks/').then(response => ({
+  getTasks: (params = {}) => 
+    axiosInstance.get('tasks/tasks/', { params }).then(response => ({
       data: response.data.map(task => ({
         id: task.task_id,
         title: task.title,
         description: task.description,
-        status: task.status_id,
-        category: task.category_id,
+        status: task.status,
+        category: task.category,
         priority: task.priority,
         deadline: task.deadline,
         attachments: task.attachments || [],
@@ -102,8 +102,8 @@ export const tasksAPI = {
       id: response.data.task_id,
       title: response.data.title,
       description: response.data.description,
-      status: response.data.status_id,
-      category: response.data.category_id,
+      status: response.data.status,
+      category: response.data.category,
       priority: response.data.priority,
       deadline: response.data.deadline,
       attachments: response.data.attachments || [],

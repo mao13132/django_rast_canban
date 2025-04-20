@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTask } from '../../context/TaskContext';
 import { useTaskForm } from '../../context/TaskFormContext';
 import Header from '../../components/Header';
@@ -20,20 +20,30 @@ const Dashboard = () => {
   } = useTask();
 
   const { openCreateForm } = useTaskForm();
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  // Загрузка задач при монтировании компонента
+  // Дебаунс для поиска
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500);
 
-  // Фильтрация задач по статусу и поисковому запросу
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Загрузка задач при изменении поискового запроса
+  useEffect(() => {
+    const params = {};
+    if (debouncedSearch) {
+      params.search = debouncedSearch;
+    }
+    fetchTasks(params);
+  }, [debouncedSearch, fetchTasks]);
+
+  // Фильтрация задач по статусу
   const filterTasks = (status) => {
-    return tasks.filter(task => {
-      const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          task.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return task.status === status && matchesSearch;
-    });
+    return tasks.filter(task => task.status === status);
   };
 
   // Обработчики для задач

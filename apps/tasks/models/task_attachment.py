@@ -8,10 +8,10 @@ class TaskAttachment(models.Model):
     """
     attachment_id = models.AutoField(primary_key=True, verbose_name='ID вложения')
 
-    task_id = models.OneToOneField(
+    task_id = models.ForeignKey(
         Task,
         on_delete=models.CASCADE,
-        related_name='attachment',
+        related_name='attachments',
         verbose_name='Задача'
     )
     name = models.CharField(

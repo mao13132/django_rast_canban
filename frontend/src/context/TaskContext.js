@@ -54,7 +54,6 @@ export const TaskProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await tasksAPI.getTasks();
-      debugger;
       console.log('Получены задачи:', response.data); // Добавляем лог для отладки
       setTasks(response.data);
       setError(null);
