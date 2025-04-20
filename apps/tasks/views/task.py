@@ -23,14 +23,16 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         Возвращает только задачи текущего пользователя
         """
-        return Task.objects.filter(
-            user_id=self.request.user
+        tasks = Task.objects.filter(
+            user_id=self.request.user.id
         ).select_related(
             'status_id',
             'category_id'
         ).prefetch_related(
             'attachments'
         )
+
+        return tasks
 
     def perform_create(self, serializer):
         """
@@ -53,14 +55,14 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         task = self.get_object()
         new_status = request.data.get('status')
-        
+
         if not new_status:
             return Response(
                 {'error': 'Не указан новый статус'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-            
+
         task.status_id = new_status
         task.save()
-        
+
         return Response(self.get_serializer(task).data)

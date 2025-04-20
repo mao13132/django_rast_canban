@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from ..models import TaskCategory
 from ..serializers import TaskCategorySerializer
 
+
 class TaskCategoryViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с категориями задач.
@@ -13,10 +14,12 @@ class TaskCategoryViewSet(viewsets.ModelViewSet):
         """
         Возвращает только категории текущего пользователя
         """
-        return TaskCategory.objects.filter(user_id=self.request.user)
+        categories = TaskCategory.objects.filter(user_id=self.request.user.id)
+
+        return categories
 
     def perform_create(self, serializer):
         """
         При создании категории автоматически устанавливает текущего пользователя
         """
-        serializer.save(user_id=self.request.user) 
+        serializer.save(user_id=self.request.user)
