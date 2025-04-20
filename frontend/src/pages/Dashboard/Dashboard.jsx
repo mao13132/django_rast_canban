@@ -82,21 +82,33 @@ const Dashboard = () => {
   const tasksByStatus = useMemo(() => {
     const result = {};
     
-    // Сортируем задачи если выбран критерий сортировки
+    // Сортируем задачи если выбраны критерии сортировки
     let sortedTasks = [...filteredTasks];
-    if (sortBy) {
+    if (sortBy.length > 0) {
       sortedTasks.sort((a, b) => {
-        switch (sortBy) {
-          case 'name':
-            return a.title.localeCompare(b.title);
-          case 'priority':
-            const priorityOrder = { high: 3, medium: 2, low: 1 };
-            return priorityOrder[b.priority] - priorityOrder[a.priority];
-          case 'status':
-            return a.status.name.localeCompare(b.status.name);
-          default:
-            return 0;
+        // Проходим по всем выбранным критериям сортировки
+        for (const criterion of sortBy) {
+          let comparison = 0;
+          
+          switch (criterion) {
+            case 'name':
+              comparison = a.title.localeCompare(b.title);
+              break;
+            case 'priority':
+              const priorityOrder = { high: 3, medium: 2, low: 1 };
+              comparison = priorityOrder[b.priority] - priorityOrder[a.priority];
+              break;
+            case 'status':
+              comparison = a.status.name.localeCompare(b.status.name);
+              break;
+            default:
+              comparison = 0;
+          }
+          
+          // Если текущий критерий дал неравенство, возвращаем его результат
+          if (comparison !== 0) return comparison;
         }
+        return 0; // Если все критерии дали равенство
       });
     }
 

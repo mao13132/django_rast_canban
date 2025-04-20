@@ -12,7 +12,11 @@ const Filter = () => {
   const { sortBy, setSortBy } = useTaskStore();
 
   const handleSortChange = (field) => {
-    setSortBy(sortBy === field ? null : field);
+    setSortBy(field);
+  };
+
+  const isOptionActive = (optionId) => {
+    return sortBy.includes(optionId);
   };
 
   if (!isFilterOpen) return null;
@@ -33,7 +37,7 @@ const Filter = () => {
         {sortOptions.map(option => (
           <div
             key={option.id}
-            className={`${styles.filterOption} ${sortBy === option.id ? styles.active : ''}`}
+            className={`${styles.filterOption} ${isOptionActive(option.id) ? styles.active : ''}`}
             onClick={() => handleSortChange(option.id)}
           >
             <span className={styles.checkmark}></span>

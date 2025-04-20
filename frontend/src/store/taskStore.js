@@ -10,7 +10,7 @@ export const useTaskStore = create((set, get) => ({
   statuses: [],
   loading: false,
   error: null,
-  sortBy: null,
+  sortBy: [],
   filters: {
     status: '',
     priority: '',
@@ -25,7 +25,20 @@ export const useTaskStore = create((set, get) => ({
   // Действия
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
-  setSortBy: (field) => set({ sortBy: field }),
+  setSortBy: (field) => set((state) => {
+    const currentSortBy = state.sortBy;
+    const index = currentSortBy.indexOf(field);
+    
+    if (index === -1) {
+      // Добавляем новое поле сортировки
+      return { sortBy: [...currentSortBy, field] };
+    } else {
+      // Удаляем поле из сортировки
+      return { 
+        sortBy: currentSortBy.filter((item, i) => i !== index)
+      };
+    }
+  }),
   setFilters: (newFilters) => set((state) => ({
     filters: {
       ...state.filters,

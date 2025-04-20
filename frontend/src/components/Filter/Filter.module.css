@@ -13,7 +13,7 @@
 
 .filterContainer {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px); /* Отступ от кнопки меню */
   right: 0;
   background: white;
   border: 1px solid #ccc;
@@ -21,7 +21,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 200px;
   padding: 8px 0;
-  z-index: 1000;
+  z-index: 1050; /* Меньше чем у header */
 }
 
 .filterHeader {
