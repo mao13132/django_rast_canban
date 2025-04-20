@@ -27,21 +27,41 @@ const TaskForm = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (isOpen && initialData) {
-      setFormData({
-        title: initialData.title || '',
-        description: initialData.description || '',
-        priority: initialData.priority || 'medium',
-        category: initialData.category?.id || null,
-        status: initialData.status?.id || null,
-        deadline: {
-          start: initialData.deadline?.start || '',
-          end: initialData.deadline?.end || ''
-        },
-        attachments: initialData.attachments || []
-      });
+    if (isOpen) {
+      if (mode === 'create') {
+        // Сбрасываем форму при создании новой задачи
+        const emptyFormData = {
+          title: '',
+          description: '',
+          priority: 'medium',
+          category: '',
+          status: '',
+          deadline: {
+            start: '',
+            end: ''
+          },
+          attachments: []
+        };
+        setFormData(emptyFormData);
+        setFiles([]);
+      } else if (initialData) {
+        // Заполняем форму данными при редактировании
+        const newFormData = {
+          title: initialData.title || '',
+          description: initialData.description || '',
+          priority: initialData.priority || 'medium',
+          category: initialData.category?.id || '',
+          status: initialData.status?.id || '',
+          deadline: {
+            start: initialData.deadline?.start || '',
+            end: initialData.deadline?.end || ''
+          },
+          attachments: initialData.attachments || []
+        };
+        setFormData(newFormData);
+      }
     }
-  }, [isOpen, initialData]);
+  }, [isOpen, mode, initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
