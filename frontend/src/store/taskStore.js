@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 import { tasksAPI, categoriesAPI, statusesAPI } from '../services/api';
+import LocalStorageService from '../services/localStorageService';
 import * as TaskDTO from '../dto/TaskDTO';
+
+// Константы для ключей localStorage
+const STORAGE_KEYS = {
+  SORT_BY: 'kanban_sort_by',
+  FILTERS: 'kanban_filters'
+};
 
 export const useTaskStore = create((set, get) => ({
   // Состояние
@@ -10,8 +17,8 @@ export const useTaskStore = create((set, get) => ({
   statuses: [],
   loading: false,
   error: null,
-  sortBy: [],
-  filters: {
+  sortBy: LocalStorageService.get(STORAGE_KEYS.SORT_BY, []),
+  filters: LocalStorageService.get(STORAGE_KEYS.FILTERS, {
     status: '',
     priority: '',
     search: '',
@@ -20,35 +27,63 @@ export const useTaskStore = create((set, get) => ({
       start: '',
       end: ''
     }
-  },
+  }),
 
   // Действия
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
-  setSortBy: (field) => set((state) => {
-    const currentSortBy = state.sortBy;
+  
+  setSortBy: (field) => {
+    const currentSortBy = get().sortBy;
     const index = currentSortBy.indexOf(field);
     
+    let newSortBy;
     if (index === -1) {
       // Добавляем новое поле сортировки
-      return { sortBy: [...currentSortBy, field] };
+      newSortBy = [...currentSortBy, field];
     } else {
       // Удаляем поле из сортировки
-      return { 
-        sortBy: currentSortBy.filter((item, i) => i !== index)
-      };
+      newSortBy = currentSortBy.filter((item, i) => i !== index);
     }
-  }),
-  setFilters: (newFilters) => set((state) => ({
-    filters: {
-      ...state.filters,
+
+    // Сохраняем в localStorage и обновляем состояние
+    LocalStorageService.set(STORAGE_KEYS.SORT_BY, newSortBy);
+    set({ sortBy: newSortBy });
+  },
+
+  setFilters: (newFilters) => {
+    const updatedFilters = {
+      ...get().filters,
       ...newFilters,
       dateRange: {
-        ...state.filters.dateRange,
+        ...get().filters.dateRange,
         ...(newFilters.dateRange || {})
       }
-    }
-  })),
+    };
+
+    // Сохраняем в localStorage и обновляем состояние
+    LocalStorageService.set(STORAGE_KEYS.FILTERS, updatedFilters);
+    set({ filters: updatedFilters });
+  },
+
+  // Сброс фильтров
+  resetFilters: () => {
+    const defaultFilters = {
+      status: '',
+      priority: '',
+      search: '',
+      category: '',
+      dateRange: { start: '', end: '' }
+    };
+
+    // Очищаем в localStorage и сбрасываем состояние
+    LocalStorageService.set(STORAGE_KEYS.FILTERS, defaultFilters);
+    LocalStorageService.set(STORAGE_KEYS.SORT_BY, []);
+    set({ 
+      filters: defaultFilters,
+      sortBy: []
+    });
+  },
 
   // Получение всех задач
   fetchTasks: async () => {
@@ -187,16 +222,5 @@ export const useTaskStore = create((set, get) => ({
       
       return true;
     });
-  },
-
-  // Сброс фильтров
-  resetFilters: () => set({
-    filters: {
-      status: '',
-      priority: '',
-      search: '',
-      category: '',
-      dateRange: { start: '', end: '' }
-    }
-  })
+  }
 })); 
