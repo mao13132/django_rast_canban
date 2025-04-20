@@ -16,12 +16,32 @@ const Dashboard = () => {
     createTask,
     updateTask,
     deleteTask,
-    updateTaskStatus
+    updateTaskStatus,
+    fetchCategories,
+    fetchStatuses,
+    statuses
   } = useTask();
 
   const { openCreateForm } = useTaskForm();
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  // Загрузка начальных данных
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        await Promise.all([
+          fetchTasks(),
+          fetchCategories(),
+          fetchStatuses()
+        ]);
+      } catch (err) {
+        console.error('Ошибка при загрузке данных:', err);
+      }
+    };
+
+    loadInitialData();
+  }, []); // Убираем зависимости, так как функции мемоизированы
 
   // Дебаунс для поиска
   useEffect(() => {
@@ -43,7 +63,12 @@ const Dashboard = () => {
 
   // Фильтрация задач по статусу
   const filterTasks = (status) => {
-    return tasks.filter(task => task.status === status);
+    return tasks.filter(task => {
+      // Проверяем, что task и task.status существуют
+      if (!task || !task.status) return false;
+      // Сравниваем ID статуса
+      return task.status.id === status;
+    });
   };
 
   // Обработчики для задач
@@ -121,34 +146,16 @@ const Dashboard = () => {
         </div>
 
         <div className={styles.kanbanBoard}>
-          <TaskColumn
-            title="Сделать"
-            tasks={filterTasks('todo')}
-            onUpdateTask={handleUpdateTask}
-            onDeleteTask={handleDeleteTask}
-            onUpdateStatus={handleUpdateTaskStatus}
-          />
-          <TaskColumn
-            title="В работе"
-            tasks={filterTasks('in_progress')}
-            onUpdateTask={handleUpdateTask}
-            onDeleteTask={handleDeleteTask}
-            onUpdateStatus={handleUpdateTaskStatus}
-          />
-          <TaskColumn
-            title="Сделано"
-            tasks={filterTasks('done')}
-            onUpdateTask={handleUpdateTask}
-            onDeleteTask={handleDeleteTask}
-            onUpdateStatus={handleUpdateTaskStatus}
-          />
-          <TaskColumn
-            title="Завершено"
-            tasks={filterTasks('completed')}
-            onUpdateTask={handleUpdateTask}
-            onDeleteTask={handleDeleteTask}
-            onUpdateStatus={handleUpdateTaskStatus}
-          />
+          {statuses.map(status => (
+            <TaskColumn
+              key={status.id}
+              title={status.name}
+              tasks={filterTasks(status.id)}
+              onUpdateTask={handleUpdateTask}
+              onDeleteTask={handleDeleteTask}
+              onUpdateStatus={handleUpdateTaskStatus}
+            />
+          ))}
         </div>
 
         <TaskFormWrapper onSubmit={handleCreateTask} />

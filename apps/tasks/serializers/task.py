@@ -48,11 +48,20 @@ class TaskSerializer(serializers.ModelSerializer):
         """
         Проверяем, что статус принадлежит текущему пользователю
         """
+        if not value:
+            raise serializers.ValidationError("Статус обязателен")
+
         try:
-            status = TaskStatus.objects.get(status_id=value)
-            if status.user_id != self.context['request'].user.id:
+            # Если пришел объект, извлекаем ID
+            if hasattr(value, 'status_id'):
+                status_id = value.status_id
+            else:
+                status_id = value
+
+            status = TaskStatus.objects.get(status_id=status_id)
+            if status.user_id.id != self.context['request'].user.id:
                 raise serializers.ValidationError("Статус не принадлежит текущему пользователю")
-            return value
+            return status  # Возвращаем объект TaskStatus вместо ID
         except TaskStatus.DoesNotExist:
             raise serializers.ValidationError("Статус не найден")
 
@@ -60,13 +69,20 @@ class TaskSerializer(serializers.ModelSerializer):
         """
         Проверяем, что категория принадлежит текущему пользователю
         """
-        if value is None:
-            return value
+        if not value:
+            return None  # Категория не обязательна
+
         try:
-            category = TaskCategory.objects.get(category_id=value)
-            if category.user_id != self.context['request'].user.id:
+            # Если пришел объект, извлекаем ID
+            if hasattr(value, 'category_id'):
+                category_id = value.category_id
+            else:
+                category_id = value
+
+            category = TaskCategory.objects.get(category_id=category_id)
+            if category.user_id.id != self.context['request'].user.id:
                 raise serializers.ValidationError("Категория не принадлежит текущему пользователю")
-            return value
+            return category  # Возвращаем объект TaskCategory вместо ID
         except TaskCategory.DoesNotExist:
             raise serializers.ValidationError("Категория не найдена")
 
@@ -75,4 +91,15 @@ class TaskSerializer(serializers.ModelSerializer):
         Общая валидация данных
         """
         logger.info(f"Validating task data: {data}")
+        
+        # Проверяем обязательные поля
+        if not data.get('title'):
+            raise serializers.ValidationError({"title": "Название задачи обязательно"})
+            
+        if not data.get('status_id'):
+            raise serializers.ValidationError({"status_id": "Статус задачи обязателен"})
+            
+        if not data.get('priority'):
+            raise serializers.ValidationError({"priority": "Приоритет задачи обязателен"})
+            
         return data

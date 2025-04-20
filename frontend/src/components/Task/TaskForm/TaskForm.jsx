@@ -27,26 +27,21 @@ const TaskForm = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (isOpen) {
-      fetchCategories();
-      fetchStatuses();
-      
-      if (initialData) {
-        setFormData({
-          title: initialData.title || '',
-          description: initialData.description || '',
-          priority: initialData.priority || 'medium',
-          category: initialData.category || null,
-          status: initialData.status || null,
-          deadline: {
-            start: initialData.deadline?.start || '',
-            end: initialData.deadline?.end || ''
-          },
-          attachments: initialData.attachments || []
-        });
-      }
+    if (isOpen && initialData) {
+      setFormData({
+        title: initialData.title || '',
+        description: initialData.description || '',
+        priority: initialData.priority || 'medium',
+        category: initialData.category || null,
+        status: initialData.status || null,
+        deadline: {
+          start: initialData.deadline?.start || '',
+          end: initialData.deadline?.end || ''
+        },
+        attachments: initialData.attachments || []
+      });
     }
-  }, [isOpen, initialData, fetchCategories, fetchStatuses]);
+  }, [isOpen, initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -114,10 +109,18 @@ const TaskForm = () => {
     } catch (err) {
       console.error('Error saving task:', err);
       if (err.response?.data) {
-        const errorMessage = Object.entries(err.response.data)
-          .map(([field, errors]) => `${field}: ${errors.join(', ')}`)
-          .join('\n');
-        showNotification(errorMessage, 'error');
+        // Обрабатываем ошибки валидации
+        const errorData = err.response.data;
+        if (typeof errorData === 'object') {
+          // Если ошибка в формате {field: [error1, error2]}
+          const errorMessages = Object.entries(errorData)
+            .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
+            .join('\n');
+          showNotification(errorMessages, 'error');
+        } else {
+          // Если ошибка в формате строки
+          showNotification(errorData, 'error');
+        }
       } else {
         showNotification('Ошибка при сохранении задачи', 'error');
       }

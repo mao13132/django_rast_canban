@@ -9,15 +9,32 @@ export const useTask = () => useContext(TaskContext);
 
 // Вспомогательная функция для преобразования данных задачи
 const transformTaskData = (taskData) => {
-  return {
+  // Преобразуем статус и категорию в ID
+  const getStatusId = (status) => {
+    if (!status) return null;
+    if (typeof status === 'object' && status.id) return status.id;
+    if (typeof status === 'string') return status;
+    return null;
+  };
+
+  const getCategoryId = (category) => {
+    if (!category) return null;
+    if (typeof category === 'object' && category.id) return category.id;
+    if (typeof category === 'string') return category;
+    return null;
+  };
+
+  const newData = {
     title: taskData.title,
     description: taskData.description,
     priority: taskData.priority,
-    category_id: taskData.category?.id || taskData.category,
-    status_id: taskData.status?.id || taskData.status,
+    status_id: getStatusId(taskData.status),
+    category_id: getCategoryId(taskData.category),
     deadline_start: taskData.deadline?.start,
     deadline_end: taskData.deadline?.end
   };
+
+  return newData;
 };
 
 // Вспомогательная функция для создания FormData

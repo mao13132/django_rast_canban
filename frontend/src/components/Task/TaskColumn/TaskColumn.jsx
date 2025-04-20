@@ -1,38 +1,19 @@
 import React from 'react';
-import TaskCard from '../TaskCard';
-import TaskForm from '../TaskForm';
+import TaskItem from '../TaskItem';
 import styles from './TaskColumn.module.css';
 
-const TaskColumn = ({
-  title,
-  tasks,
-  onUpdateTask,
-  onDeleteTask,
-  showForm,
-  onCreateTask,
-  onCancelCreate
-}) => {
+const TaskColumn = ({ title, tasks, onUpdateTask, onDeleteTask, onUpdateStatus }) => {
   return (
     <div className={styles.column}>
-      <div className={styles.header}>
-        <h2>{title}</h2>
-        <span className={styles.counter}>{tasks.length} задач</span>
-      </div>
-      
-      <div className={styles.taskList}>
-        {showForm && (
-          <TaskForm
-            onSubmit={onCreateTask}
-            onCancel={onCancelCreate}
-          />
-        )}
-        
+      <h3 className={styles.title}>{title}</h3>
+      <div className={styles.tasks}>
         {tasks.map(task => (
-          <TaskCard
+          <TaskItem
             key={task.id}
             task={task}
             onUpdate={onUpdateTask}
             onDelete={onDeleteTask}
+            onUpdateStatus={onUpdateStatus}
           />
         ))}
       </div>
