@@ -1,71 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { tasksAPI } from '../../services/api';
+import React, { useEffect } from 'react';
+import { useTask } from '../../context/TaskContext';
+import { useTaskForm } from '../../context/TaskFormContext';
 import Header from '../../components/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
 import TaskFormWrapper from '../../components/Task/TaskForm/TaskFormWrapper';
 import SearchBar from '../../components/UI/SearchBar';
-import { useTaskForm } from '../../context/TaskFormContext';
 import styles from './Dashboard.module.css';
 
 const Dashboard = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const { openCreateForm } = useTaskForm();
+  const {
+    tasks,
+    loading,
+    error,
+    fetchTasks,
+    createTask,
+    updateTask,
+    deleteTask,
+    updateTaskStatus
+  } = useTask();
 
+  const { openCreateForm } = useTaskForm();
+  const [searchQuery, setSearchQuery] = React.useState('');
+
+  // Загрузка задач при монтировании компонента
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [fetchTasks]);
 
-  const fetchTasks = async () => {
-    try {
-      const response = await tasksAPI.getTasks();
-      setTasks(response.data);
-    } catch (err) {
-      setError('Ошибка при загрузке задач');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateTask = async (taskData) => {
-    try {
-      await tasksAPI.createTask(taskData);
-      fetchTasks();
-    } catch (err) {
-      setError('Ошибка при создании задачи');
-      console.error(err);
-    }
-  };
-
-  const handleUpdateTask = async (taskId, taskData) => {
-    try {
-      await tasksAPI.updateTask(taskId, taskData);
-      fetchTasks();
-    } catch (err) {
-      setError('Ошибка при обновлении задачи');
-      console.error(err);
-    }
-  };
-
-  const handleDeleteTask = async (taskId) => {
-    try {
-      await tasksAPI.deleteTask(taskId);
-      fetchTasks();
-    } catch (err) {
-      setError('Ошибка при удалении задачи');
-      console.error(err);
-    }
-  };
-
+  // Фильтрация задач по статусу и поисковому запросу
   const filterTasks = (status) => {
     return tasks.filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           task.description.toLowerCase().includes(searchQuery.toLowerCase());
       return task.status === status && matchesSearch;
     });
+  };
+
+  // Обработчики для задач
+  const handleCreateTask = async (taskData) => {
+    try {
+      await createTask(taskData);
+    } catch (err) {
+      console.error('Ошибка при создании задачи:', err);
+    }
+  };
+
+  const handleUpdateTask = async (taskId, taskData) => {
+    try {
+      await updateTask(taskId, taskData);
+    } catch (err) {
+      console.error('Ошибка при обновлении задачи:', err);
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+    } catch (err) {
+      console.error('Ошибка при удалении задачи:', err);
+    }
+  };
+
+  const handleUpdateTaskStatus = async (taskId, newStatus) => {
+    try {
+      await updateTaskStatus(taskId, newStatus);
+    } catch (err) {
+      console.error('Ошибка при обновлении статуса задачи:', err);
+    }
   };
 
   if (loading) return (
@@ -115,24 +116,28 @@ const Dashboard = () => {
             tasks={filterTasks('todo')}
             onUpdateTask={handleUpdateTask}
             onDeleteTask={handleDeleteTask}
+            onUpdateStatus={handleUpdateTaskStatus}
           />
           <TaskColumn
             title="В работе"
             tasks={filterTasks('in_progress')}
             onUpdateTask={handleUpdateTask}
             onDeleteTask={handleDeleteTask}
+            onUpdateStatus={handleUpdateTaskStatus}
           />
           <TaskColumn
             title="Сделано"
             tasks={filterTasks('done')}
             onUpdateTask={handleUpdateTask}
             onDeleteTask={handleDeleteTask}
+            onUpdateStatus={handleUpdateTaskStatus}
           />
           <TaskColumn
             title="Завершено"
             tasks={filterTasks('completed')}
             onUpdateTask={handleUpdateTask}
             onDeleteTask={handleDeleteTask}
+            onUpdateStatus={handleUpdateTaskStatus}
           />
         </div>
 

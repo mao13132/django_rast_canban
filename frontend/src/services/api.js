@@ -93,7 +93,8 @@ export const tasksAPI = {
         category: task.category_id,
         priority: task.priority,
         deadline: task.deadline,
-        attachments: task.attachments
+        attachments: task.attachments || [],
+        user_id: task.user_id
       }))
     })),
   getTask: (taskId) => 
@@ -105,7 +106,8 @@ export const tasksAPI = {
       category: response.data.category_id,
       priority: response.data.priority,
       deadline: response.data.deadline,
-      attachments: response.data.attachments
+      attachments: response.data.attachments || [],
+      user_id: response.data.user_id
     })),
   createTask: async (formData) => {
     try {

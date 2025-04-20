@@ -54,11 +54,14 @@ export const TaskProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await tasksAPI.getTasks();
+      debugger;
+      console.log('Получены задачи:', response.data); // Добавляем лог для отладки
       setTasks(response.data);
       setError(null);
     } catch (err) {
-      setError('Ошибка при загрузке задач');
       console.error('Ошибка при загрузке задач:', err);
+      setError('Ошибка при загрузке задач');
+      setTasks([]); // Сбрасываем список задач при ошибке
     } finally {
       setLoading(false);
     }
@@ -67,20 +70,30 @@ export const TaskProvider = ({ children }) => {
   // Получение категорий
   const fetchCategories = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await categoriesAPI.getCategories();
+      console.log('Получены категории:', response.data); // Добавляем лог для отладки
       setCategories(response.data);
     } catch (err) {
       console.error('Ошибка при загрузке категорий:', err);
+      setCategories([]); // Сбрасываем список категорий при ошибке
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   // Получение статусов
   const fetchStatuses = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await statusesAPI.getStatuses();
+      console.log('Получены статусы:', response.data); // Добавляем лог для отладки
       setStatuses(response.data);
     } catch (err) {
       console.error('Ошибка при загрузке статусов:', err);
+      setStatuses([]); // Сбрасываем список статусов при ошибке
+    } finally {
+      setLoading(false);
     }
   }, []);
 
