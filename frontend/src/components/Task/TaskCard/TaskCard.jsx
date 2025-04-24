@@ -45,6 +45,19 @@ const TaskCard = ({ task }) => {
     return date.toLocaleDateString('ru-RU', options);
   };
 
+  const getPriorityText = (priority) => {
+    switch (priority) {
+      case 'high':
+        return 'Высокий';
+      case 'medium':
+        return 'Средний';
+      case 'low':
+        return 'Низкий';
+      default:
+        return priority;
+    }
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.header}>
@@ -61,7 +74,7 @@ const TaskCard = ({ task }) => {
       <div className={styles.details}>
         <div className={styles.priority}>
           <span className={`${styles.priorityIndicator} ${getPriorityColor(task.priority)}`} />
-          <span>Приоритет: {task.priority}</span>
+          <span>Приоритет: {getPriorityText(task.priority)}</span>
         </div>
 
         <div className={styles.category}>
@@ -69,10 +82,10 @@ const TaskCard = ({ task }) => {
           <span>{task.category?.name || 'Без категории'}</span>
         </div>
 
-        {task.due_date && (
+        {task.deadline && (
           <div className={styles.deadline}>
             <span className={styles.deadlineIcon}>🕒</span>
-            <span>{formatDate(task.due_date)}</span>
+            <span>с {formatDate(task.deadline.start)} по {formatDate(task.deadline.end)}</span>
           </div>
         )}
       </div>
