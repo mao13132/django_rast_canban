@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { TaskProvider } from './context/TaskContext.js';
 import { TaskFormProvider } from './context/TaskFormContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { NotesProvider } from './context/NotesContext';
 import AppRoutes from './routes/AppRoutes';
 import './App.css';
 
@@ -14,7 +15,9 @@ function App() {
         <NotificationProvider>
           <TaskProvider>
             <TaskFormProvider>
-              <AppRoutes />
+              <NotesProvider>
+                <AppRoutes />
+              </NotesProvider>
             </TaskFormProvider>
           </TaskProvider>
         </NotificationProvider>

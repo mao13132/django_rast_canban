@@ -1,0 +1,88 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.titleContainer {
+  width: 100%;
+}
+
+.titleInput {
+  width: 100%;
+  padding: 12px;
+  font-size: 24px;
+  font-weight: 600;
+  border: none;
+  border-bottom: 2px solid #E5E7EB;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.titleInput:focus {
+  border-color: #3B82F6;
+}
+
+.contentContainer {
+  width: 100%;
+}
+
+.contentInput {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+  border: 1px solid #E5E7EB;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 200px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.contentInput:focus {
+  border-color: #3B82F6;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.saveButton {
+  padding: 8px 16px;
+  background: #3B82F6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.saveButton:hover {
+  background: #2563EB;
+}
+
+.cancelButton {
+  padding: 8px 16px;
+  background: #F3F4F6;
+  color: #4B5563;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+  background: #E5E7EB;
+} 
