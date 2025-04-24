@@ -221,7 +221,7 @@ const Dashboard = () => {
 
         <div className={styles.subHeader}>
           <span onClick={() => navigate('/notes')} className={styles.link}>Заметки</span>
-          <span>Архив заметок</span>
+          <span onClick={() => navigate('/archive')} className={styles.link}>Архив заметок</span>
         </div>
 
         <div className={styles.kanbanBoard}>
