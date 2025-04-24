@@ -1,0 +1,43 @@
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.saveButton {
+  font-family: 'Karma', serif;
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 1.453;
+  color: #000000;
+  background: #9EA7F5;
+  border: 1px solid rgba(0, 0, 0, 0.53);
+  border-radius: 15px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.saveButton:hover {
+  background: #8A93E0;
+}
+
+.cancelButton {
+  font-family: 'Karma', serif;
+  font-weight: 400;
+  font-size: 54px;
+  line-height: 1.453;
+  color: #000000;
+  background: #F5F5F5;
+  border: 2px solid rgba(0, 0, 0, 0.53);
+  border-radius: 15px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.cancelButton:hover {
+  background: #E5E5E5;
+} 

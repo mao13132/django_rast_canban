@@ -1,0 +1,19 @@
+.container {
+  background: #F2F2F2;
+  min-height: 100vh;
+}
+
+.main {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 1.445;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0 0 20px 0;
+} 

@@ -1,0 +1,57 @@
+.fileItem {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  gap: 20px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.82);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.fileItem:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.name,
+.type,
+.size {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  font-size: 24px;
+}
+
+.text {
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 48px;
+  line-height: 1.445;
+  color: #000000;
+}
+
+.favoriteButton,
+.restoreButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.2s ease;
+}
+
+.favoriteButton:hover,
+.restoreButton:hover {
+  transform: scale(1.1);
+}
+
+.favorite {
+  color: #FFD700;
+}
+
+.restoreButton {
+  color: #4CAF50;
+} 

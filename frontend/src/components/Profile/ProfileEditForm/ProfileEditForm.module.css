@@ -1,0 +1,52 @@
+.form {
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.title {
+  font-family: 'Karma', serif;
+  font-weight: 300;
+  font-size: 50px;
+  line-height: 1.419;
+  color: rgba(0, 0, 0, 0.53);
+  margin: 0 0 20px 0;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-family: 'Karma', serif;
+  font-weight: 300;
+  font-size: 40px;
+  line-height: 1.419;
+  color: #000000;
+}
+
+.input {
+  font-family: 'Karma', serif;
+  font-weight: 300;
+  font-size: 40px;
+  line-height: 1.419;
+  color: #000000;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid #000000;
+  border-radius: 8px;
+  padding: 10px;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #9EA7F5;
+} 
