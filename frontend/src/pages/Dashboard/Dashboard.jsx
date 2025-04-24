@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTaskForm } from '../../context/TaskFormContext';
 import { useFilter } from '../../context/FilterContext';
 import { useTaskStore } from '../../store/taskStore';
@@ -11,6 +12,7 @@ import styles from './Dashboard.module.css';
 import { useNotification } from '../../context/NotificationContext';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const {
     tasks,
     loading,
@@ -218,7 +220,7 @@ const Dashboard = () => {
         </div>
 
         <div className={styles.subHeader}>
-          <span>Заметки</span>
+          <span onClick={() => navigate('/notes')} className={styles.link}>Заметки</span>
           <span>Архив заметок</span>
         </div>
 

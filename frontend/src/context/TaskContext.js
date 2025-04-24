@@ -10,7 +10,7 @@ const transformTaskData = (taskData) => {
   };
 };
 
-export const TaskContext = createContext();
+const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);

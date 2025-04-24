@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { TaskProvider } from './context/TaskContext';
+import { TaskProvider } from './context/TaskContext.js';
 import { TaskFormProvider } from './context/TaskFormContext';
 import { NotificationProvider } from './context/NotificationContext';
 import AppRoutes from './routes/AppRoutes';
@@ -12,11 +12,11 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <NotificationProvider>
-            <TaskProvider>
-              <TaskFormProvider>
-                <AppRoutes />
-              </TaskFormProvider>
-            </TaskProvider>
+          <TaskProvider>
+            <TaskFormProvider>
+              <AppRoutes />
+            </TaskFormProvider>
+          </TaskProvider>
         </NotificationProvider>
       </AuthProvider>
     </BrowserRouter>
