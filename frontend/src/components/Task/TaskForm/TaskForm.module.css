@@ -1,18 +1,20 @@
 .overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 400px;
-  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 232px;
+  left: 720px;
+  width: 720px;
+  background: #F5F5F5;
   display: flex;
   justify-content: flex-end;
-  z-index: 1000;
+  z-index: 9999;
+  border: 2px solid #000000;
+  min-height: calc(100vh - 232px);
 }
 
 .form {
+  overflow: hidden;
   width: 100%;
-  background: white;
+  background: #F5F5F5;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -26,19 +28,24 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  border-bottom: 1px solid #000000;
+  padding-bottom: 10px;
 }
 
 .header h2 {
   margin: 0;
-  font-size: 1.25rem;
-  color: #333;
+  font-family: 'Jost', sans-serif;
+  font-size: 48px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.82);
+  line-height: 1.445;
 }
 
 .closeButton {
   background: none;
   border: none;
   font-size: 24px;
-  color: #666;
+  color: #000000;
   cursor: pointer;
   padding: 0;
 }
@@ -64,35 +71,44 @@
 .select,
 .textarea {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  background: #f5f5f5;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  font-family: 'Jost', sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  background: #D9D9D9;
+  color: rgba(0, 0, 0, 0.46);
+  line-height: 1.445;
 }
 
 .input:focus,
 .select:focus,
 .textarea:focus {
   outline: none;
-  border-color: #2563eb;
-  background: white;
+  background: #D9D9D9;
 }
 
 .textarea {
-  min-height: 100px;
+  min-height: 150px;
   resize: vertical;
+  border-radius: 15px;
 }
 
 .fileUpload {
-  border: 2px dashed #ddd;
-  padding: 20px;
+  border: none;
+  padding: 12px;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 20px;
   cursor: pointer;
-  color: #666;
+  color: rgba(0, 0, 0, 0.46);
   position: relative;
   overflow: hidden;
+  background: #D9D9D9;
+  font-family: 'Jost', sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.445;
 }
 
 .fileUpload:hover {
@@ -119,14 +135,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px;
-  background: #f3f4f6;
-  border-radius: 4px;
+  background: #D9D9D9;
+  border-radius: 20px;
   margin-bottom: 8px;
 }
 
 .fileItem span {
-  font-size: 14px;
-  color: #4b5563;
+  font-family: 'Jost', sans-serif;
+  font-size: 40px;
+  color: rgba(0, 0, 0, 0.46);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -135,10 +152,10 @@
 .removeFile {
   background: none;
   border: none;
-  color: #ef4444;
+  color: #000000;
   cursor: pointer;
   padding: 0 8px;
-  font-size: 18px;
+  font-size: 24px;
 }
 
 .removeFile:hover {
@@ -154,17 +171,24 @@
 .deadlineGroup label {
   display: block;
   margin-bottom: 4px;
-  color: #666;
-  font-size: 14px;
+  color: rgba(0, 0, 0, 0.46);
+  font-family: 'Jost', sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.445;
 }
 
 .dateInput {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  background: #f5f5f5;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  font-family: 'Jost', sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  background: #D9D9D9;
+  color: #000000;
+  line-height: 1.445;
 }
 
 .actions {
@@ -176,39 +200,35 @@
 .submitButton,
 .cancelButton {
   flex: 1;
-  padding: 10px;
-  border: none;
+  padding: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.46);
   border-radius: 4px;
-  font-weight: 500;
+  font-family: 'Jost', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.445;
   cursor: pointer;
   transition: all 0.2s;
-}
-
-.submitButton {
-  background: #2563eb;
-  color: white;
+  background: #F5F5F5;
+  color: #000000;
 }
 
 .submitButton:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: #D9D9D9;
 }
 
 .submitButton:disabled {
-  background: #93c5fd;
+  background: #F5F5F5;
+  color: rgba(0, 0, 0, 0.46);
   cursor: not-allowed;
 }
 
-.cancelButton {
-  background: #f3f4f6;
-  color: #4b5563;
-}
-
 .cancelButton:hover:not(:disabled) {
-  background: #e5e7eb;
+  background: #D9D9D9;
 }
 
 .cancelButton:disabled {
-  background: #e5e7eb;
-  color: #9ca3af;
+  background: #F5F5F5;
+  color: rgba(0, 0, 0, 0.46);
   cursor: not-allowed;
 } 

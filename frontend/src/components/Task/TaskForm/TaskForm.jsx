@@ -5,7 +5,7 @@ import { useNotification } from '../../../context/NotificationContext';
 import * as TaskDTO from '../../../dto/TaskDTO';
 import styles from './TaskForm.module.css';
 
-const TaskForm = () => {
+const TaskForm = ({ className }) => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
   const { createTask, updateTask, categories, statuses } = useTaskStore();
   const { showNotification } = useNotification();
@@ -59,7 +59,6 @@ const TaskForm = () => {
     setLoading(true);
     setError(null);
 
-    // Проверяем обязательные поля
     if (!formData.title) {
       showNotification('Название задачи обязательно', 'error');
       setLoading(false);
@@ -110,7 +109,7 @@ const TaskForm = () => {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay}>
+    <div className={`${styles.overlay} ${className || ''}`}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.header}>
           <h2>{mode === 'create' ? 'Новая задача' : 'Редактировать задачу'}</h2>
@@ -248,7 +247,7 @@ const TaskForm = () => {
             Отмена
           </button>
           <button type="submit" className={styles.submitButton} disabled={loading}>
-            {loading ? 'Сохранение...' : mode === 'create' ? 'Создать' : 'Сохранить'}
+            Сохранить
           </button>
         </div>
       </form>

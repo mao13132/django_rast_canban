@@ -226,7 +226,7 @@ const Dashboard = () => {
           {renderColumns}
         </div>
 
-        <TaskForm onSubmit={handleCreateTask} />
+        <TaskForm />
       </main>
     </div>
   );
