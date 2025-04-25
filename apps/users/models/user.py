@@ -62,6 +62,14 @@ class User(AbstractUser):
         help_text='Фамилия пользователя'
     )
 
+    avatar = models.ImageField(
+        'аватар',
+        upload_to='avatars/',
+        null=True,
+        blank=True,
+        help_text='Аватар пользователя'
+    )
+
     # Убираем username из обязательных полей
     username = None
 
