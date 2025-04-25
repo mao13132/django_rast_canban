@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTaskForm } from '../../context/TaskFormContext';
 import { useFilter } from '../../context/FilterContext';
 import { useTaskStore } from '../../store/taskStore';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
-import TaskForm from '../../components/Task/TaskForm/TaskForm';
+import TaskForm from '../../components/Task/TaskForm';
 import Filter from '../../components/Filter/Filter';
 import SearchBar from '../../components/UI/SearchBar';
 import styles from './Dashboard.module.css';
@@ -34,6 +34,7 @@ const Dashboard = () => {
   const { toggleFilter } = useFilter();
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [showFilter, setShowFilter] = useState(false);
 
   // Загрузка начальных данных
   useEffect(() => {
@@ -66,16 +67,16 @@ const Dashboard = () => {
   const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
       if (!task || !task.status) return false;
-      
+
       // Фильтрация по поисковому запросу
       if (debouncedSearch) {
         const searchLower = debouncedSearch.toLowerCase();
-        const matchesSearch = 
+        const matchesSearch =
           task.title.toLowerCase().includes(searchLower) ||
           task.description?.toLowerCase().includes(searchLower);
         if (!matchesSearch) return false;
       }
-      
+
       return true;
     });
   }, [tasks, debouncedSearch]);
@@ -83,7 +84,7 @@ const Dashboard = () => {
   // Мемоизированное распределение задач по статусам
   const tasksByStatus = useMemo(() => {
     const result = {};
-    
+
     // Сортируем задачи если выбраны критерии сортировки
     let sortedTasks = [...filteredTasks];
     if (sortBy.length > 0) {
@@ -91,7 +92,7 @@ const Dashboard = () => {
         // Проходим по всем выбранным критериям сортировки
         for (const criterion of sortBy) {
           let comparison = 0;
-          
+
           switch (criterion) {
             case 'name':
               comparison = a.title.localeCompare(b.title);
@@ -106,7 +107,7 @@ const Dashboard = () => {
             default:
               comparison = 0;
           }
-          
+
           // Если текущий критерий дал неравенство, возвращаем его результат
           if (comparison !== 0) return comparison;
         }
@@ -181,7 +182,7 @@ const Dashboard = () => {
       <div className={styles.loading}>Загрузка...</div>
     </>
   );
-  
+
   if (error) return (
     <>
       <Header />
@@ -190,39 +191,46 @@ const Dashboard = () => {
   );
 
   return (
-    <div className={styles.dashboardContainer}>
-      <Header />
-      <main className={styles.dashboard}>
-        <div className={styles.header}>
-          <h1>Доска задач</h1>
-          <div className={styles.actions}>
-            <SearchBar 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Поиск задач"
-            />
-            <button 
-              className={styles.createButton}
-              onClick={openCreateForm}
-            >
-              Создать
-            </button>
-            <div className={styles.menuContainer}>
-              <button 
-                className={styles.menuButton}
-                onClick={toggleFilter}
-              >
-                ☰
-              </button>
-              <Filter />
-            </div>
-          </div>
-        </div>
+    <div className={styles.container}>
+      <main className={styles.main}>
+        <Header
+          navigationLinks={[
+            { label: 'Заметки', path: '/notes' },
+            { label: 'Архив заметок', path: '/archive' },
+            { label: 'Файлы', path: '/files' }
+          ]}
+
+        />
 
         <div className={styles.subHeader}>
           <span onClick={() => navigate('/notes')} className={styles.link}>Заметки</span>
           <span onClick={() => navigate('/archive')} className={styles.link}>Архив заметок</span>
           <span onClick={() => navigate('/files')} className={styles.link}>Хранилище</span>
+        </div>
+
+        <div>
+          <SearchBar
+            value=""
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder='Поиск задач'
+          />
+          <>
+              <button
+                className={styles.createButton}
+                onClick={openCreateForm}
+              >
+                Создать
+              </button>
+              <div className={styles.menuContainer}>
+                <button
+                  className={styles.menuButton}
+                  onClick={toggleFilter}
+                >
+                  ☰
+                </button>
+                <Filter />
+              </div>
+            </>
         </div>
 
         <div className={styles.kanbanBoard}>

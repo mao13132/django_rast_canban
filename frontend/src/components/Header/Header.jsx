@@ -1,48 +1,41 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
+import SearchBar from '../UI/SearchBar';
 
 /**
  * Компонент Header - главная навигационная панель приложения
  * @returns {JSX.Element} Компонент Header
  */
-const Header = () => {
+const Header = ({
+  navigationLinks = [],
+}) => {
+  const navigate = useNavigate();
+
   return (
-    <header className={styles.header}>
-      <div className={styles.container}>
-        <div className={styles.left}>
-          <Link to="/" className={styles.logo}>
-            Kanban Board
-          </Link>
-          <nav className={styles.nav}>
-            <Link to="/dashboard" className={styles.navLink}>
-              Доска
-            </Link>
-            <Link to="/tasks" className={styles.navLink}>
-              Задачи
-            </Link>
-            <Link to="/analytics" className={styles.navLink}>
-              Аналитика
-            </Link>
-          </nav>
+    <div className={styles.header}>
+      <div className={styles.contentWrapper}>
+        <div className={styles.leftHeder}>
+
+          <img src="/assets/image_68d8cb1c.png" alt="Логотип" className={styles.logoImage} />
+
+          <div className={styles.navigation}>
+            {navigationLinks.map((link, index) => (
+              <div className={styles.navigationItem} key={index} onClick={() => navigate(link.path)}>{link.label}</div>
+            ))}
+          </div>
+
         </div>
-        
-        <div className={styles.right}>
-          <button className={styles.notificationBtn}>
-            <span className={styles.notificationDot} />
-            <i className="fas fa-bell" />
-          </button>
+        <div className={styles.rightHeder}>
           <div className={styles.profile}>
-            <img 
-              src="https://via.placeholder.com/32" 
-              alt="Профиль"
-              className={styles.avatar}
-            />
-            <span className={styles.username}>Пользователь</span>
+            <span>Мой профиль</span>
           </div>
         </div>
+
+
       </div>
-    </header>
+
+    </div>
   );
 };
 
