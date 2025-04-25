@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
-import SearchBar from '../UI/SearchBar';
-
+import { useProfile } from '../../context/ProfileContext';
 /**
  * Компонент Header - главная навигационная панель приложения
  * @returns {JSX.Element} Компонент Header
@@ -11,6 +10,7 @@ const Header = ({
   navigationLinks = [],
 }) => {
   const navigate = useNavigate();
+  const { toggleProfile } = useProfile();
 
   return (
     <div className={styles.header}>
@@ -28,7 +28,7 @@ const Header = ({
         </div>
         <div className={styles.rightHeder}>
           <div className={styles.profile}>
-            <span>Мой профиль</span>
+            <span onClick={toggleProfile}>Мой профиль</span>
           </div>
         </div>
 
