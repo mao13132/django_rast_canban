@@ -1,5 +1,5 @@
 import React from 'react';
-import Navigation from '../../components/Header/Navigation';
+import Navigation from '../../components/NavigationHome';
 import heroImage from '../../assets/images/hero-bg.jpeg';
 import styles from './Home.module.css';
 

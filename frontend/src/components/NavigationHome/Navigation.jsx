@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
-import { usePopup } from '../../../context/PopupContext';
-import LoginForm from '../../Auth/LoginForm';
+import { useAuth } from '../../context/AuthContext';
+import { usePopup } from '../../context/PopupContext';
+import LoginForm from '../Auth/LoginForm';
 import styles from './Navigation.module.css';
 
 const Navigation = () => {
