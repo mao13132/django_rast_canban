@@ -10,26 +10,23 @@ import TrashFiles from '../pages/TrashFiles/TrashFiles';
 import Profile from '../pages/Profile/Profile';
 import ProfileEdit from '../pages/ProfileEdit/ProfileEdit';
 import { useAuth } from '../context/AuthContext';
+import Home from '../pages/Home/Home';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/notes" element={<Notes />} />
-      <Route path="/archive" element={<ArchiveNotes />} />
-      <Route path="/notes/:id/edit" element={<EditNote />} />
-      <Route path="/files" element={<Files />} />
-      <Route path="/files/favorite" element={<FavoriteFiles />} />
-      <Route path="/files/trash" element={<TrashFiles />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/profile/edit" element={<ProfileEdit />} />
+      <Route path="/" element={isAuthenticated ? <Dashboard /> : <Home />} />
+      <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />} />
+      <Route path="/notes" element={isAuthenticated ? <Notes /> : <Navigate to="/" replace />} />
+      <Route path="/archive" element={isAuthenticated ? <ArchiveNotes /> : <Navigate to="/" replace />} />
+      <Route path="/notes/:id/edit" element={isAuthenticated ? <EditNote /> : <Navigate to="/" replace />} />
+      <Route path="/files" element={isAuthenticated ? <Files /> : <Navigate to="/" replace />} />
+      <Route path="/files/favorite" element={isAuthenticated ? <FavoriteFiles /> : <Navigate to="/" replace />} />
+      <Route path="/files/trash" element={isAuthenticated ? <TrashFiles /> : <Navigate to="/" replace />} />
+      <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/" replace />} />
+      <Route path="/profile/edit" element={isAuthenticated ? <ProfileEdit /> : <Navigate to="/" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

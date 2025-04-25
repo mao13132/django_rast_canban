@@ -1,21 +1,9 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React from 'react';
 import Navigation from '../../components/Header/Navigation';
 import heroImage from '../../assets/images/hero-bg.jpeg';
 import styles from './Home.module.css';
 
 const Home = () => {
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
-  // Редирект на дашборд, если пользователь авторизован
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, navigate]);
-
   return (
     <div className={styles.homePage}>
       <Navigation />
@@ -29,7 +17,6 @@ const Home = () => {
           />
         </div>
       </div>
-
 
       <div className={styles.content}>
         <h1 className={styles.heading}>Ваш личный помощник в учебе!</h1>
