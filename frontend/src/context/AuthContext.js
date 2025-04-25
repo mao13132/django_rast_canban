@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { authAPI } from '../services/api';
+import UserDTO from '../dto/UserDTO';
 
 // Создаем контекст аутентификации
 export const AuthContext = createContext(null);
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await authAPI.getUser();
-          setUser(response.data);
+          setUser(UserDTO.fromAPI(response.data));
         } catch (err) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }) => {
       
       // Получаем данные пользователя
       const userResponse = await authAPI.getUser();
-      setUser(userResponse.data);
+      setUser(UserDTO.fromAPI(userResponse.data));
       
       return true;
     } catch (err) {
@@ -115,7 +116,6 @@ export const AuthProvider = ({ children }) => {
         // После успешной регистрации входим с новыми данными
         return await login(userData.email, userData.password);
       } catch (registerError) {
-        
         const errorMessages = registerError.response?.data;
         
         if (errorMessages) {

@@ -1,103 +1,164 @@
 .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 80px; /* Учитываем высоту header */
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding-top: 150px;
+    /* Учитываем высоту header */
+    padding-right: 40px;
+    z-index: 1000;
 }
 
 .container {
-  background-color: #A0A9F3;
-  border-radius: 15px;
-  padding: 20px;
-  width: 400px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.title {
-  font-family: 'Karma', sans-serif;
-  font-weight: 300;
-  font-size: 36px;
-  margin: 0;
+    background-color: #A0A9F3;
+    border-radius: 15px;
+    padding: 40px;
+    min-width: 683px;
+    height: 326px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .closeButton {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 5px;
+    position: absolute;
+    top: 10px;
+    right: 32px;
+    height: 58px;
+    width: 58px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+.closeButton span {
+    font-size: 48px;
+    line-height: 1;
+    display: block;
+    color: #000;
+    transform: translateY(-2px);
 }
 
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
+
+
+.title {
+    font-family: 'Karma', sans-serif;
+    font-weight: 300;
+    font-size: 36px;
+    margin: 0;
+    cursor: pointer;
 }
 
-.avatarPlaceholder {
-  font-size: 40px;
-  color: #A0A9F3;
+
+.containerTop {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
 }
+
+.avatarWrapper {
+    position: relative;
+    font-size: 40px;
+    color: #A0A9F3;
+    width: 108px;
+    height: 105px;
+}
+
+.logoImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 
 .info {
-  text-align: center;
+    text-align: center;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 40px;
+    color: #000;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .name {
-  font-family: 'Jost', sans-serif;
-  font-weight: 400;
-  font-size: 40px;
-  margin: 0;
-  color: #000;
 }
 
 .email {
-  font-family: 'Jost', sans-serif;
-  font-weight: 400;
-  font-size: 36px;
-  color: rgba(0, 0, 0, 0.82);
-  margin: 10px 0;
+}
+
+.containerBottom {
 }
 
 .logoutButton {
-  font-family: 'Karma', sans-serif;
-  font-weight: 300;
-  font-size: 36px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #000;
-  padding: 10px 20px;
-  transition: opacity 0.3s;
+    font-family: 'Karma', sans-serif;
+    font-weight: 300;
+    font-size: 36px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #000;
+    padding: 10px 20px;
+    transition: opacity 0.3s;
 }
 
 .logoutButton:hover {
-  opacity: 0.7;
-} 
+    opacity: 0.7;
+}
+
+.containerBottom {
+    display: flex;
+    flex-direction: column;
+}
+
+.myProfile {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profileImage {
+}
+.title {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    font-size: 36px;
+}
+
+.profileImage {
+    width: 67px;
+    height: 60px;
+}
+
+.logoutImage {
+    width: 59px;
+    height: 45px;
+}
+
+.logout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: #000;
+    margin: 20px 0;
+}

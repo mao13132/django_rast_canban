@@ -178,6 +178,8 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {
         'user_create': 'apps.users.serializers.user.UserCreateSerializer',
+        'user': 'apps.users.serializers.user.UserSerializer',
+        'current_user': 'apps.users.serializers.user.UserSerializer',
     },
     'PERMISSIONS': {
         'user_create': ['rest_framework.permissions.AllowAny'],
