@@ -40,6 +40,7 @@
 .profile {
   cursor: pointer;
   transition: color 0.3s ease;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.25);
 }
 
 .navigationItem {
