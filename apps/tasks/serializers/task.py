@@ -30,7 +30,10 @@ class TaskSerializer(serializers.ModelSerializer):
         if hasattr(obj, 'status_id') and obj.status_id:
             return {
                 'id': obj.status_id.status_id,
-                'name': obj.status_id.name
+                'name': obj.status_id.name,
+                'order': obj.status_id.order,
+                'color': obj.status_id.color,
+                'user_id': obj.status_id.user_id.id
             }
         return None
 

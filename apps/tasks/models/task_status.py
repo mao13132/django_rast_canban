@@ -18,11 +18,20 @@ class TaskStatus(models.Model):
         related_name='task_statuses',
         help_text='Владелец статуса'
     )
+    order = models.IntegerField(
+        default=0,
+        help_text='Порядок отображения статуса'
+    )
+    color = models.CharField(
+        max_length=7,
+        default='#A0A9F3',
+        help_text='Цвет статуса в формате HEX'
+    )
 
     class Meta:
         verbose_name = 'Статус задачи'
         verbose_name_plural = 'Статусы задач'
-        ordering = ['name']
+        ordering = ['order', 'name']
         unique_together = ['name', 'user_id']
 
     def __str__(self):

@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { TaskProvider } from './context/TaskContext.js';
 import { TaskFormProvider } from './context/TaskFormContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { NotesProvider } from './context/NotesContext';
@@ -18,7 +17,6 @@ function App() {
       <AuthProvider>
         <PopupProvider>
           <NotificationProvider>
-            <TaskProvider>
               <TaskFormProvider>
                 <NotesProvider>
                   <ProfileProvider>
@@ -28,7 +26,6 @@ function App() {
                   </ProfileProvider>
                 </NotesProvider>
               </TaskFormProvider>
-            </TaskProvider>
           </NotificationProvider>
         </PopupProvider>
       </AuthProvider>

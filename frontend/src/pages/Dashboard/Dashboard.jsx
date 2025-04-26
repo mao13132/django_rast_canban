@@ -102,7 +102,7 @@ const Dashboard = () => {
               comparison = priorityOrder[b.priority] - priorityOrder[a.priority];
               break;
             case 'status':
-              comparison = a.status.name.localeCompare(b.status.name);
+              comparison = a.status.order - b.status.order;
               break;
             default:
               comparison = 0;
@@ -115,7 +115,10 @@ const Dashboard = () => {
       });
     }
 
-    statuses.forEach(status => {
+    // Сортируем статусы по полю order
+    const sortedStatuses = [...statuses].sort((a, b) => a.order - b.order);
+    
+    sortedStatuses.forEach(status => {
       result[status.id] = sortedTasks.filter(task => task.status?.id === status.id);
     });
     return result;
@@ -164,11 +167,15 @@ const Dashboard = () => {
 
   // Мемоизированный рендеринг колонок
   const renderColumns = useMemo(() => {
-    return statuses.map(status => (
+    // Сортируем статусы по полю order
+    const sortedStatuses = [...statuses].sort((a, b) => a.order - b.order);
+    
+    return sortedStatuses.map(status => (
       <TaskColumn
         key={status.id}
         title={status.name}
         tasks={tasksByStatus[status.id] || []}
+        color={status.color}
         onUpdateTask={handleUpdateTask}
         onDeleteTask={handleDeleteTask}
         onUpdateStatus={handleUpdateTaskStatus}
@@ -199,7 +206,6 @@ const Dashboard = () => {
             { label: 'Архив заметок', path: '/archive' },
             { label: 'Файлы', path: '/files' }
           ]}
-
         />
 
         <div className={styles.subHeader}>

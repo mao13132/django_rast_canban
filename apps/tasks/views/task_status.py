@@ -14,7 +14,11 @@ class TaskStatusViewSet(viewsets.ModelViewSet):
         """
         Возвращает только статусы текущего пользователя
         """
-        status = TaskStatus.objects.filter(user_id=self.request.user.id)
+        status = TaskStatus.objects.filter(
+            user_id=self.request.user.id
+        ).select_related(
+            'user_id'
+        ).order_by('order', 'name')
 
         return status
 

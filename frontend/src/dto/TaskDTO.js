@@ -7,6 +7,8 @@
  * @property {Object} status - Статус задачи
  * @property {number} status.id - ID статуса
  * @property {string} status.name - Название статуса
+ * @property {number} status.order - Порядок отображения статуса
+ * @property {string} status.color - Цвет статуса в формате HEX
  * @property {Object} category - Категория задачи
  * @property {number} category.id - ID категории
  * @property {string} category.name - Название категории
@@ -100,11 +102,23 @@ const normalizeEntity = (entity) => {
   if (!entity) return null;
   
   // Если уже в нужном формате
-  if (entity.id && entity.name) return entity;
+  if (entity.id && entity.name) {
+    return {
+      id: entity.id,
+      name: entity.name,
+      order: entity.order || 0,
+      color: entity.color || '#A0A9F3'
+    };
+  }
   
   // Если пришел только id
   if (typeof entity === 'number' || typeof entity === 'string') {
-    return { id: Number(entity), name: '' };
+    return { 
+      id: Number(entity), 
+      name: '',
+      order: 0,
+      color: '#A0A9F3'
+    };
   }
   
   return null;

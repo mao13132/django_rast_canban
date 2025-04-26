@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { tasksAPI, categoriesAPI, statusesAPI } from '../services/api';
 import LocalStorageService from '../services/localStorageService';
 import * as TaskDTO from '../dto/TaskDTO';
+import * as StatusDTO from '../dto/StatusDTO';
 
 // Константы для ключей localStorage
 const STORAGE_KEYS = {
@@ -119,7 +120,10 @@ export const useTaskStore = create((set, get) => ({
     try {
       set({ loading: true });
       const response = await statusesAPI.getStatuses();
-      set({ statuses: response.data });
+      // Нормализуем и сортируем статусы
+      const normalizedStatuses = response.data.map(StatusDTO.fromBackend);
+      const sortedStatuses = normalizedStatuses.sort((a, b) => a.order - b.order);
+      set({ statuses: sortedStatuses });
     } catch (err) {
       console.error('Ошибка при загрузке статусов:', err);
       set({ statuses: [] });

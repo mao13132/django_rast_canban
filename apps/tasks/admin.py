@@ -11,9 +11,11 @@ class TaskAdmin(admin.ModelAdmin):
 
 @admin.register(TaskStatus)
 class TaskStatusAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user_id')
+    list_display = ('name', 'user_id', 'order', 'color')
     list_filter = ('user_id',)
     search_fields = ('name',)
+    list_editable = ('order', 'color')
+    ordering = ('order', 'name')
 
 
 @admin.register(TaskCategory)

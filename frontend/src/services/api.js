@@ -84,109 +84,23 @@ export const usersAPI = {
 // API методы для работы с задачами
 export const tasksAPI = {
   getTasks: (params = {}) => 
-    axiosInstance.get('tasks/tasks/', { params }).then(response => ({
-      data: response.data.map(task => ({
-        id: task.task_id,
-        title: task.title,
-        description: task.description,
-        status: task.status,
-        category: task.category,
-        priority: task.priority,
-        deadline: task.deadline,
-        attachments: task.attachments || [],
-        user_id: task.user_id
-      }))
-    })),
+    axiosInstance.get('tasks/tasks/', { params }),
   getTask: (taskId) => 
-    axiosInstance.get(`tasks/tasks/${taskId}/`).then(response => ({
-      id: response.data.task_id,
-      title: response.data.title,
-      description: response.data.description,
-      status: response.data.status,
-      category: response.data.category,
-      priority: response.data.priority,
-      deadline: response.data.deadline,
-      attachments: response.data.attachments || [],
-      user_id: response.data.user_id
-    })),
-  createTask: async (formData) => {
-    try {
-      const response = await axiosInstance.post('/tasks/tasks/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
-      
-      if (!response.data || !response.data.id) {
-        throw new Error('Неверный формат ответа от сервера');
-      }
-      
-      return response;
-    } catch (error) {
-      console.error('Error creating task:', error);
-      throw error;
-    }
-  },
-  updateTask: async (taskId, taskData) => {
-    try {
-      const response = await axiosInstance.put(`tasks/tasks/${taskId}/`, taskData);
-      
-      if (!response.data) {
-        throw new Error('No data in response');
-      }
-
-      // Преобразуем ответ в нужный формат
-      const transformedData = {
-        id: response.data.task_id,
-        title: response.data.title,
-        description: response.data.description,
-        status: {
-          id: response.data.status_id,
-          name: response.data.status.name
-        },
-        category: {
-          id: response.data.category_id,
-          name: response.data.category.name
-        },
-        priority: response.data.priority,
-        deadline: response.data.deadline,
-        attachments: response.data.attachments || [],
-        user_id: response.data.user_id
-      };
-
-      return transformedData;
-    } catch (error) {
-      console.error('Error in updateTask:', error);
-      throw error;
-    }
-  },
+    axiosInstance.get(`tasks/tasks/${taskId}/`),
+  createTask: (formData) => 
+    axiosInstance.post('tasks/tasks/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
+  updateTask: (taskId, taskData) => 
+    axiosInstance.put(`tasks/tasks/${taskId}/`, taskData),
   deleteTask: (taskId) => 
     axiosInstance.delete(`tasks/tasks/${taskId}/`),
   updateTaskStatus: (taskId, status) => 
-    axiosInstance.patch(`tasks/tasks/${taskId}/`, { status_id: status }).then(response => ({
-      id: response.data.task_id,
-      title: response.data.title,
-      description: response.data.description,
-      status: response.data.status_id,
-      category: response.data.category_id,
-      priority: response.data.priority,
-      deadline: response.data.deadline,
-      attachments: response.data.attachments
-    })),
+    axiosInstance.patch(`tasks/tasks/${taskId}/`, { status_id: status }),
   getFilteredTasks: (params) => 
-    axiosInstance.get('tasks/tasks/', { params }).then(response => ({
-      data: response.data.map(task => ({
-        id: task.task_id,
-        title: task.title,
-        description: task.description,
-        status: task.status_id,
-        category: task.category_id,
-        priority: task.priority,
-        deadline: task.deadline,
-        attachments: task.attachments
-      }))
-    })),
+    axiosInstance.get('tasks/tasks/', { params }),
   bulkUpdateTasks: (taskIds, updateData) => 
     axiosInstance.patch('tasks/tasks/bulk_update/', { 
       ids: taskIds, 
@@ -201,25 +115,11 @@ export const tasksAPI = {
 // API методы для работы со статусами задач
 export const statusesAPI = {
   getStatuses: () => 
-    axiosInstance.get('tasks/statuses/').then(response => ({
-      data: response.data.map(status => ({
-        id: status.status_id,
-        name: status.name,
-        user_id: status.user_id
-      }))
-    })),
+    axiosInstance.get('tasks/statuses/'),
   createStatus: (statusData) => 
-    axiosInstance.post('tasks/statuses/', statusData).then(response => ({
-      id: response.data.status_id,
-      name: response.data.name,
-      user_id: response.data.user_id
-    })),
+    axiosInstance.post('tasks/statuses/', statusData),
   updateStatus: (statusId, statusData) => 
-    axiosInstance.patch(`tasks/statuses/${statusId}/`, statusData).then(response => ({
-      id: response.data.status_id,
-      name: response.data.name,
-      user_id: response.data.user_id
-    })),
+    axiosInstance.patch(`tasks/statuses/${statusId}/`, statusData),
   deleteStatus: (statusId) => 
     axiosInstance.delete(`tasks/statuses/${statusId}/`),
 };
@@ -227,25 +127,11 @@ export const statusesAPI = {
 // API методы для работы с категориями задач
 export const categoriesAPI = {
   getCategories: () => 
-    axiosInstance.get('tasks/categories/').then(response => ({
-      data: response.data.map(category => ({
-        id: category.category_id,
-        name: category.name,
-        user_id: category.user_id
-      }))
-    })),
+    axiosInstance.get('tasks/categories/'),
   createCategory: (categoryData) => 
-    axiosInstance.post('tasks/categories/', categoryData).then(response => ({
-      id: response.data.category_id,
-      name: response.data.name,
-      user_id: response.data.user_id
-    })),
+    axiosInstance.post('tasks/categories/', categoryData),
   updateCategory: (categoryId, categoryData) => 
-    axiosInstance.patch(`tasks/categories/${categoryId}/`, categoryData).then(response => ({
-      id: response.data.category_id,
-      name: response.data.name,
-      user_id: response.data.user_id
-    })),
+    axiosInstance.patch(`tasks/categories/${categoryId}/`, categoryData),
   deleteCategory: (categoryId) => 
     axiosInstance.delete(`tasks/categories/${categoryId}/`),
 };
