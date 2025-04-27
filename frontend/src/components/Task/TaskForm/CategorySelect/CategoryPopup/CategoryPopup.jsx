@@ -57,9 +57,6 @@ const CategoryPopup = () => {
           </div>
 
           <div className={styles.actions}>
-            <button type="button" onClick={closePopup} className={styles.cancelButton}>
-              Отменить
-            </button>
             <button 
               type="button" 
               onClick={handleSubmit} 
@@ -67,6 +64,9 @@ const CategoryPopup = () => {
               disabled={categoriesLoading || !formData.name.trim()}
             >
               {categoriesLoading ? 'Сохранение...' : 'Сохранить'}
+            </button>
+            <button type="button" onClick={closePopup} className={styles.cancelButton}>
+              Отменить
             </button>
           </div>
         </div>
