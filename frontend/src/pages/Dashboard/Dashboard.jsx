@@ -1,19 +1,15 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTaskForm } from '../../context/TaskFormContext';
-import { useFilter } from '../../context/FilterContext';
 import { useTaskStore } from '../../store/taskStore';
 import Header from '../../components/Header/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
 import TaskForm from '../../components/Task/TaskForm';
-import Filter from '../../components/Filter/Filter';
-import SearchBar from '../../components/UI/SearchBar';
 import SubHeader from '../../components/SubHeader/SubHeader';
+import TaskControls from '../../components/TaskControls/TaskControls';
 import styles from './Dashboard.module.css';
+import SearchBar from '../../components/UI/SearchBar';
 import { useNotification } from '../../context/NotificationContext';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const {
     tasks,
     loading,
@@ -31,11 +27,8 @@ const Dashboard = () => {
   } = useTaskStore();
 
   const { showNotification } = useNotification();
-  const { openCreateForm } = useTaskForm();
-  const { toggleFilter } = useFilter();
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [showFilter, setShowFilter] = useState(false);
 
   // Загрузка начальных данных
   useEffect(() => {
@@ -210,45 +203,25 @@ const Dashboard = () => {
         />
 
         <div className={styles.contentWrapper}>
-          
-          <SubHeader 
-            title="Заметки"
+          <SubHeader
+            title="Доска задач"
             navLinks={[
               { label: 'Заметки', path: '/notes', isActive: true },
               { label: 'Архив заметок', path: '/archive' },
               { label: 'Хранилище', path: '/files' }
             ]}
-           />
+            rightComponent={<TaskControls />}
+          />
 
-          <div>
-            <SearchBar
-              value=""
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder='Поиск задач'
-            />
-            <>
-              <button
-                className={styles.createButton}
-                onClick={openCreateForm}
-              >
-                Создать
-              </button>
-              <div className={styles.menuContainer}>
-                <button
-                  className={styles.menuButton}
-                  onClick={toggleFilter}
-                >
-                  ☰
-                </button>
-                <Filter />
-              </div>
-            </>
-          </div>
+          <SearchBar
+            value=""
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder='Поиск задач'
+          />
 
           <div className={styles.kanbanBoard}>
             {renderColumns}
           </div>
-
         </div>
 
         <TaskForm />

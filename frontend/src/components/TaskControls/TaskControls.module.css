@@ -1,0 +1,39 @@
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.createButton {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.createButton:hover {
+  background: #0056b3;
+}
+
+.menuContainer {
+  position: relative;
+}
+
+.menuButton {
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.menuButton:hover {
+  background: #e0e0e0;
+} 

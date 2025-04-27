@@ -35,13 +35,23 @@ export const TaskFormProvider = ({ children }) => {
     }, 300);
   };
 
+  // Переключить состояние формы
+  const toggleForm = () => {
+    if (isOpen) {
+      closeForm();
+    } else {
+      openCreateForm();
+    }
+  };
+
   const value = {
     isOpen,
     initialData,
     mode,
     openCreateForm,
     openEditForm,
-    closeForm
+    closeForm,
+    toggleForm
   };
 
   return <TaskFormContext.Provider value={value}>{children}</TaskFormContext.Provider>;
