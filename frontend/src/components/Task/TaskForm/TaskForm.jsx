@@ -151,6 +151,7 @@ const TaskForm = ({ className }) => {
 
         <div className={styles.formGroup}>
           <div className={styles.fileUpload}>
+            <img src="/assets/file.png" alt="Файл" className={styles.fileIcon} />
             <span>Прикрепить файл</span>
             <input
               type="file"

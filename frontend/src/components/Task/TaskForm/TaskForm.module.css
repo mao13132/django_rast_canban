@@ -6,7 +6,7 @@
   background: #F5F5F5;
   display: flex;
   justify-content: flex-end;
-  z-index: 9999;
+  z-index: 500;
   border: 2px solid #000000;
   min-height: calc(100vh - 232px);
 }
@@ -111,6 +111,16 @@
   font-size: 40px;
   font-weight: 400;
   line-height: 1.445;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 12px;
+}
+
+.fileIcon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .fileUpload:hover {
