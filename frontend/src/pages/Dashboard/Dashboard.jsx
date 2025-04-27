@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { useTaskStore } from '../../store/taskStore';
 import Header from '../../components/Header/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
@@ -8,6 +8,7 @@ import TaskControls from '../../components/TaskControls/TaskControls';
 import styles from './Dashboard.module.css';
 import SearchBar from '../../components/UI/SearchBar';
 import { useNotification } from '../../context/NotificationContext';
+import { useTaskSearch } from '../../context/TaskSearchContext';
 
 const Dashboard = () => {
   const {
@@ -22,13 +23,11 @@ const Dashboard = () => {
     fetchCategories,
     fetchStatuses,
     statuses,
-    setFilters,
     sortBy
   } = useTaskStore();
 
   const { showNotification } = useNotification();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const { searchQuery, setSearchQuery, filterTasks } = useTaskSearch();
 
   // Загрузка начальных данных
   useEffect(() => {
@@ -47,33 +46,10 @@ const Dashboard = () => {
     loadInitialData();
   }, [fetchTasks, fetchCategories, fetchStatuses]);
 
-  // Дебаунс для поиска
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchQuery);
-      setFilters({ search: searchQuery });
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [searchQuery, setFilters]);
-
   // Мемоизированная фильтрация задач
   const filteredTasks = useMemo(() => {
-    return tasks.filter(task => {
-      if (!task || !task.status) return false;
-
-      // Фильтрация по поисковому запросу
-      if (debouncedSearch) {
-        const searchLower = debouncedSearch.toLowerCase();
-        const matchesSearch =
-          task.title.toLowerCase().includes(searchLower) ||
-          task.description?.toLowerCase().includes(searchLower);
-        if (!matchesSearch) return false;
-      }
-
-      return true;
-    });
-  }, [tasks, debouncedSearch]);
+    return filterTasks(tasks);
+  }, [tasks, filterTasks]);
 
   // Мемоизированное распределение задач по статусам
   const tasksByStatus = useMemo(() => {
@@ -214,7 +190,7 @@ const Dashboard = () => {
           />
 
           <SearchBar
-            value=""
+            value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder='Поиск задач'
           />
