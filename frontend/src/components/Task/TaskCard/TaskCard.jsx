@@ -27,34 +27,61 @@ const TaskCard = ({ task }) => {
         </div>
 
         <div className={styles.descriptionWrapper}>
-          <div className={styles.descriptionIconWrapper}>
-            <img className={styles.descriptionIcon} src="/assets/desc.png" alt="Описание задачи" />
+          <div className={styles.descTitle}>
+            <div className={styles.descriptionIconWrapper}>
+              <img className={styles.descriptionIcon} src="/assets/desc.png" alt="Описание задачи" />
+            </div>
+            <p className={styles.description}>Описание задачи</p>
           </div>
-          <p className={styles.description}>{task.description}</p>
+
+          <div className={styles.descriptionContainer}>
+
+            <textarea readOnly value={task.description} editable={false} className={styles.descriptionTextarea}></textarea>
+
+          </div>
+
         </div>
 
       </div>
 
-      <div className={styles.details}>
+      <div className={styles.priorityWrapper}>
+
+        <div className={styles.priority}>
+          <div className={styles.priorityIconWrapper}>
+            <img className={styles.iconTitle} src="/assets/prior.png" alt="Приоритет" />
+          </div>
+          <span>Приоритет</span>
+        </div>
+
+
         <div className={styles.priority}>
           <div className={styles.priorityIconWrapper}>
             {getPriorityIcon(task.priority, styles.priorityIcon)}
           </div>
-          <span>Приоритет: {getPriorityText(task.priority)}</span>
+          <span>{getPriorityText(task.priority)}</span>
+        </div>
+
+      </div>
+
+      <div className={styles.categoryWrapper}>
+        <div className={styles.categoryIconWrapper}>
+          <img className={styles.iconCategory} src="/assets/category.png" alt="Категория" />
         </div>
 
         <div className={styles.category}>
-          <span className={styles.categoryIcon}>📁</span>
-          <span>{task.category?.name || 'Без категории'}</span>
+          {task.category?.name || 'Без категории'}
         </div>
 
-        {task.deadline && (
-          <div className={styles.deadline}>
-            <span className={styles.deadlineIcon}>🕒</span>
-            <span>с {formatDate(task.deadline.start)} по {formatDate(task.deadline.end)}</span>
-          </div>
-        )}
       </div>
+
+      {task.deadline && (
+        <div className={styles.deadline}>
+          <div className={styles.deadlineIconWrapper}>
+            <img className={styles.descriptionIcon} src="/assets/date.png" alt="Дедлайн" />
+          </div>
+          <span>с {formatDate(task.deadline.start)} по {formatDate(task.deadline.end)}</span>
+        </div>
+      )}
     </div>
   );
 };
