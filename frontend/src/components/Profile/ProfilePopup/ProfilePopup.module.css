@@ -19,7 +19,7 @@
     padding: 40px;
     min-width: 683px;
     height: 356px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
     position: relative;
 }
 
@@ -69,7 +69,7 @@
     height: 105px;
     border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
 }
 
 .logoImage {
