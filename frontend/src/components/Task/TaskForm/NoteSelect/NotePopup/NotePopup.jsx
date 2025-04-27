@@ -4,7 +4,7 @@ import { useTaskStore } from '../../../../../store/taskStore';
 import { useNotification } from '../../../../../context/NotificationContext';
 import styles from './NotePopup.module.css';
 
-const NotePopup = () => {
+const NotePopup = ({ onNoteCreated }) => {
   const { isOpen, closePopup } = useNotePopup();
   const { createNote } = useTaskStore();
   const { showNotification } = useNotification();
@@ -14,9 +14,13 @@ const NotePopup = () => {
 
   const handleSubmit = async () => {
     try {
-      await createNote({ title, content, is_pinned: isPinned });
+      const newNote = await createNote({ title, content, is_pinned: isPinned });
       showNotification('Заметка успешно создана', 'success', 3000, 'bottom');
       closePopup();
+      // Автоматически выбираем созданную заметку
+      if (onNoteCreated) {
+        onNoteCreated(newNote.id);
+      }
     } catch (error) {
       showNotification('Ошибка при создании заметки', 'error', 3000, 'bottom');
     }

@@ -79,7 +79,7 @@ const NoteSelect = ({ value, onChange, className }) => {
           </div>
         )}
       </div>
-      <NotePopup />
+      <NotePopup onNoteCreated={handleSelect} />
     </>
   );
 };
