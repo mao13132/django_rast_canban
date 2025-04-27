@@ -1,0 +1,48 @@
+.subHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 60px;
+  color: #000000;
+  margin: 0;
+  font-weight: 400;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navLink {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.navLink:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.navLink.active {
+  background: #f0f0f0;
+  color: #333;
+  font-weight: 500;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+} 

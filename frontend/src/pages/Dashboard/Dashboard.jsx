@@ -8,6 +8,7 @@ import TaskColumn from '../../components/Task/TaskColumn';
 import TaskForm from '../../components/Task/TaskForm';
 import Filter from '../../components/Filter/Filter';
 import SearchBar from '../../components/UI/SearchBar';
+import SubHeader from '../../components/SubHeader/SubHeader';
 import styles from './Dashboard.module.css';
 import { useNotification } from '../../context/NotificationContext';
 
@@ -209,12 +210,15 @@ const Dashboard = () => {
         />
 
         <div className={styles.contentWrapper}>
-
-          <div className={styles.subHeader}>
-            <span onClick={() => navigate('/notes')} className={styles.link}>Заметки</span>
-            <span onClick={() => navigate('/archive')} className={styles.link}>Архив заметок</span>
-            <span onClick={() => navigate('/files')} className={styles.link}>Хранилище</span>
-          </div>
+          
+          <SubHeader 
+            title="Заметки"
+            navLinks={[
+              { label: 'Заметки', path: '/notes', isActive: true },
+              { label: 'Архив заметок', path: '/archive' },
+              { label: 'Хранилище', path: '/files' }
+            ]}
+           />
 
           <div>
             <SearchBar
