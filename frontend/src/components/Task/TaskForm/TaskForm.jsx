@@ -5,6 +5,7 @@ import { useNotification } from '../../../context/NotificationContext';
 import * as TaskDTO from '../../../dto/TaskDTO';
 import styles from './TaskForm.module.css';
 import PrioritySelect from './PrioritySelect/PrioritySelect';
+import CategorySelect from './CategorySelect/CategorySelect';
 
 const TaskForm = ({ className }) => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
@@ -183,20 +184,12 @@ const TaskForm = ({ className }) => {
 
         <div className={styles.formGroup}>
           <div className={styles.selectLabel}>Категория</div>
-          <select
-            name="category"
+          <CategorySelect
             value={formData.category}
             onChange={handleChange}
+            categories={categories}
             className={styles.select}
-            required
-          >
-            <option value="">Выберите категорию</option>
-            {categories.map(category => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
         <div className={styles.formGroup}>

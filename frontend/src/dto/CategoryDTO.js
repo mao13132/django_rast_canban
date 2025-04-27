@@ -3,7 +3,7 @@
  * @typedef {Object} CategoryDTO
  * @property {number} id - ID категории
  * @property {string} name - Название категории
- * @property {number} user_id - ID пользователя
+ * @property {number} user_id - ID пользователя-владельца категории
  */
 
 /**
@@ -29,8 +29,8 @@ export const toBackend = (formData) => {
 };
 
 /**
- * Создает пустую категорию
+ * Создает пустую форму
  */
-export const createEmptyCategory = () => ({
+export const createEmptyForm = () => ({
   name: ''
 }); 
