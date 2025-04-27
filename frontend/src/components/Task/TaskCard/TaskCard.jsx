@@ -1,83 +1,45 @@
 import React from 'react';
-import { useTaskStore } from '../../../store/taskStore';
-import { useTaskForm } from '../../../context/TaskFormContext';
 import styles from './TaskCard.module.css';
+import { useTaskCard } from '../../../hooks/useTaskCard';
 
 const TaskCard = ({ task }) => {
-  const { updateTask, deleteTask } = useTaskStore();
-  const { openEditForm } = useTaskForm();
-
-  const handleStatusChange = (e) => {
-    updateTask(task.id, { status: e.target.value });
-  };
-
-  const handleDelete = () => {
-    if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
-      deleteTask(task.id);
-    } 
-  };
-
-  const handleEdit = () => {
-    openEditForm(task);
-  };
-
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'block':
-        return styles.blockPriority;
-      case 'high':
-        return styles.highPriority;
-      case 'medium':
-        return styles.mediumPriority;
-      case 'low':
-        return styles.lowPriority;
-      default:
-        return '';
-    }
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      timeZone: 'UTC'
-    };
-    return date.toLocaleDateString('ru-RU', options);
-  };
-
-  const getPriorityText = (priority) => {
-    switch (priority) {
-      case 'block':
-        return 'Блокер';
-      case 'high':
-        return 'Высокий';
-      case 'medium':
-        return 'Средний';
-      case 'low':
-        return 'Низкий';
-      default:
-        return priority;
-    }
-  };
+  const {
+    handleDelete,
+    handleEdit,
+    getPriorityIcon,
+    formatDate,
+    getPriorityText
+  } = useTaskCard(task);
 
   return (
     <div className={styles.card}>
       <div className={styles.header}>
         <div className={styles.title}>
-          <h3>{task.title}</h3>
+          <div className={styles.iconTitleWrapper}>
+            <div className={styles.iconWrapper}>
+              <img className={styles.iconTitle} src="/assets/name.png" alt="Название задачи" />
+            </div>
+            <span className={styles.titleText}>{task.title}</span>
+          </div>
           <div className={styles.actions}>
             <button onClick={handleEdit} className={styles.editButton}>✎</button>
-            <button onClick={handleDelete} className={styles.deleteButton}>✕</button>
           </div>
         </div>
-        <p className={styles.description}>{task.description}</p>
+
+        <div className={styles.descriptionWrapper}>
+          <div className={styles.descriptionIconWrapper}>
+            <img className={styles.descriptionIcon} src="/assets/desc.png" alt="Описание задачи" />
+          </div>
+          <p className={styles.description}>{task.description}</p>
+        </div>
+
       </div>
 
       <div className={styles.details}>
         <div className={styles.priority}>
-          <span className={`${styles.priorityIndicator} ${getPriorityColor(task.priority)}`} />
+          <div className={styles.priorityIconWrapper}>
+            {getPriorityIcon(task.priority, styles.priorityIcon)}
+          </div>
           <span>Приоритет: {getPriorityText(task.priority)}</span>
         </div>
 
