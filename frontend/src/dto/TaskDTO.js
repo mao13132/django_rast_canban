@@ -12,6 +12,9 @@
  * @property {Object} category - Категория задачи
  * @property {number} category.id - ID категории
  * @property {string} category.name - Название категории
+ * @property {Object} note - Заметка задачи
+ * @property {number} note.id - ID заметки
+ * @property {string} note.title - Заголовок заметки
  * @property {string} priority - Приоритет (low/medium/high)
  * @property {Object} deadline - Сроки
  * @property {string} deadline.start - Дата начала
@@ -88,6 +91,7 @@ export const toForm = (data) => {
     description: data.description || '',
     status: data.status?.id || '',
     category: data.category?.id || '',
+    note: data.note?.id || '',
     priority: data.priority || 'medium',
     deadline: {
       start: data.deadline?.start || '',
@@ -135,6 +139,7 @@ export const createEmptyForm = () => ({
   description: '',
   status: '',
   category: '',
+  note: '',
   priority: 'medium',
   deadline: {
     start: '',

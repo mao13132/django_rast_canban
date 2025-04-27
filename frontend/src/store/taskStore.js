@@ -4,6 +4,7 @@ import LocalStorageService from '../services/localStorageService';
 import * as TaskDTO from '../dto/TaskDTO';
 import * as StatusDTO from '../dto/StatusDTO';
 import * as CategoryDTO from '../dto/CategoryDTO';
+import * as NoteDTO from '../dto/NoteDTO';
 
 // Константы для ключей localStorage
 const STORAGE_KEYS = {
@@ -17,8 +18,10 @@ export const useTaskStore = create((set, get) => ({
   filteredTasks: [],
   categories: [],
   statuses: [],
+  notes: [],
   loading: false,
   categoriesLoading: false,
+  notesLoading: false,
   error: null,
   sortBy: LocalStorageService.get(STORAGE_KEYS.SORT_BY, []),
   filters: LocalStorageService.get(STORAGE_KEYS.FILTERS, {
@@ -283,6 +286,123 @@ export const useTaskStore = create((set, get) => ({
       throw err;
     } finally {
       set({ categoriesLoading: false });
+    }
+  },
+
+  // Получение заметок
+  fetchNotes: async () => {
+    try {
+      set({ notesLoading: true });
+      const response = await fetch('/api/v1/notes/notes/');
+      if (!response.ok) {
+        throw new Error('Ошибка при получении заметок');
+      }
+      const data = await response.json();
+      const normalizedNotes = data.map(NoteDTO.fromBackend);
+      
+      // Сортируем заметки: сначала закрепленные, потом по алфавиту
+      const sortedNotes = normalizedNotes.sort((a, b) => {
+        // Сначала сравниваем по закреплению
+        if (a.is_pinned !== b.is_pinned) {
+          return b.is_pinned ? 1 : -1;
+        }
+        // Если закрепление одинаковое, сортируем по алфавиту
+        return a.title.localeCompare(b.title);
+      });
+      
+      set({ notes: sortedNotes });
+    } catch (err) {
+      console.error('Ошибка при загрузке заметок:', err);
+      set({ notes: [] });
+    } finally {
+      set({ notesLoading: false });
+    }
+  },
+
+  // Создание заметки
+  createNote: async (formData) => {
+    try {
+      set({ notesLoading: true });
+      const noteData = NoteDTO.toBackend(formData);
+      const response = await fetch('/api/v1/notes/notes/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(noteData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка при создании заметки');
+      }
+
+      const newNote = NoteDTO.fromBackend(await response.json());
+      set((state) => ({
+        notes: [...state.notes, newNote]
+      }));
+
+      return newNote;
+    } catch (err) {
+      console.error('Ошибка при создании заметки:', err);
+      throw err;
+    } finally {
+      set({ notesLoading: false });
+    }
+  },
+
+  // Обновление заметки
+  updateNote: async (noteId, formData) => {
+    try {
+      set({ notesLoading: true });
+      const noteData = NoteDTO.toBackend(formData);
+      const response = await fetch(`/api/v1/notes/notes/${noteId}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(noteData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка при обновлении заметки');
+      }
+
+      const updatedNote = NoteDTO.fromBackend(await response.json());
+      set((state) => ({
+        notes: state.notes.map(note => 
+          note.id === noteId ? updatedNote : note
+        )
+      }));
+
+      return updatedNote;
+    } catch (err) {
+      console.error('Ошибка при обновлении заметки:', err);
+      throw err;
+    } finally {
+      set({ notesLoading: false });
+    }
+  },
+
+  // Удаление заметки
+  deleteNote: async (noteId) => {
+    try {
+      set({ notesLoading: true });
+      const response = await fetch(`/api/v1/notes/notes/${noteId}/`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка при удалении заметки');
+      }
+
+      set((state) => ({
+        notes: state.notes.filter(note => note.id !== noteId)
+      }));
+    } catch (err) {
+      console.error('Ошибка при удалении заметки:', err);
+      throw err;
+    } finally {
+      set({ notesLoading: false });
     }
   },
 })); 

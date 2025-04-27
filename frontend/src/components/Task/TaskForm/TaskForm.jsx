@@ -6,6 +6,7 @@ import * as TaskDTO from '../../../dto/TaskDTO';
 import styles from './TaskForm.module.css';
 import PrioritySelect from './PrioritySelect/PrioritySelect';
 import CategorySelect from './CategorySelect/CategorySelect';
+import NoteSelect from './NoteSelect/NoteSelect';
 
 const TaskForm = ({ className }) => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
@@ -188,6 +189,15 @@ const TaskForm = ({ className }) => {
             value={formData.category}
             onChange={handleChange}
             categories={categories}
+            className={styles.select}
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <div className={styles.selectLabel}>Заметка</div>
+          <NoteSelect
+            value={formData.note}
+            onChange={handleChange}
             className={styles.select}
           />
         </div>
