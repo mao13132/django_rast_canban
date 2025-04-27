@@ -16,12 +16,14 @@ class TaskSerializer(serializers.ModelSerializer):
     attachments = TaskAttachmentSerializer(many=True, read_only=True)
     status = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
+    days_remaining = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
         fields = ['task_id', 'user_id', 'title', 'description', 'status_id',
-                  'category_id', 'priority', 'deadline', 'attachments', 'status', 'category']
-        read_only_fields = ['task_id', 'user_id']
+                  'category_id', 'priority', 'deadline_start', 'deadline_end', 
+                  'attachments', 'status', 'category', 'days_remaining']
+        read_only_fields = ['task_id', 'user_id', 'days_remaining']
 
     def get_status(self, obj):
         """
@@ -47,6 +49,12 @@ class TaskSerializer(serializers.ModelSerializer):
                 'name': obj.category_id.name
             }
         return None
+
+    def get_days_remaining(self, obj):
+        """
+        Возвращает количество оставшихся дней до дедлайна
+        """
+        return obj.get_days_remaining()
 
     def validate_status_id(self, value):
         """
@@ -105,6 +113,13 @@ class TaskSerializer(serializers.ModelSerializer):
             
         if not data.get('priority'):
             raise serializers.ValidationError({"priority": "Приоритет задачи обязателен"})
+
+        # Проверяем корректность дат
+        deadline_start = data.get('deadline_start')
+        deadline_end = data.get('deadline_end')
+        
+        if deadline_start and deadline_end and deadline_start > deadline_end:
+            raise serializers.ValidationError({"deadline": "Дата начала не может быть позже даты окончания"})
             
         return data
 
@@ -122,7 +137,8 @@ class TaskSerializer(serializers.ModelSerializer):
             status_id=validated_data['status_id'],
             category_id=validated_data.get('category_id'),
             priority=validated_data.get('priority', 'medium'),
-            deadline=validated_data.get('deadline')
+            deadline_start=validated_data.get('deadline_start'),
+            deadline_end=validated_data.get('deadline_end')
         )
         
         logger.info(f"Created task: {task}")
@@ -139,7 +155,8 @@ class TaskSerializer(serializers.ModelSerializer):
         instance.status_id = validated_data.get('status_id', instance.status_id)
         instance.category_id = validated_data.get('category_id', instance.category_id)
         instance.priority = validated_data.get('priority', instance.priority)
-        instance.deadline = validated_data.get('deadline', instance.deadline)
+        instance.deadline_start = validated_data.get('deadline_start', instance.deadline_start)
+        instance.deadline_end = validated_data.get('deadline_end', instance.deadline_end)
         
         instance.save()
         logger.info(f"Updated task: {instance}")
@@ -153,6 +170,15 @@ class TaskSerializer(serializers.ModelSerializer):
             data = super().to_representation(instance)
             # Добавляем ID в корень объекта
             data['id'] = instance.task_id
+            
+            # Форматируем deadline в нужный формат
+            if data.get('deadline_start') or data.get('deadline_end'):
+                data['deadline'] = {
+                    'start': data.pop('deadline_start'),
+                    'end': data.pop('deadline_end')
+                }
+            else:
+                data['deadline'] = None
             
             # Логируем полные данные для отладки
             logger.info("Full task representation: %s", json.dumps(data, ensure_ascii=False))

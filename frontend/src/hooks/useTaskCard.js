@@ -48,13 +48,9 @@ export const useTaskCard = (task) => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const options = { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      timeZone: 'UTC'
-    };
-    return date.toLocaleDateString('ru-RU', options);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    return `${day}.${month}`;
   };
 
   const getPriorityText = (priority) => {

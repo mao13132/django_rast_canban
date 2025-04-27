@@ -4,7 +4,7 @@ from .models import Task, TaskStatus, TaskCategory, TaskAttachment
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user_id', 'status_id', 'category_id', 'priority', 'deadline')
+    list_display = ('title', 'user_id', 'status_id', 'category_id', 'priority', 'deadline_start', 'deadline_end')
     list_filter = ('priority', 'status_id', 'category_id')
     search_fields = ('title', 'description')
     list_editable = ('priority',)

@@ -11,6 +11,10 @@
   gap: 10px;
 }
 
+/* Стили для срочных задач */
+.card.urgent {
+  background: #F4A5A5;
+}
 
 
 .descriptionIconWrapper,
@@ -20,8 +24,9 @@
   justify-content: center;
 }
 
-/* Заголовок и описание */
-.header {}
+.date {
+  font-weight: 500;
+}
 
 .title {
   display: flex;

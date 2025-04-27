@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from apps.users.models import User
 from .task_status import TaskStatus
 from .task_category import TaskCategory
@@ -51,10 +52,15 @@ class Task(models.Model):
         default='medium',
         help_text='Приоритет задачи'
     )
-    deadline = models.DateTimeField(
+    deadline_start = models.DateTimeField(
         null=True,
         blank=True,
-        help_text='Срок выполнения'
+        help_text='Начало срока выполнения'
+    )
+    deadline_end = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text='Конец срока выполнения'
     )
 
     class Meta:
@@ -64,3 +70,16 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_days_remaining(self):
+        """
+        Возвращает количество оставшихся дней до дедлайна.
+        Если дедлайн уже прошел, возвращает отрицательное число.
+        Если дедлайн не установлен, возвращает None.
+        """
+        if not self.deadline_end:
+            return None
+            
+        now = timezone.now()
+        delta = self.deadline_end - now
+        return delta.days

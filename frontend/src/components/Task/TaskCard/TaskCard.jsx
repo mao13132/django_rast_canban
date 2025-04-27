@@ -11,8 +11,11 @@ const TaskCard = ({ task }) => {
     getPriorityText
   } = useTaskCard(task);
 
+  // Определяем, является ли задача срочной (осталось 1 день или меньше)
+  const isUrgent = task.days_remaining !== null && task.days_remaining <= 1;
+
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} ${isUrgent ? styles.urgent : ''}`}>
       <div className={styles.header}>
         <div className={styles.title}>
           <div className={styles.iconTitleWrapper}>
@@ -79,7 +82,7 @@ const TaskCard = ({ task }) => {
           <div className={styles.deadlineIconWrapper}>
             <img className={styles.descriptionIcon} src="/assets/date.png" alt="Дедлайн" />
           </div>
-          <span>с {formatDate(task.deadline.start)} по {formatDate(task.deadline.end)}</span>
+          <span>с <span className={styles.date}>{formatDate(task.deadline.start)}</span> по <span className={styles.date}>{formatDate(task.deadline.end)}</span></span>
         </div>
       )}
     </div>

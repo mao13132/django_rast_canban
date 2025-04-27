@@ -18,6 +18,7 @@
  * @property {string} deadline.end - Дата окончания
  * @property {Array} attachments - Прикрепленные файлы
  * @property {number} user_id - ID пользователя
+ * @property {number} days_remaining - Количество оставшихся дней до дедлайна
  */
 
 /**
@@ -38,7 +39,8 @@ export const fromBackend = (data) => {
       end: data.deadline?.end || ''
     },
     attachments: data.attachments || [],
-    user_id: data.user_id
+    user_id: data.user_id,
+    days_remaining: data.days_remaining || null
   };
 };
 
@@ -91,7 +93,8 @@ export const toForm = (data) => {
       start: data.deadline?.start || '',
       end: data.deadline?.end || ''
     },
-    attachments: data.attachments || []
+    attachments: data.attachments || [],
+    days_remaining: data.days_remaining || null
   };
 };
 
@@ -137,5 +140,6 @@ export const createEmptyForm = () => ({
     start: '',
     end: ''
   },
-  attachments: []
+  attachments: [],
+  days_remaining: null
 }); 
