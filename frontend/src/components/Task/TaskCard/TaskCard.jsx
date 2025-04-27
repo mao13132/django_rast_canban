@@ -14,7 +14,7 @@ const TaskCard = ({ task }) => {
   const handleDelete = () => {
     if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
       deleteTask(task.id);
-    }
+    } 
   };
 
   const handleEdit = () => {
@@ -23,6 +23,8 @@ const TaskCard = ({ task }) => {
 
   const getPriorityColor = (priority) => {
     switch (priority) {
+      case 'block':
+        return styles.blockPriority;
       case 'high':
         return styles.highPriority;
       case 'medium':
@@ -47,6 +49,8 @@ const TaskCard = ({ task }) => {
 
   const getPriorityText = (priority) => {
     switch (priority) {
+      case 'block':
+        return 'Блокер';
       case 'high':
         return 'Высокий';
       case 'medium':

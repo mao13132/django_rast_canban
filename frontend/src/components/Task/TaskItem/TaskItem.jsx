@@ -7,7 +7,7 @@ const TaskItem = ({ task }) => {
   const { updateTask, deleteTask, updateTaskStatus } = useTaskStore();
 
   return (
-    <div className={styles.taskItem}>
+    <div className={styles.taskItem}> 
       <TaskCard
         task={task}
         onUpdate={updateTask}

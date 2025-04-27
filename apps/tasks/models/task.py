@@ -14,6 +14,7 @@ class Task(models.Model):
         ('low', 'Низкий'),
         ('medium', 'Средний'),
         ('high', 'Высокий'),
+        ('block', 'Блокер'),
     ]
 
     user_id = models.ForeignKey(

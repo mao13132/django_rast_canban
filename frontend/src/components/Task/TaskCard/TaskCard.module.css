@@ -7,7 +7,7 @@
   position: relative;
   border: 2px solid #000000;
 }
-
+ 
 .header {
   margin-bottom: 12px;
 }
@@ -93,6 +93,10 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
+}
+
+.blockPriority {
+  background-color: #FF0000;
 }
 
 .highPriority {

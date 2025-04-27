@@ -139,9 +139,10 @@ const TaskForm = ({ className }) => {
             required
           >
             <option value="">Приоритет</option>
-            <option value="low">Низкий</option>
-            <option value="medium">Средний</option>
+            <option value="block">Блокер</option>
             <option value="high">Высокий</option>
+            <option value="medium">Средний</option>
+            <option value="low">Низкий</option>
           </select>
         </div>
 
