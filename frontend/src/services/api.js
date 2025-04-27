@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 // Создаем экземпляр axios с базовым URL и настройками
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/',
+  baseURL: API_ENDPOINTS.BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -37,10 +38,7 @@ axiosInstance.interceptors.response.use(
         // Получаем новый токен с помощью refresh токена
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
-          const response = await axios.post(
-            'http://localhost:8000/api/v1/auth/jwt/refresh/', 
-            { refresh: refreshToken }
-          );
+          const response = await axios.post(API_ENDPOINTS.REFRESH_TOKEN, { refresh: refreshToken });
           
           if (response.data.access) {
             localStorage.setItem('accessToken', response.data.access);
@@ -62,52 +60,52 @@ axiosInstance.interceptors.response.use(
 // API методы аутентификации
 export const authAPI = {
   login: (email, password) => 
-    axiosInstance.post('auth/jwt/create/', { email, password }),
+    axiosInstance.post(API_ENDPOINTS.LOGIN, { email, password }),
   register: (userData) => 
-    axiosInstance.post('auth/users/', {
+    axiosInstance.post(API_ENDPOINTS.REGISTER, {
       email: userData.email,
       password: userData.password,
       re_password: userData.re_password
     }),
   getUser: () => 
-    axiosInstance.get('auth/users/me/'),
+    axiosInstance.get(API_ENDPOINTS.USER),
 };
 
 // API методы для работы с пользователями
 export const usersAPI = {
   getProfile: () => 
-    axiosInstance.get('users/users/me/'),
+    axiosInstance.get(API_ENDPOINTS.PROFILE),
   updateProfile: (userData) => 
-    axiosInstance.patch('users/users/me/', userData),
+    axiosInstance.patch(API_ENDPOINTS.PROFILE, userData),
 };
 
 // API методы для работы с задачами
 export const tasksAPI = {
   getTasks: (params = {}) => 
-    axiosInstance.get('tasks/tasks/', { params }),
+    axiosInstance.get(API_ENDPOINTS.TASKS, { params }),
   getTask: (taskId) => 
-    axiosInstance.get(`tasks/tasks/${taskId}/`),
+    axiosInstance.get(API_ENDPOINTS.TASK(taskId)),
   createTask: (formData) => 
-    axiosInstance.post('tasks/tasks/', formData, {
+    axiosInstance.post(API_ENDPOINTS.TASKS, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     }),
   updateTask: (taskId, taskData) => 
-    axiosInstance.put(`tasks/tasks/${taskId}/`, taskData),
+    axiosInstance.put(API_ENDPOINTS.TASK(taskId), taskData),
   deleteTask: (taskId) => 
-    axiosInstance.delete(`tasks/tasks/${taskId}/`),
+    axiosInstance.delete(API_ENDPOINTS.TASK(taskId)),
   updateTaskStatus: (taskId, status) => 
-    axiosInstance.patch(`tasks/tasks/${taskId}/`, { status_id: status }),
+    axiosInstance.patch(API_ENDPOINTS.TASK(taskId), { status_id: status }),
   getFilteredTasks: (params) => 
-    axiosInstance.get('tasks/tasks/', { params }),
+    axiosInstance.get(API_ENDPOINTS.TASKS, { params }),
   bulkUpdateTasks: (taskIds, updateData) => 
-    axiosInstance.patch('tasks/tasks/bulk_update/', { 
+    axiosInstance.patch(API_ENDPOINTS.BULK_UPDATE_TASKS, { 
       ids: taskIds, 
       ...updateData 
     }),
   bulkDeleteTasks: (taskIds) => 
-    axiosInstance.post('tasks/tasks/bulk_delete/', { 
+    axiosInstance.post(API_ENDPOINTS.BULK_DELETE_TASKS, { 
       ids: taskIds 
     }),
 };
@@ -115,37 +113,49 @@ export const tasksAPI = {
 // API методы для работы со статусами задач
 export const statusesAPI = {
   getStatuses: () => 
-    axiosInstance.get('tasks/statuses/'),
+    axiosInstance.get(API_ENDPOINTS.STATUSES),
   createStatus: (statusData) => 
-    axiosInstance.post('tasks/statuses/', statusData),
+    axiosInstance.post(API_ENDPOINTS.STATUSES, statusData),
   updateStatus: (statusId, statusData) => 
-    axiosInstance.patch(`tasks/statuses/${statusId}/`, statusData),
+    axiosInstance.patch(API_ENDPOINTS.STATUS(statusId), statusData),
   deleteStatus: (statusId) => 
-    axiosInstance.delete(`tasks/statuses/${statusId}/`),
+    axiosInstance.delete(API_ENDPOINTS.STATUS(statusId)),
 };
 
 // API методы для работы с категориями задач
 export const categoriesAPI = {
   getCategories: () => 
-    axiosInstance.get('tasks/categories/'),
+    axiosInstance.get(API_ENDPOINTS.CATEGORIES),
   createCategory: (categoryData) => 
-    axiosInstance.post('tasks/categories/', categoryData),
+    axiosInstance.post(API_ENDPOINTS.CATEGORIES, categoryData),
   updateCategory: (categoryId, categoryData) => 
-    axiosInstance.patch(`tasks/categories/${categoryId}/`, categoryData),
+    axiosInstance.patch(API_ENDPOINTS.CATEGORY(categoryId), categoryData),
   deleteCategory: (categoryId) => 
-    axiosInstance.delete(`tasks/categories/${categoryId}/`),
+    axiosInstance.delete(API_ENDPOINTS.CATEGORY(categoryId)),
+};
+
+// API методы для работы с заметками
+export const notesAPI = {
+  getNotes: () => 
+    axiosInstance.get(API_ENDPOINTS.NOTES),
+  createNote: (noteData) => 
+    axiosInstance.post(API_ENDPOINTS.NOTES, noteData),
+  updateNote: (noteId, noteData) => 
+    axiosInstance.put(API_ENDPOINTS.NOTE(noteId), noteData),
+  deleteNote: (noteId) => 
+    axiosInstance.delete(API_ENDPOINTS.NOTE(noteId)),
 };
 
 // API методы для работы с вложениями
 export const attachmentsAPI = {
   getAttachments: () => 
-    axiosInstance.get('tasks/attachments/'),
+    axiosInstance.get(API_ENDPOINTS.ATTACHMENTS),
   createAttachment: (attachmentData) => 
-    axiosInstance.post('tasks/attachments/', attachmentData),
+    axiosInstance.post(API_ENDPOINTS.ATTACHMENTS, attachmentData),
   deleteAttachment: (attachmentId) => 
-    axiosInstance.delete(`tasks/attachments/${attachmentId}/`),
+    axiosInstance.delete(API_ENDPOINTS.ATTACHMENT(attachmentId)),
   downloadAttachment: (attachmentId) => 
-    axiosInstance.get(`tasks/attachments/${attachmentId}/download/`, {
+    axiosInstance.get(API_ENDPOINTS.ATTACHMENT_DOWNLOAD(attachmentId), {
       responseType: 'blob'
     }),
 };

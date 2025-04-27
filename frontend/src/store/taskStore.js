@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { tasksAPI, categoriesAPI, statusesAPI } from '../services/api';
+import { tasksAPI, categoriesAPI, statusesAPI, notesAPI } from '../services/api';
 import LocalStorageService from '../services/localStorageService';
 import * as TaskDTO from '../dto/TaskDTO';
 import * as StatusDTO from '../dto/StatusDTO';
@@ -293,12 +293,8 @@ export const useTaskStore = create((set, get) => ({
   fetchNotes: async () => {
     try {
       set({ notesLoading: true });
-      const response = await fetch('/api/v1/notes/notes/');
-      if (!response.ok) {
-        throw new Error('Ошибка при получении заметок');
-      }
-      const data = await response.json();
-      const normalizedNotes = data.map(NoteDTO.fromBackend);
+      const response = await notesAPI.getNotes();
+      const normalizedNotes = response.data.map(NoteDTO.fromBackend);
       
       // Сортируем заметки: сначала закрепленные, потом по алфавиту
       const sortedNotes = normalizedNotes.sort((a, b) => {
@@ -324,19 +320,9 @@ export const useTaskStore = create((set, get) => ({
     try {
       set({ notesLoading: true });
       const noteData = NoteDTO.toBackend(formData);
-      const response = await fetch('/api/v1/notes/notes/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(noteData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка при создании заметки');
-      }
-
-      const newNote = NoteDTO.fromBackend(await response.json());
+      const response = await notesAPI.createNote(noteData);
+      const newNote = NoteDTO.fromBackend(response.data);
+      
       set((state) => ({
         notes: [...state.notes, newNote]
       }));
@@ -355,19 +341,9 @@ export const useTaskStore = create((set, get) => ({
     try {
       set({ notesLoading: true });
       const noteData = NoteDTO.toBackend(formData);
-      const response = await fetch(`/api/v1/notes/notes/${noteId}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(noteData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка при обновлении заметки');
-      }
-
-      const updatedNote = NoteDTO.fromBackend(await response.json());
+      const response = await notesAPI.updateNote(noteId, noteData);
+      const updatedNote = NoteDTO.fromBackend(response.data);
+      
       set((state) => ({
         notes: state.notes.map(note => 
           note.id === noteId ? updatedNote : note
@@ -387,14 +363,8 @@ export const useTaskStore = create((set, get) => ({
   deleteNote: async (noteId) => {
     try {
       set({ notesLoading: true });
-      const response = await fetch(`/api/v1/notes/notes/${noteId}/`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка при удалении заметки');
-      }
-
+      await notesAPI.deleteNote(noteId);
+      
       set((state) => ({
         notes: state.notes.filter(note => note.id !== noteId)
       }));

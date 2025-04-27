@@ -10,32 +10,29 @@
  */
 
 /**
- * Преобразует данные с бекенда в стандартный формат фронтенда
+ * Преобразует данные заметки из бэкенда в формат фронтенда
+ * @param {Object} data - Данные заметки с бэкенда
+ * @returns {Object} Нормализованные данные заметки
  */
-export const fromBackend = (data) => {
-  if (!data) return null;
-
-  return {
-    id: data.note_id || data.id,
-    title: data.title || '',
-    content: data.content || '',
-    user_id: data.user_id,
-    is_pinned: data.is_pinned || false,
-    is_archived: data.is_archived || false
-  };
-};
+export const fromBackend = (data) => ({
+  id: data.note_id,
+  title: data.title,
+  content: data.content,
+  is_pinned: data.is_pinned,
+  is_archived: data.is_archived
+});
 
 /**
- * Преобразует данные формы в формат для отправки на бекенд
+ * Преобразует данные заметки из фронтенда в формат бэкенда
+ * @param {Object} data - Данные заметки с фронтенда
+ * @returns {Object} Данные заметки для отправки на бэкенд
  */
-export const toBackend = (formData) => {
-  return {
-    title: formData.title || '',
-    content: formData.content || '',
-    is_pinned: formData.is_pinned || false,
-    is_archived: formData.is_archived || false
-  };
-};
+export const toBackend = (data) => ({
+  title: data.title,
+  content: data.content,
+  is_pinned: data.is_pinned || false,
+  is_archived: data.is_archived || false
+});
 
 /**
  * Создает пустую форму

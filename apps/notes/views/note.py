@@ -14,10 +14,10 @@ class NoteViewSet(viewsets.ModelViewSet):
         """
         Возвращает только заметки текущего пользователя
         """
-        return Note.objects.filter(user=self.request.user)
+        return Note.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         """
         При создании заметки автоматически устанавливает текущего пользователя
         """
-        serializer.save(user=self.request.user)
+        serializer.save()
