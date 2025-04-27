@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './TaskCard.module.css';
 import { useTaskCard } from '../../../hooks/useTaskCard';
+import { getPriorityIcon } from '../../../utils/PriorityIcons';
 
 const TaskCard = ({ task }) => {
   const {
     handleDelete,
     handleEdit,
-    getPriorityIcon,
     formatDate,
     getPriorityText
   } = useTaskCard(task);

@@ -4,12 +4,13 @@ import { useTaskStore } from '../../../store/taskStore';
 import { useNotification } from '../../../context/NotificationContext';
 import * as TaskDTO from '../../../dto/TaskDTO';
 import styles from './TaskForm.module.css';
+import PrioritySelect from './PrioritySelect/PrioritySelect';
 
 const TaskForm = ({ className }) => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
   const { createTask, updateTask, categories, statuses } = useTaskStore();
   const { showNotification } = useNotification();
-  
+
   const [formData, setFormData] = useState(TaskDTO.createEmptyForm());
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -131,19 +132,11 @@ const TaskForm = ({ className }) => {
         </div>
 
         <div className={styles.formGroup}>
-          <select
-            name="priority"
+          <PrioritySelect
             value={formData.priority}
             onChange={handleChange}
             className={styles.select}
-            required
-          >
-            <option value="">Приоритет</option>
-            <option value="block">Блокер</option>
-            <option value="high">Высокий</option>
-            <option value="medium">Средний</option>
-            <option value="low">Низкий</option>
-          </select>
+          />
         </div>
 
         <div className={styles.formGroup}>
