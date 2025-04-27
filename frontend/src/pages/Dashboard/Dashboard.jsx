@@ -117,7 +117,7 @@ const Dashboard = () => {
 
     // Сортируем статусы по полю order
     const sortedStatuses = [...statuses].sort((a, b) => a.order - b.order);
-    
+
     sortedStatuses.forEach(status => {
       result[status.id] = sortedTasks.filter(task => task.status?.id === status.id);
     });
@@ -169,7 +169,7 @@ const Dashboard = () => {
   const renderColumns = useMemo(() => {
     // Сортируем статусы по полю order
     const sortedStatuses = [...statuses].sort((a, b) => a.order - b.order);
-    
+
     return sortedStatuses.map(status => (
       <TaskColumn
         key={status.id}
@@ -208,19 +208,21 @@ const Dashboard = () => {
           ]}
         />
 
-        <div className={styles.subHeader}>
-          <span onClick={() => navigate('/notes')} className={styles.link}>Заметки</span>
-          <span onClick={() => navigate('/archive')} className={styles.link}>Архив заметок</span>
-          <span onClick={() => navigate('/files')} className={styles.link}>Хранилище</span>
-        </div>
+        <div className={styles.contentWrapper}>
 
-        <div>
-          <SearchBar
-            value=""
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder='Поиск задач'
-          />
-          <>
+          <div className={styles.subHeader}>
+            <span onClick={() => navigate('/notes')} className={styles.link}>Заметки</span>
+            <span onClick={() => navigate('/archive')} className={styles.link}>Архив заметок</span>
+            <span onClick={() => navigate('/files')} className={styles.link}>Хранилище</span>
+          </div>
+
+          <div>
+            <SearchBar
+              value=""
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder='Поиск задач'
+            />
+            <>
               <button
                 className={styles.createButton}
                 onClick={openCreateForm}
@@ -237,10 +239,12 @@ const Dashboard = () => {
                 <Filter />
               </div>
             </>
-        </div>
+          </div>
 
-        <div className={styles.kanbanBoard}>
-          {renderColumns}
+          <div className={styles.kanbanBoard}>
+            {renderColumns}
+          </div>
+
         </div>
 
         <TaskForm />

@@ -5,6 +5,10 @@
   background-color: #F2F2F2;
 }
 
+.contentWrapper {
+  padding: 0 40px;
+}
+
 .dashboard {
   flex: 1;
   padding: 20px;
