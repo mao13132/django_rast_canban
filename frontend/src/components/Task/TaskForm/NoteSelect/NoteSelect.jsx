@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTaskStore } from '../../../../store/taskStore';
 import { useNotePopup } from '../../../../context/NotePopupContext';
 import styles from './NoteSelect.module.css';
@@ -9,6 +10,9 @@ const NoteSelect = ({ value, onChange, className }) => {
   const selectRef = useRef(null);
   const { notes, notesLoading } = useTaskStore();
   const { openPopup } = useNotePopup();
+  const navigate = useNavigate();
+
+  const selectedNote = notes.find(note => note.id === value);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -26,7 +30,39 @@ const NoteSelect = ({ value, onChange, className }) => {
     setIsOpen(false);
   };
 
-  const selectedNote = notes.find(note => note.id === value) || { title: 'Без заметки' };
+  const removeNote = (e) => {
+    e.stopPropagation(); // Предотвращаем переход на страницу заметки
+    onChange({ target: { name: 'note', value: '' } });
+  };
+
+  const handleNoteClick = (e) => {
+    e.preventDefault();
+    if (selectedNote?.id) {
+      navigate(`/notes/${selectedNote.id}/edit`);
+    }
+  };
+
+  if (selectedNote) {
+    return (
+      <div className={`${styles.noteSelect} ${className}`}>
+        <div 
+          className={styles.selectedNoteDisplay}
+          onClick={handleNoteClick}
+        >
+          <div className={styles.noteOption}>
+            <span>{selectedNote.title}</span>
+          </div>
+          <button
+            type="button"
+            onClick={removeNote}
+            className={styles.removeNote}
+          >
+            ×
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -36,7 +72,7 @@ const NoteSelect = ({ value, onChange, className }) => {
           onClick={() => setIsOpen(!isOpen)}
         >
           <div className={styles.noteOption}>
-            <span>{selectedNote.title}</span>
+            <span>Без заметки</span>
           </div>
           <div className={styles.selectArrow}>
             <img src="/assets/arrow.png" alt="▼" className={styles.arrowIcon} />
