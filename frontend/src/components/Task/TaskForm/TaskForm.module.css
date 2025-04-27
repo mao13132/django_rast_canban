@@ -81,6 +81,7 @@
   color: rgba(0, 0, 0, 0.46);
   line-height: 1.445;
   height: 60px;
+  padding-left: 20px;
 }
 
 .input:focus,
