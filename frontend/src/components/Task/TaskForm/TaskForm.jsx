@@ -120,18 +120,20 @@ const TaskForm = ({ className }) => {
         {error && <div className={styles.error}>{error}</div>}
 
         <div className={styles.formGroup}>
+          <div className={styles.selectLabel}>Название задачи</div>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            placeholder="Название задачи"
+            placeholder=""
             className={styles.input}
             required
           />
         </div>
 
         <div className={styles.formGroup}>
+          <div className={styles.selectLabel}>Приоритет</div>
           <PrioritySelect
             value={formData.priority}
             onChange={handleChange}
@@ -140,19 +142,20 @@ const TaskForm = ({ className }) => {
         </div>
 
         <div className={styles.formGroup}>
+          <div className={styles.selectLabel}>Описание</div>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Описание"
+            placeholder=""
             className={styles.textarea}
           />
         </div>
 
         <div className={styles.formGroup}>
+          <div className={styles.selectLabel}>Прикрепить файл</div>
           <div className={styles.fileUpload}>
             <img src="/assets/file.png" alt="Файл" className={styles.fileIcon} />
-            <span>Прикрепить файл</span>
             <input
               type="file"
               multiple
@@ -179,6 +182,7 @@ const TaskForm = ({ className }) => {
         </div>
 
         <div className={styles.formGroup}>
+          <div className={styles.selectLabel}>Категория</div>
           <select
             name="category"
             value={formData.category}
@@ -186,7 +190,7 @@ const TaskForm = ({ className }) => {
             className={styles.select}
             required
           >
-            <option value="">Категория</option>
+            <option value="">Выберите категорию</option>
             {categories.map(category => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -196,6 +200,7 @@ const TaskForm = ({ className }) => {
         </div>
 
         <div className={styles.formGroup}>
+          <div className={styles.selectLabel}>Статус</div>
           <select
             name="status"
             value={formData.status}
@@ -203,7 +208,7 @@ const TaskForm = ({ className }) => {
             className={styles.select}
             required
           >
-            <option value="">Статус</option>
+            <option value="">Выберите статус</option>
             {statuses.map(status => (
               <option key={status.id} value={status.id}>
                 {status.name}
