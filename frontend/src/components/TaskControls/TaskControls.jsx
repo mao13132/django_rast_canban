@@ -21,12 +21,11 @@ const TaskControls = () => {
         Создать
       </button>
       <div className={styles.menuContainer}>
-        <button
-          className={styles.menuButton}
-          onClick={toggleFilter}
-        >
-          ☰
-        </button>
+        
+        <div className={styles.imageContainer}>
+          <img src="/assets/sort.png" alt="Логотип" className={styles.sortImage} onClick={toggleFilter} />
+        </div>
+
         <Filter />
       </div>
     </div>

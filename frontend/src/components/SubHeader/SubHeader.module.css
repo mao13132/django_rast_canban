@@ -1,7 +1,7 @@
 .subHeader {
   display: flex;
   justify-content: space-between;
-  margin-top: 40px;
+  margin-top: 10px;
   align-items: center;
 }
 
@@ -41,7 +41,7 @@
 .right {
   display: flex;
   align-items: center;
-  border: 10px solid blue;
+  padding-right: 60px;
 } 
 
 .divider {
