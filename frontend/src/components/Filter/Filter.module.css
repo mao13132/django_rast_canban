@@ -13,15 +13,16 @@
 
 .filterContainer {
   position: absolute;
-  top: calc(100% + 8px); /* Отступ от кнопки меню */
+  top: calc(100% + 8px);
+  /* Отступ от кнопки меню */
   right: 0;
   background: white;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-shadow: var(--box-shadow);
-  width: 200px;
+  width: 330px;
   padding: 8px 0;
-  z-index: 1050; /* Меньше чем у header */
+  z-index: 1050;
+  /* Меньше чем у header */
 }
 
 .filterHeader {
@@ -33,20 +34,23 @@
 }
 
 .filterHeader span {
-  font-size: 14px;
+  font-size: 32px;
   color: #333;
 }
 
 .closeButton {
   background: none;
   border: none;
-  font-size: 16px;
+  font-size: 26px;
   cursor: pointer;
   color: #666;
-  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  position: absolute;
+  top: -10px;
+  right: 5px;
 }
 
 .filterContent {
@@ -59,9 +63,11 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 14px;
+  justify-content: space-between;
+  font-size: 32px;
   color: #333;
   transition: background-color 0.2s;
+  user-select: none;
 }
 
 .filterOption:hover {
@@ -83,7 +89,6 @@
   width: 16px;
   height: 16px;
   margin-right: 8px;
-  border: 1px solid #ccc;
   border-radius: 3px;
   position: relative;
 }
@@ -94,7 +99,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 12px;
+  font-size: 32px;
   color: #333;
 }
 
@@ -128,4 +133,4 @@
   border-radius: 8px;
   font-size: 14px;
   flex: 1;
-} 
+}

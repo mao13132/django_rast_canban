@@ -40,8 +40,9 @@ const Filter = () => {
             className={`${styles.filterOption} ${isOptionActive(option.id) ? styles.active : ''}`}
             onClick={() => handleSortChange(option.id)}
           >
-            <span className={styles.checkmark}></span>
+
             {option.label}
+            <span className={styles.checkmark}></span>
           </div>
         ))}
       </div>
