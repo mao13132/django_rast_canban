@@ -11,9 +11,9 @@ const SearchBar = ({ value, onChange, placeholder }) => {
         placeholder={placeholder}
         className={styles.input}
       />
-      <button className={styles.searchButton}>
-        🔍
-      </button>
+      <div className={styles.wrapperIcon}>
+        <img src="/assets/search.png" alt="Логотип" className={styles.searchImage} />
+      </div>
     </div>
   );
 };
