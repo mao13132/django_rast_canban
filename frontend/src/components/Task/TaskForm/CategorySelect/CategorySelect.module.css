@@ -94,4 +94,12 @@
   width: 24px;
   height: 24px;
   object-fit: contain;
+}
+
+.loading {
+  padding: 10px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.48);
+  font-family: 'Jost', sans-serif;
+  font-size: 16px;
 } 

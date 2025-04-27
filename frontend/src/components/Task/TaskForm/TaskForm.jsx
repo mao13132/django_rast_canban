@@ -10,7 +10,16 @@ import NoteSelect from './NoteSelect/NoteSelect';
 
 const TaskForm = ({ className }) => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
-  const { createTask, updateTask, categories, statuses } = useTaskStore();
+  const { 
+    createTask, 
+    updateTask, 
+    fetchCategories, 
+    fetchNotes,
+    categories, 
+    statuses,
+    categoriesLoading,
+    notesLoading 
+  } = useTaskStore();
   const { showNotification } = useNotification();
 
   const [formData, setFormData] = useState(TaskDTO.createEmptyForm());
@@ -20,6 +29,10 @@ const TaskForm = ({ className }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // Загружаем категории и заметки при открытии формы
+      fetchCategories();
+      fetchNotes();
+
       if (mode === 'create') {
         setFormData(TaskDTO.createEmptyForm());
         setFiles([]);
@@ -27,7 +40,7 @@ const TaskForm = ({ className }) => {
         setFormData(TaskDTO.toForm(initialData));
       }
     }
-  }, [isOpen, mode, initialData]);
+  }, [isOpen, mode, initialData, fetchCategories, fetchNotes]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -190,6 +203,7 @@ const TaskForm = ({ className }) => {
             onChange={handleChange}
             categories={categories}
             className={styles.select}
+            loading={categoriesLoading}
           />
         </div>
 
@@ -199,6 +213,7 @@ const TaskForm = ({ className }) => {
             value={formData.note}
             onChange={handleChange}
             className={styles.select}
+            loading={notesLoading}
           />
         </div>
 

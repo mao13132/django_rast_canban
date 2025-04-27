@@ -10,10 +10,11 @@ const NotePopup = () => {
   const { showNotification } = useNotification();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [isPinned, setIsPinned] = useState(false);
 
   const handleSubmit = async () => {
     try {
-      await createNote({ title, content });
+      await createNote({ title, content, is_pinned: isPinned });
       showNotification('Заметка успешно создана', 'success', 3000, 'bottom');
       closePopup();
     } catch (error) {
@@ -46,6 +47,16 @@ const NotePopup = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={isPinned}
+              onChange={(e) => setIsPinned(e.target.checked)}
+            />
+            <span>Закрепить заметку</span>
+          </label>
         </div>
         <div className={styles.actions}>
           <button 

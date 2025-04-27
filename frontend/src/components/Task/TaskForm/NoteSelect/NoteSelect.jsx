@@ -7,7 +7,7 @@ import NotePopup from './NotePopup/NotePopup';
 const NoteSelect = ({ value, onChange, className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
-  const { notes } = useTaskStore();
+  const { notes, notesLoading } = useTaskStore();
   const { openPopup } = useNotePopup();
 
   useEffect(() => {
@@ -52,15 +52,19 @@ const NoteSelect = ({ value, onChange, className }) => {
               <span>Без заметки</span>
             </div>
             
-            {notes.map(note => (
-              <div
-                key={note.id}
-                className={`${styles.noteOption} ${note.id === value ? styles.selected : ''}`}
-                onClick={() => handleSelect(note.id)}
-              >
-                <span>{note.title}</span>
-              </div>
-            ))}
+            {notesLoading ? (
+              <div className={styles.loading}>Загрузка заметок...</div>
+            ) : (
+              notes.map(note => (
+                <div
+                  key={note.id}
+                  className={`${styles.noteOption} ${note.id === value ? styles.selected : ''}`}
+                  onClick={() => handleSelect(note.id)}
+                >
+                  <span>{note.title}</span>
+                </div>
+              ))
+            )}
             
             <div
               className={styles.createNote}

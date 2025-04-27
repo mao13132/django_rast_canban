@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { TaskFormProvider } from './context/TaskFormContext';
 import { NotificationProvider } from './context/NotificationContext';
-import { NotesProvider } from './context/NotesContext';
 import { PopupProvider } from './context/PopupContext';
 import { ProfileProvider } from './context/ProfileContext';
 import { TaskSearchProvider } from './context/TaskSearchContext';
@@ -22,17 +21,15 @@ function App() {
           <NotificationProvider>
             <TaskSearchProvider>
               <TaskFormProvider>
-                <NotesProvider>
-                  <ProfileProvider>
-                    <CategoryPopupProvider>
-                      <NotePopupProvider>
-                        <AppRoutes />
-                        <Popup />
-                        <Profile />
-                      </NotePopupProvider>
-                    </CategoryPopupProvider>
-                  </ProfileProvider>
-                </NotesProvider>
+                <ProfileProvider>
+                  <CategoryPopupProvider>
+                    <NotePopupProvider>
+                      <AppRoutes />
+                      <Popup />
+                      <Profile />
+                    </NotePopupProvider>
+                  </CategoryPopupProvider>
+                </ProfileProvider>
               </TaskFormProvider>
             </TaskSearchProvider>
           </NotificationProvider>

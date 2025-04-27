@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { fromBackend } from '../../../../dto/CategoryDTO';
+import { useTaskStore } from '../../../../store/taskStore';
 import { useCategoryPopup } from '../../../../context/CategoryPopupContext';
 import styles from './CategorySelect.module.css';
 import CategoryPopup from './CategoryPopup/CategoryPopup';
 
-const CategorySelect = ({ value, onChange, categories, className }) => {
+const CategorySelect = ({ value, onChange, className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
+  const { categories, fetchCategories, categoriesLoading } = useTaskStore();
   const { openPopup } = useCategoryPopup();
 
   useEffect(() => {
@@ -25,8 +26,7 @@ const CategorySelect = ({ value, onChange, categories, className }) => {
     setIsOpen(false);
   };
 
-  const normalizedCategories = categories.map(fromBackend);
-  const selectedCategory = normalizedCategories.find(cat => cat.id === value) || { name: 'Без категории' };
+  const selectedCategory = categories.find(cat => cat.id === value) || { name: 'Без категории' };
 
   return (
     <>
@@ -53,15 +53,19 @@ const CategorySelect = ({ value, onChange, categories, className }) => {
               <span>Без категории</span>
             </div>
             
-            {normalizedCategories.map(category => (
-              <div
-                key={category.id}
-                className={`${styles.categoryOption} ${category.id === value ? styles.selected : ''}`}
-                onClick={() => handleSelect(category.id)}
-              >
-                <span>{category.name}</span>
-              </div>
-            ))}
+            {categoriesLoading ? (
+              <div className={styles.loading}>Загрузка категорий...</div>
+            ) : (
+              categories.map(category => (
+                <div
+                  key={category.id}
+                  className={`${styles.categoryOption} ${category.id === value ? styles.selected : ''}`}
+                  onClick={() => handleSelect(category.id)}
+                >
+                  <span>{category.name}</span>
+                </div>
+              ))
+            )}
             
             <div
               className={styles.createCategory}
