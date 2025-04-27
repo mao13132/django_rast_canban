@@ -18,8 +18,19 @@ export const NotificationProvider = ({ children }) => {
     return null;
   }
 
-  const showNotification = (message, type = 'error', duration = 3000) => {
-    setNotification({ message, type });
+  const showNotification = (message, type = 'error', duration = 3000, position = 'top') => {
+    // Получаем текущую позицию скролла
+    const scrollPosition = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    // Определяем, находится ли пользователь в нижней части страницы
+    const isNearBottom = scrollPosition + windowHeight >= documentHeight - 100;
+
+    // Если пользователь внизу, показываем уведомление снизу
+    const finalPosition = isNearBottom ? 'bottom' : position;
+
+    setNotification({ message, type, position: finalPosition });
     setTimeout(() => setNotification(null), duration);
   };
 
@@ -27,7 +38,11 @@ export const NotificationProvider = ({ children }) => {
     <NotificationContext.Provider value={{ showNotification }}>
       {children}
       {notification && (
-        <Notification message={notification.message} type={notification.type} />
+        <Notification 
+          message={notification.message} 
+          type={notification.type} 
+          position={notification.position}
+        />
       )}
     </NotificationContext.Provider>
   );

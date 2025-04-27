@@ -27,7 +27,7 @@ export const NotesProvider = ({ children }) => {
       const data = await response.json();
       return data;
     } catch (error) {
-      showNotification('Ошибка при загрузке заметки', 'error');
+      showNotification('Ошибка при загрузке заметки', 'error', 3000, 'bottom');
       return null;
     }
   };
@@ -51,10 +51,10 @@ export const NotesProvider = ({ children }) => {
       setNotes(notes.map(note => 
         note.id === id ? updatedNote : note
       ));
-      showNotification('Заметка успешно обновлена', 'success');
+      showNotification('Заметка успешно обновлена', 'success', 3000, 'bottom');
       return updatedNote;
     } catch (error) {
-      showNotification('Ошибка при обновлении заметки', 'error');
+      showNotification('Ошибка при обновлении заметки', 'error', 3000, 'bottom');
       return null;
     }
   };
@@ -76,10 +76,10 @@ export const NotesProvider = ({ children }) => {
 
       const newNote = await response.json();
       setNotes([...notes, newNote]);
-      showNotification('Заметка успешно создана', 'success');
+      showNotification('Заметка успешно создана', 'success', 3000, 'bottom');
       return newNote;
     } catch (error) {
-      showNotification('Ошибка при создании заметки', 'error');
+      showNotification('Ошибка при создании заметки', 'error', 3000, 'bottom');
       return null;
     }
   };
@@ -96,10 +96,10 @@ export const NotesProvider = ({ children }) => {
       }
 
       setNotes(notes.filter(note => note.id !== id));
-      showNotification('Заметка успешно удалена', 'success');
+      showNotification('Заметка успешно удалена', 'success', 3000, 'bottom');
       return true;
     } catch (error) {
-      showNotification('Ошибка при удалении заметки', 'error');
+      showNotification('Ошибка при удалении заметки', 'error', 3000, 'bottom');
       return false;
     }
   };
@@ -115,7 +115,7 @@ export const NotesProvider = ({ children }) => {
       setNotes(data);
       return data;
     } catch (error) {
-      showNotification('Ошибка при загрузке заметок', 'error');
+      showNotification('Ошибка при загрузке заметок', 'error', 3000, 'bottom');
       return [];
     }
   };

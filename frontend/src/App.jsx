@@ -7,6 +7,7 @@ import { NotesProvider } from './context/NotesContext';
 import { PopupProvider } from './context/PopupContext';
 import { ProfileProvider } from './context/ProfileContext';
 import { TaskSearchProvider } from './context/TaskSearchContext';
+import { CategoryPopupProvider } from './context/CategoryPopupContext';
 import Popup from './components/Popup';
 import Profile from './components/Profile/ProfilePopup/ProfilePopup.jsx';
 import AppRoutes from './routes/AppRoutes';
@@ -22,9 +23,11 @@ function App() {
               <TaskFormProvider>
                 <NotesProvider>
                   <ProfileProvider>
-                    <AppRoutes />
-                    <Popup />
-                    <Profile />
+                    <CategoryPopupProvider>
+                      <AppRoutes />
+                      <Popup />
+                      <Profile />
+                    </CategoryPopupProvider>
                   </ProfileProvider>
                 </NotesProvider>
               </TaskFormProvider>

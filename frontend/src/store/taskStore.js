@@ -3,6 +3,7 @@ import { tasksAPI, categoriesAPI, statusesAPI } from '../services/api';
 import LocalStorageService from '../services/localStorageService';
 import * as TaskDTO from '../dto/TaskDTO';
 import * as StatusDTO from '../dto/StatusDTO';
+import * as CategoryDTO from '../dto/CategoryDTO';
 
 // Константы для ключей localStorage
 const STORAGE_KEYS = {
@@ -17,6 +18,7 @@ export const useTaskStore = create((set, get) => ({
   categories: [],
   statuses: [],
   loading: false,
+  categoriesLoading: false,
   error: null,
   sortBy: LocalStorageService.get(STORAGE_KEYS.SORT_BY, []),
   filters: LocalStorageService.get(STORAGE_KEYS.FILTERS, {
@@ -104,14 +106,14 @@ export const useTaskStore = create((set, get) => ({
   // Получение категорий
   fetchCategories: async () => {
     try {
-      set({ loading: true });
+      set({ categoriesLoading: true });
       const response = await categoriesAPI.getCategories();
       set({ categories: response.data });
     } catch (err) {
       console.error('Ошибка при загрузке категорий:', err);
       set({ categories: [] });
     } finally {
-      set({ loading: false });
+      set({ categoriesLoading: false });
     }
   },
 
@@ -226,5 +228,61 @@ export const useTaskStore = create((set, get) => ({
       
       return true;
     });
-  }
+  },
+
+  // Создание категории
+  createCategory: async (formData) => {
+    try {
+      set({ categoriesLoading: true });
+      const categoryData = CategoryDTO.toBackend(formData);
+      const response = await categoriesAPI.createCategory(categoryData);
+      const normalizedCategory = CategoryDTO.fromBackend(response.data);
+      
+      // Обновляем список категорий
+      await get().fetchCategories();
+      
+      return normalizedCategory;
+    } catch (err) {
+      console.error('Ошибка при создании категории:', err);
+      throw err;
+    } finally {
+      set({ categoriesLoading: false });
+    }
+  },
+
+  // Обновление категории
+  updateCategory: async (categoryId, formData) => {
+    try {
+      set({ categoriesLoading: true });
+      const categoryData = CategoryDTO.toBackend(formData);
+      const response = await categoriesAPI.updateCategory(categoryId, categoryData);
+      const normalizedCategory = CategoryDTO.fromBackend(response.data);
+      
+      // Обновляем список категорий
+      await get().fetchCategories();
+      
+      return normalizedCategory;
+    } catch (err) {
+      console.error('Ошибка при обновлении категории:', err);
+      throw err;
+    } finally {
+      set({ categoriesLoading: false });
+    }
+  },
+
+  // Удаление категории
+  deleteCategory: async (categoryId) => {
+    try {
+      set({ categoriesLoading: true });
+      await categoriesAPI.deleteCategory(categoryId);
+      
+      // Обновляем список категорий
+      await get().fetchCategories();
+    } catch (err) {
+      console.error('Ошибка при удалении категории:', err);
+      throw err;
+    } finally {
+      set({ categoriesLoading: false });
+    }
+  },
 })); 

@@ -62,13 +62,13 @@ const TaskForm = ({ className }) => {
     setError(null);
 
     if (!formData.title) {
-      showNotification('Название задачи обязательно', 'error');
+      showNotification('Название задачи обязательно', 'error', 3000, 'bottom');
       setLoading(false);
       return;
     }
 
     if (!formData.status) {
-      showNotification('Статус задачи обязателен', 'error');
+      showNotification('Статус задачи обязателен', 'error', 3000, 'bottom');
       setLoading(false);
       return;
     }
@@ -81,10 +81,10 @@ const TaskForm = ({ className }) => {
 
       if (mode === 'create') {
         await createTask(taskData);
-        showNotification('Задача успешно создана', 'success');
+        showNotification('Задача успешно создана', 'success', 3000, 'bottom');
       } else {
         await updateTask(initialData.id, taskData);
-        showNotification('Задача успешно обновлена', 'success');
+        showNotification('Задача успешно обновлена', 'success', 3000, 'bottom');
       }
 
       closeForm();
@@ -96,12 +96,12 @@ const TaskForm = ({ className }) => {
           const errorMessages = Object.entries(errorData)
             .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
             .join('\n');
-          showNotification(errorMessages, 'error');
+          showNotification(errorMessages, 'error', 3000, 'bottom');
         } else {
-          showNotification(errorData, 'error');
+          showNotification(errorData, 'error', 3000, 'bottom');
         }
       } else {
-        showNotification('Ошибка при сохранении задачи', 'error');
+        showNotification('Ошибка при сохранении задачи', 'error', 3000, 'bottom');
       }
     } finally {
       setLoading(false);
