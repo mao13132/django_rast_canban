@@ -21,13 +21,16 @@ class TaskSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
     note = serializers.SerializerMethodField()
     days_remaining = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Task
         fields = ['task_id', 'user_id', 'title', 'description', 'status_id',
                   'category_id', 'note_id', 'priority', 'deadline_start', 'deadline_end',
-                  'attachments', 'status', 'category', 'note', 'days_remaining']
-        read_only_fields = ['task_id', 'user_id', 'days_remaining']
+                  'attachments', 'status', 'category', 'note', 'days_remaining',
+                  'created_at', 'updated_at']
+        read_only_fields = ['task_id', 'user_id', 'days_remaining', 'created_at', 'updated_at']
 
     def get_status(self, obj):
         """

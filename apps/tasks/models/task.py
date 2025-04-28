@@ -71,11 +71,13 @@ class Task(models.Model):
         blank=True,
         help_text='Конец срока выполнения'
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Задача'
         verbose_name_plural = 'Задачи'
-        ordering = ['task_id']
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title

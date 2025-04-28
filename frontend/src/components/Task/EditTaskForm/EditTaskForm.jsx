@@ -9,6 +9,17 @@ import CategorySelect from '../TaskForm/CategorySelect/CategorySelect';
 import NoteSelect from '../TaskForm/NoteSelect/NoteSelect';
 import DateTimeSelect from '../TaskForm/DateTimeSelect/DateTimeSelect';
 
+// Функция для форматирования даты
+const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+};
+
 const EditTaskForm = ({ className }) => {
     const { isOpen, taskData, closeForm, updateTaskData, loading, error, setLoading, setError } = useEditTaskForm();
     const {
@@ -114,6 +125,9 @@ const EditTaskForm = ({ className }) => {
     const handleDelete = async () => {
         if (!taskData?.id) return;
 
+        const confirmDelete = window.confirm('Вы уверены, что хотите удалить эту задачу?');
+        if (!confirmDelete) return;
+
         try {
             await deleteTask(taskData.id);
             await fetchTasks();
@@ -213,66 +227,8 @@ const EditTaskForm = ({ className }) => {
                             )}
                         </div>
 
-                        <div className={styles.actions}>
-                            <button type="button" onClick={closeForm} className={styles.cancelButton}>
-                                Отмена
-                            </button>
-                            <button type="button" onClick={handleDelete} className={styles.deleteButton}>
-                                Удалить задачу
-                            </button>
-                            <button type="button" onClick={handleSubmit} className={styles.submitButton} disabled={loading}>
-                                Сохранить изменения
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className={styles.divider}></div>
-
-                    <div className={styles.rightWrapper}>
-                        <div className={styles.formGroup}>
-                            <div className={styles.selectLabel}>Название задачи</div>
-                            <input
-                                type="text"
-                                name="title"
-                                value={formData.title}
-                                onChange={handleChange}
-                                placeholder=""
-                                className={styles.input}
-                                required
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <div className={styles.selectLabel}>Приоритет</div>
-                            <PrioritySelect
-                                value={formData.priority}
-                                onChange={handleChange}
-                                className={styles.select}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <div className={styles.selectLabel}>Категория</div>
-                            <CategorySelect
-                                value={formData.category}
-                                onChange={handleChange}
-                                categories={categories}
-                                className={styles.select}
-                                loading={categoriesLoading}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <div className={styles.selectLabel}>Заметка</div>
-                            <NoteSelect
-                                value={formData.note}
-                                onChange={handleChange}
-                                className={styles.select}
-                                loading={notesLoading}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
+                        <div className={styles.dedlineWrapper}>
+                            <div className={styles.selectLabel}>Изменить дедлайн</div>
                             <div className={styles.deadlineGroup}>
                                 <div className={styles.dateWrapper}>
                                     <label>Начало:</label>
@@ -292,6 +248,122 @@ const EditTaskForm = ({ className }) => {
                                         placeholder=""
                                     />
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className={styles.actions}>
+                            <button type="button" onClick={handleSubmit} className={styles.submitButton} disabled={loading}>
+                                Сохранить
+                            </button>
+                            <button type="button" onClick={closeForm} className={styles.cancelButton}>
+                                Отменить
+                            </button>
+                            <button type="button" onClick={handleDelete} className={styles.deleteButton}>
+                                Удалить задачу
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className={styles.divider}></div>
+
+                    <div className={styles.rightWrapper}>
+                        <div className={styles.nameTask}>
+
+                            <div className={styles.iconWrapper}>
+                                <img src={"/assets/name.png"} alt="Профиль" className={styles.profileImage} />
+                            </div>
+                            <input
+                                type="text"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                placeholder=""
+                                className={styles.inputNameTask}
+                                required
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.idTitle}>Номер задачи</div>
+                            <div className={styles.numberText}>Задача №{formData.id}</div>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Категория</div>
+                            <CategorySelect
+                                value={formData.category}
+                                onChange={handleChange}
+                                categories={categories}
+                                className={`${styles.select} ${styles.selectCategory}`}
+                                loading={categoriesLoading}
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Приоритет</div>
+                            <PrioritySelect
+                                value={formData.priority}
+                                onChange={handleChange}
+                                className={styles.select}
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Заметка</div>
+                            <NoteSelect
+                                value={formData.note}
+                                onChange={handleChange}
+                                className={styles.select}
+                                loading={notesLoading}
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Дата создания</div>
+                            <div className={styles.dateText}>{formatDate(formData.created_at)}</div>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Дата изменения</div>
+                            <div className={styles.dateText}>{formatDate(formData.updated_at)}</div>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Дедлайн</div>
+                            <div className={styles.deadlineGroup}>
+                                <div className={styles.dateWrapper}>
+                                    <label>Начало:</label>
+                                    <DateTimeSelect
+                                        name="deadline.startView"
+                                        value={formData.deadline.start}
+                                        onChange={handleChange}
+                                        placeholder=""
+                                        onlyView={true}
+                                    />
+                                </div>
+                                <div className={styles.dateWrapper}>
+                                    <label>Конец:</label>
+                                    <DateTimeSelect
+                                        name="deadline.endView"
+                                        value={formData.deadline.end}
+                                        onChange={handleChange}
+                                        placeholder=""
+                                        onlyView={true}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <div className={styles.selectLabel}>Описание</div>
+                                    <textarea
+                                        name="descriptionView"
+                                        value={formData.description}
+                                        onChange={handleChange}
+                                        placeholder=""
+                                        className={`${styles.textarea} ${styles.descriptionView}`}
+                                        readOnly={true}
+                                    />
+                                </div>
+
+
                             </div>
                         </div>
                     </div>

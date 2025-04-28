@@ -11,7 +11,9 @@ export const createEmptyForm = () => ({
         start: '',
         end: ''
     },
-    attachments: []
+    attachments: [],
+    created_at: null,
+    updated_at: null
 });
 
 // Нормализация данных для формы редактирования
@@ -28,7 +30,9 @@ export const normalizeFormData = (task) => {
             start: task.deadline?.start || '',
             end: task.deadline?.end || ''
         },
-        attachments: task.attachments || []
+        attachments: task.attachments || [],
+        created_at: task.created_at || null,
+        updated_at: task.updated_at || null
     };
 };
 

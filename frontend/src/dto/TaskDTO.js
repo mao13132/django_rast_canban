@@ -30,6 +30,8 @@
  * @property {string} deadline.end - Дата окончания
  * @property {number} user_id - ID пользователя
  * @property {number} days_remaining - Количество оставшихся дней до дедлайна
+ * @property {string} created_at - Дата создания задачи
+ * @property {string} updated_at - Дата последнего обновления задачи
  */
 
 /**
@@ -52,7 +54,9 @@ export const fromBackend = (data) => {
       end: data.deadline?.end || ''
     },
     user_id: data.user_id,
-    days_remaining: data.days_remaining || null
+    days_remaining: data.days_remaining || null,
+    created_at: data.created_at || null,
+    updated_at: data.updated_at || null
   };
 };
 

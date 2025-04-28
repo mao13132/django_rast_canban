@@ -17,13 +17,29 @@ class TaskAttachmentInline(admin.TabularInline):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('task_id', 'title', 'user_id', 'status_id', 'category_id', 'note_id', 'priority', 'deadline_start', 'deadline_end')
-    list_filter = ('status_id', 'category_id', 'note_id', 'priority')
+    list_display = ('task_id', 'title', 'user_id', 'status_id', 'category_id', 'note_id', 'priority', 'deadline_start', 'deadline_end', 'created_at', 'updated_at')
+    list_filter = ('status_id', 'category_id', 'note_id', 'priority', 'user_id')
     search_fields = ('title', 'description')
     date_hierarchy = 'deadline_start'
     list_editable = ('priority',)
     inlines = [TaskAttachmentInline]
     exclude = ('attachments',)
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('user_id', 'title', 'description', 'priority')
+        }),
+        ('Связи', {
+            'fields': ('status_id', 'category_id', 'note_id')
+        }),
+        ('Дедлайн', {
+            'fields': ('deadline_start', 'deadline_end')
+        }),
+        ('Даты', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
 
 
 @admin.register(TaskStatus)

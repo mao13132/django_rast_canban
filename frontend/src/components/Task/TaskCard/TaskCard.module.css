@@ -206,3 +206,10 @@
   align-items: center;
   gap: var(--padding-card);
 }
+
+.deadlineText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
