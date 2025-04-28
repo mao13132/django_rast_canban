@@ -54,7 +54,7 @@ export const fromBackend = (data) => {
       end: data.deadline?.end || ''
     },
     user_id: data.user_id,
-    days_remaining: data.days_remaining || null,
+    days_remaining: data.days_remaining,
     created_at: data.created_at || null,
     updated_at: data.updated_at || null
   };

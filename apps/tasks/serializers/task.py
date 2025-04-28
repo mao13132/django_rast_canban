@@ -75,7 +75,9 @@ class TaskSerializer(serializers.ModelSerializer):
         """
         Возвращает количество оставшихся дней до дедлайна
         """
-        return obj.get_days_remaining()
+        days = obj.get_days_remaining()
+        # Возвращаем 0 вместо None, если дедлайн прошел
+        return 0 if days == 0 else days
 
     def validate_status_id(self, value):
         """
