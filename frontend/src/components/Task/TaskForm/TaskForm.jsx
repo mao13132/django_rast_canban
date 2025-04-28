@@ -10,10 +10,9 @@ import NoteSelect from './NoteSelect/NoteSelect';
 import DateTimeSelect from './DateTimeSelect/DateTimeSelect';
 
 const TaskForm = ({ className }) => {
-  const { isOpen, mode, initialData, closeForm } = useTaskForm();
+  const { isOpen, closeForm } = useTaskForm();
   const { 
     createTask, 
-    updateTask, 
     fetchCategories, 
     fetchNotes,
     categories, 
@@ -33,15 +32,10 @@ const TaskForm = ({ className }) => {
       // Загружаем категории и заметки при открытии формы
       fetchCategories();
       fetchNotes();
-
-      if (mode === 'create') {
-        setFormData(TaskDTO.createEmptyForm());
-        setFiles([]);
-      } else if (initialData) {
-        setFormData(TaskDTO.toForm(initialData));
-      }
+      setFormData(TaskDTO.createEmptyForm());
+      setFiles([]);
     }
-  }, [isOpen, mode, initialData, fetchCategories, fetchNotes]);
+  }, [isOpen, fetchCategories, fetchNotes]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,15 +88,8 @@ const TaskForm = ({ className }) => {
 
     try {
       const taskData = TaskDTO.toBackend(formData, files);
-
-      if (mode === 'create') {
-        await createTask(taskData);
-        showNotification('Задача успешно создана', 'success', 3000, 'bottom');
-      } else {
-        await updateTask(initialData.id, taskData);
-        showNotification('Задача успешно обновлена', 'success', 3000, 'bottom');
-      }
-
+      await createTask(taskData);
+      showNotification('Задача успешно создана', 'success', 3000, 'bottom');
       closeForm();
     } catch (err) {
       console.error('Error saving task:', err);
@@ -130,7 +117,7 @@ const TaskForm = ({ className }) => {
     <div className={`${styles.overlay} ${className || ''}`}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.header}>
-          <h2>{mode === 'create' ? 'Новая задача' : 'Редактировать задачу'}</h2>
+          <h2>Новая задача</h2>
           <button type="button" className={styles.closeButton} onClick={closeForm}>×</button>
         </div>
 
