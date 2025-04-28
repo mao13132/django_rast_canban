@@ -138,7 +138,6 @@ const EditTaskForm = ({ className }) => {
                         className={`${styles.select} ${styles.headerSelect}`}
                         required
                     >
-                        <option value="">Без статуса</option>
                         {statuses.map(status => (
                             <option key={status.id} value={status.id}>
                                 {status.name}
@@ -149,134 +148,162 @@ const EditTaskForm = ({ className }) => {
 
                 {error && <div className={styles.error}>{error}</div>}
 
-                <div className={styles.formGroup}>
-                    <div className={styles.selectLabel}>Название задачи</div>
-                    <input
-                        type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        placeholder=""
-                        className={styles.input}
-                        required
-                    />
-                </div>
+                <div className={styles.contentwrapper}>
 
-                <div className={styles.formGroup}>
-                    <div className={styles.selectLabel}>Приоритет</div>
-                    <PrioritySelect
-                        value={formData.priority}
-                        onChange={handleChange}
-                        className={styles.select}
-                    />
-                </div>
+                    <div className={styles.leftWrapper}>
 
-                <div className={styles.formGroup}>
-                    <div className={styles.selectLabel}>Описание</div>
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        placeholder=""
-                        className={styles.textarea}
-                    />
-                </div>
-
-                <div className={styles.formGroup}>
-                    <div className={styles.selectLabel}>Прикрепить файл</div>
-                    <div className={styles.fileUpload}>
-                        <img src="/assets/file.png" alt="Файл" className={styles.fileIcon} />
-                        <input
-                            type="file"
-                            multiple
-                            onChange={handleFileChange}
-                            className={styles.fileInput}
-                        />
-                    </div>
-                    {(files.length > 0 || newFiles.length > 0) && (
-                        <div className={styles.fileList}>
-                            {files.map((file, index) => (
-                                <div key={`existing-${index}`} className={styles.fileItem}>
-                                    <span>{file.name}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeFile(index, false)}
-                                        className={styles.removeFile}
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
-                            {newFiles.map((file, index) => (
-                                <div key={`new-${index}`} className={styles.fileItem}>
-                                    <span>{file.name}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeFile(index, true)}
-                                        className={styles.removeFile}
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                <div className={styles.formGroup}>
-                    <div className={styles.selectLabel}>Категория</div>
-                    <CategorySelect
-                        value={formData.category}
-                        onChange={handleChange}
-                        categories={categories}
-                        className={styles.select}
-                        loading={categoriesLoading}
-                    />
-                </div>
-
-                <div className={styles.formGroup}>
-                    <div className={styles.selectLabel}>Заметка</div>
-                    <NoteSelect
-                        value={formData.note}
-                        onChange={handleChange}
-                        className={styles.select}
-                        loading={notesLoading}
-                    />
-                </div>
-
-                <div className={styles.formGroup}>
-                    <div className={styles.deadlineGroup}>
-                        <div className={styles.dateWrapper}>
-                            <label>Начало:</label>
-                            <DateTimeSelect
-                                name="deadline.start"
-                                value={formData.deadline.start}
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Редактировать описание</div>
+                            <textarea
+                                name="description"
+                                value={formData.description}
                                 onChange={handleChange}
                                 placeholder=""
+                                className={styles.textarea}
                             />
                         </div>
-                        <div className={styles.dateWrapper}>
-                            <label>Конец:</label>
-                            <DateTimeSelect
-                                name="deadline.end"
-                                value={formData.deadline.end}
+
+                        <div className={styles.Oneactions}>
+                            <button type="button" onClick={handleSubmit} className={styles.OneButton} disabled={loading}>
+                                Сохранить изменения
+                            </button>
+                            <button type="button" onClick={closeForm} className={styles.OneButton}>
+                                Отменить
+                            </button>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Прикрепить файл</div>
+                            <div className={styles.fileUpload}>
+                                <img src="/assets/file.png" alt="Файл" className={styles.fileIcon} />
+                                <input
+                                    type="file"
+                                    multiple
+                                    onChange={handleFileChange}
+                                    className={styles.fileInput}
+                                />
+                            </div>
+                            {(files.length > 0 || newFiles.length > 0) && (
+                                <div className={styles.fileList}>
+                                    {files.map((file, index) => (
+                                        <div key={`existing-${index}`} className={styles.fileItem}>
+                                            <span>{file.name}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => removeFile(index, false)}
+                                                className={styles.removeFile}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {newFiles.map((file, index) => (
+                                        <div key={`new-${index}`} className={styles.fileItem}>
+                                            <span>{file.name}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => removeFile(index, true)}
+                                                className={styles.removeFile}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+
+
+                        <div className={styles.actions}>
+                            <button type="button" onClick={closeForm} className={styles.cancelButton}>
+                                Отмена
+                            </button>
+                            <button type="button" onClick={handleDelete} className={styles.deleteButton}>
+                                Удалить задачу
+                            </button>
+                            <button type="button" onClick={handleSubmit} className={styles.submitButton} disabled={loading}>
+                                Сохранить изменения
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div className={styles.divider}></div>
+
+                    <div className={styles.rightWrapper}>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Название задачи</div>
+                            <input
+                                type="text"
+                                name="title"
+                                value={formData.title}
                                 onChange={handleChange}
                                 placeholder=""
+                                className={styles.input}
+                                required
                             />
                         </div>
-                    </div>
-                </div>
 
-                <div className={styles.actions}>
-                    <button type="button" onClick={closeForm} className={styles.cancelButton}>
-                        Отмена
-                    </button>
-                    <button type="button" onClick={handleDelete} className={styles.deleteButton}>
-                        Удалить задачу
-                    </button>
-                    <button type="button" onClick={handleSubmit} className={styles.submitButton} disabled={loading}>
-                        Сохранить изменения
-                    </button>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Приоритет</div>
+                            <PrioritySelect
+                                value={formData.priority}
+                                onChange={handleChange}
+                                className={styles.select}
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Категория</div>
+                            <CategorySelect
+                                value={formData.category}
+                                onChange={handleChange}
+                                categories={categories}
+                                className={styles.select}
+                                loading={categoriesLoading}
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <div className={styles.selectLabel}>Заметка</div>
+                            <NoteSelect
+                                value={formData.note}
+                                onChange={handleChange}
+                                className={styles.select}
+                                loading={notesLoading}
+                            />
+                        </div>
+
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.deadlineGroup}>
+                                <div className={styles.dateWrapper}>
+                                    <label>Начало:</label>
+                                    <DateTimeSelect
+                                        name="deadline.start"
+                                        value={formData.deadline.start}
+                                        onChange={handleChange}
+                                        placeholder=""
+                                    />
+                                </div>
+                                <div className={styles.dateWrapper}>
+                                    <label>Конец:</label>
+                                    <DateTimeSelect
+                                        name="deadline.end"
+                                        value={formData.deadline.end}
+                                        onChange={handleChange}
+                                        placeholder=""
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
                 </div>
             </div>
         </div>
