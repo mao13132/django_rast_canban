@@ -73,6 +73,10 @@ const TaskForm = ({ className }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Проверяем, что это реальный сабмит формы, а не StrictMode
+    if (!e.isTrusted) return;
+    
     setLoading(true);
     setError(null);
 
@@ -89,10 +93,7 @@ const TaskForm = ({ className }) => {
     }
 
     try {
-      const taskData = {
-        ...formData,
-        attachments: files
-      };
+      const taskData = TaskDTO.toBackend(formData, files);
 
       if (mode === 'create') {
         await createTask(taskData);

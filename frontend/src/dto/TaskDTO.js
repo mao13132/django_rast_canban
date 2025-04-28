@@ -52,23 +52,32 @@ export const fromBackend = (data) => {
  */
 export const toBackend = (formData, files = []) => {
   const formDataObj = new FormData();
-
-  // Основные поля
-  formDataObj.append('title', formData.title || '');
-  formDataObj.append('description', formData.description || '');
+  
+  // Основные поля (всегда отправляем, даже если пустые)
+  formDataObj.append('title', formData.title);
+  formDataObj.append('description', formData.description);
   formDataObj.append('priority', formData.priority || 'medium');
   
-  // ID статуса и категории
+  // ID статуса и категории (обязательные поля)
   if (formData.status) {
-    formDataObj.append('status_id', typeof formData.status === 'object' ? formData.status.id : formData.status);
-  }
-  if (formData.category) {
-    formDataObj.append('category_id', typeof formData.category === 'object' ? formData.category.id : formData.category);
+    formDataObj.append('status_id', formData.status);
+  } else {
+    formDataObj.append('status_id', ''); // Отправляем пустое значение для валидации
   }
 
-  // Сроки
-  if (formData.deadline?.start) formDataObj.append('deadline.start', formData.deadline.start);
-  if (formData.deadline?.end) formDataObj.append('deadline.end', formData.deadline.end);
+  if (formData.category) {
+    formDataObj.append('category_id', formData.category);
+  } else {
+    formDataObj.append('category_id', ''); // Отправляем пустое значение для валидации
+  }
+
+  if (formData.note) {
+    formDataObj.append('note_id', formData.note);
+  }
+
+  // Сроки (опциональные поля)
+  formDataObj.append('deadline_start', formData.deadline?.start || '');
+  formDataObj.append('deadline_end', formData.deadline?.end || '');
 
   // Файлы
   if (files && files.length > 0) {

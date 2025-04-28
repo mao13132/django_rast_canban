@@ -1,7 +1,7 @@
 .overlay {
   position: absolute;
   top: 300px;
-  left: 720px;
+  right: 200px;
   width: 720px;
   background: #F5F5F5;
   display: flex;

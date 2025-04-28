@@ -26,7 +26,7 @@ const CategorySelect = ({ value, onChange, className }) => {
     setIsOpen(false);
   };
 
-  const selectedCategory = categories.find(cat => cat.id === value) || { name: 'Без категории' };
+  const selectedCategory = categories.find(cat => cat.category_id === value) || { name: 'Без категории' };
 
   return (
     <>
@@ -58,9 +58,9 @@ const CategorySelect = ({ value, onChange, className }) => {
             ) : (
               categories.map(category => (
                 <div
-                  key={category.id}
-                  className={`${styles.categoryOption} ${category.id === value ? styles.selected : ''}`}
-                  onClick={() => handleSelect(category.id)}
+                  key={category.category_id}
+                  className={`${styles.categoryOption} ${category.category_id === value ? styles.selected : ''}`}
+                  onClick={() => handleSelect(category.category_id)}
                 >
                   <span>{category.name}</span>
                 </div>

@@ -140,8 +140,7 @@ export const useTaskStore = create((set, get) => ({
   // Создание задачи
   createTask: async (taskData) => {
     try {
-      const formData = TaskDTO.toBackend(taskData, taskData.attachments);
-      const response = await tasksAPI.createTask(formData);
+      const response = await tasksAPI.createTask(taskData);
       const normalizedTask = TaskDTO.fromBackend(response.data);
 
       set((state) => ({
@@ -158,8 +157,7 @@ export const useTaskStore = create((set, get) => ({
   // Обновление задачи
   updateTask: async (taskId, taskData) => {
     try {
-      const formData = TaskDTO.toBackend(taskData, taskData.attachments);
-      const response = await tasksAPI.updateTask(taskId, formData);
+      const response = await tasksAPI.updateTask(taskId, taskData);
       const normalizedTask = TaskDTO.fromBackend(response);
 
       set((state) => ({
