@@ -1,6 +1,7 @@
 from django_filters import rest_framework as filters
 from .models import Task
 
+
 class TaskFilter(filters.FilterSet):
     """
     Фильтры для задач
@@ -24,4 +25,4 @@ class TaskFilter(filters.FilterSet):
             title__icontains=value
         ) | queryset.filter(
             description__icontains=value
-        ) 
+        )
