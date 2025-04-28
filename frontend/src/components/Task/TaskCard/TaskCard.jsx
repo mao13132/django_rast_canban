@@ -80,7 +80,7 @@ const TaskCard = ({ task }) => {
       {task.deadline && (
         <div className={styles.deadline}>
           <div className={styles.deadlineIconWrapper}>
-            <img className={styles.descriptionIcon} src="/assets/date.png" alt="Дедлайн" />
+            {isUrgent ? <img className={styles.descriptionIcon} src="/assets/dedline.png" alt="Дедлайн" /> : <img className={styles.descriptionIcon} src="/assets/date.png" alt="Дедлайн" />}
           </div>
           <span>с <span className={styles.date}>{formatDate(task.deadline.start)}</span> по <span className={styles.date}>{formatDate(task.deadline.end)}</span></span>
         </div>
