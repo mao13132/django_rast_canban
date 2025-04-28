@@ -15,11 +15,19 @@
  * @property {Object} note - Заметка задачи
  * @property {number} note.id - ID заметки
  * @property {string} note.title - Заголовок заметки
+ * @property {string} note.content - Содержание заметки
+ * @property {boolean} note.is_pinned - Закреплена ли заметка
+ * @property {boolean} note.is_archived - Архивирована ли заметка
+ * @property {Array<Object>} attachments - Вложения задачи
+ * @property {number} attachments[].id - ID вложения
+ * @property {string} attachments[].name - Название файла
+ * @property {number} attachments[].size - Размер файла в байтах
+ * @property {string} attachments[].url - URL для скачивания файла
+ * @property {string} attachments[].uploaded_at - Дата загрузки
  * @property {string} priority - Приоритет (low/medium/high)
  * @property {Object} deadline - Сроки
  * @property {string} deadline.start - Дата начала
  * @property {string} deadline.end - Дата окончания
- * @property {Array} attachments - Прикрепленные файлы
  * @property {number} user_id - ID пользователя
  * @property {number} days_remaining - Количество оставшихся дней до дедлайна
  */
@@ -36,12 +44,13 @@ export const fromBackend = (data) => {
     description: data.description || '',
     status: normalizeEntity(data.status),
     category: normalizeEntity(data.category),
+    note: normalizeNote(data.note),
+    attachments: normalizeAttachments(data.attachments),
     priority: data.priority || 'medium',
     deadline: {
       start: data.deadline?.start || '',
       end: data.deadline?.end || ''
     },
-    attachments: data.attachments || [],
     user_id: data.user_id,
     days_remaining: data.days_remaining || null
   };
@@ -73,6 +82,8 @@ export const toBackend = (formData, files = []) => {
 
   if (formData.note) {
     formDataObj.append('note_id', formData.note);
+  } else {
+    formDataObj.append('note_id', ''); // Отправляем пустое значение для валидации
   }
 
   // Сроки (опциональные поля)
@@ -138,6 +149,52 @@ const normalizeEntity = (entity) => {
   }
   
   return null;
+};
+
+/**
+ * Нормализует заметку
+ */
+const normalizeNote = (note) => {
+  if (!note) return null;
+  
+  // Если уже в нужном формате
+  if (note.id && note.title) {
+    return {
+      id: note.id,
+      title: note.title,
+      content: note.content || '',
+      is_pinned: note.is_pinned || false,
+      is_archived: note.is_archived || false
+    };
+  }
+  
+  // Если пришел только id
+  if (typeof note === 'number' || typeof note === 'string') {
+    return { 
+      id: Number(note), 
+      title: '',
+      content: '',
+      is_pinned: false,
+      is_archived: false
+    };
+  }
+  
+  return null;
+};
+
+/**
+ * Нормализует вложения
+ */
+const normalizeAttachments = (attachments) => {
+  if (!attachments) return [];
+  
+  return attachments.map(attachment => ({
+    id: attachment.attachment_id,
+    name: attachment.name,
+    size: attachment.size,
+    url: attachment.url,
+    uploaded_at: attachment.uploaded_at
+  }));
 };
 
 /**

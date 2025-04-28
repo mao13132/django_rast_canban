@@ -4,12 +4,35 @@ from ..models.task_attachment import TaskAttachment
 
 class TaskAttachmentSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для вложений к задачам
+    Сериализатор для вложений задачи
     """
+    file = serializers.FileField(source='path', write_only=True)
+    url = serializers.SerializerMethodField()
+
     class Meta:
         model = TaskAttachment
-        fields = ['attachment_id', 'name', 'path', 'size']
-        read_only_fields = ['attachment_id', 'size']
+        fields = ['attachment_id', 'name', 'size', 'uploaded_at', 'file', 'url']
+        read_only_fields = ['attachment_id', 'size', 'uploaded_at']
+
+    def get_url(self, obj):
+        """
+        Возвращает URL для скачивания файла
+        """
+        if obj.path:
+            return obj.path.url
+        return None
+
+    def create(self, validated_data):
+        """
+        Создает новое вложение и возвращает его
+        """
+        file = validated_data.pop('path')
+        validated_data['size'] = file.size
+        validated_data['name'] = file.name
+        validated_data['user_id'] = self.context['request'].user
+        
+        instance = TaskAttachment.objects.create(**validated_data, path=file)
+        return instance
 
     def validate(self, attrs):
         """

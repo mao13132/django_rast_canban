@@ -3,6 +3,7 @@ from django.utils import timezone
 from apps.users.models import User
 from .task_status import TaskStatus
 from .task_category import TaskCategory
+from apps.notes.models.note import Note
 
 
 class Task(models.Model):
@@ -45,6 +46,14 @@ class Task(models.Model):
         blank=True,
         related_name='tasks',
         help_text='Категория задачи'
+    )
+    note_id = models.ForeignKey(
+        Note,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='tasks',
+        help_text='Заметка задачи'
     )
     priority = models.CharField(
         max_length=10,

@@ -1,7 +1,10 @@
 from rest_framework import serializers
+
+from ..models import TaskAttachment
 from ..models.task import Task
 from ..models.task_status import TaskStatus
 from ..models.task_category import TaskCategory
+from apps.notes.models.note import Note
 from .task_attachment import TaskAttachmentSerializer
 import logging
 import json
@@ -16,13 +19,14 @@ class TaskSerializer(serializers.ModelSerializer):
     attachments = TaskAttachmentSerializer(many=True, read_only=True)
     status = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
+    note = serializers.SerializerMethodField()
     days_remaining = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
         fields = ['task_id', 'user_id', 'title', 'description', 'status_id',
-                  'category_id', 'priority', 'deadline_start', 'deadline_end', 
-                  'attachments', 'status', 'category', 'days_remaining']
+                  'category_id', 'note_id', 'priority', 'deadline_start', 'deadline_end',
+                  'attachments', 'status', 'category', 'note', 'days_remaining']
         read_only_fields = ['task_id', 'user_id', 'days_remaining']
 
     def get_status(self, obj):
@@ -47,6 +51,20 @@ class TaskSerializer(serializers.ModelSerializer):
             return {
                 'id': obj.category_id.category_id,
                 'name': obj.category_id.name
+            }
+        return None
+
+    def get_note(self, obj):
+        """
+        Возвращает данные заметки задачи
+        """
+        if hasattr(obj, 'note_id') and obj.note_id:
+            return {
+                'id': obj.note_id.note_id,
+                'title': obj.note_id.title,
+                'content': obj.note_id.content,
+                'is_pinned': obj.note_id.is_pinned,
+                'is_archived': obj.note_id.is_archived
             }
         return None
 
@@ -98,29 +116,50 @@ class TaskSerializer(serializers.ModelSerializer):
         except TaskCategory.DoesNotExist:
             raise serializers.ValidationError("Категория не найдена")
 
+    def validate_note_id(self, value):
+        """
+        Проверяем, что заметка принадлежит текущему пользователю
+        """
+        if not value:
+            return None  # Заметка не обязательна
+
+        try:
+            # Если пришел объект, извлекаем ID
+            if hasattr(value, 'note_id'):
+                note_id = value.note_id
+            else:
+                note_id = value
+
+            note = Note.objects.get(note_id=note_id)
+            if note.user_id.id != self.context['request'].user.id:
+                raise serializers.ValidationError("Заметка не принадлежит текущему пользователю")
+            return note  # Возвращаем объект Note вместо ID
+        except Note.DoesNotExist:
+            raise serializers.ValidationError("Заметка не найдена")
+
     def validate(self, data):
         """
         Общая валидация данных
         """
         logger.info(f"Validating task data: {data}")
-        
+
         # Проверяем обязательные поля
         if not data.get('title'):
             raise serializers.ValidationError({"title": "Название задачи обязательно"})
-            
+
         if not data.get('status_id'):
             raise serializers.ValidationError({"status_id": "Статус задачи обязателен"})
-            
+
         if not data.get('priority'):
             raise serializers.ValidationError({"priority": "Приоритет задачи обязателен"})
 
         # Проверяем корректность дат
         deadline_start = data.get('deadline_start')
         deadline_end = data.get('deadline_end')
-        
+
         if deadline_start and deadline_end and deadline_start > deadline_end:
             raise serializers.ValidationError({"deadline": "Дата начала не может быть позже даты окончания"})
-            
+
         return data
 
     def create(self, validated_data):
@@ -128,7 +167,11 @@ class TaskSerializer(serializers.ModelSerializer):
         Создает новую задачу и возвращает её в нужном формате
         """
         logger.info(f"Creating task with data: {validated_data}")
-        
+
+        # Получаем файлы из request
+        files = self.context['request'].FILES.getlist('attachments')
+        logger.info(f"Received files: {files}")
+
         # Создаем задачу
         task = Task.objects.create(
             user_id=self.context['request'].user,
@@ -136,11 +179,22 @@ class TaskSerializer(serializers.ModelSerializer):
             description=validated_data.get('description', ''),
             status_id=validated_data['status_id'],
             category_id=validated_data.get('category_id'),
+            note_id=validated_data.get('note_id'),
             priority=validated_data.get('priority', 'medium'),
             deadline_start=validated_data.get('deadline_start'),
             deadline_end=validated_data.get('deadline_end')
         )
-        
+
+        # Создаем вложения
+        for file in files:
+            TaskAttachment.objects.create(
+                task_id=task,
+                user_id=self.context['request'].user,
+                name=file.name,
+                path=file,
+                size=file.size
+            )
+
         logger.info(f"Created task: {task}")
         return task
 
@@ -149,15 +203,16 @@ class TaskSerializer(serializers.ModelSerializer):
         Обновляет существующую задачу
         """
         logger.info(f"Updating task {instance.task_id} with data: {validated_data}")
-        
+
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.status_id = validated_data.get('status_id', instance.status_id)
         instance.category_id = validated_data.get('category_id', instance.category_id)
+        instance.note_id = validated_data.get('note_id', instance.note_id)
         instance.priority = validated_data.get('priority', instance.priority)
         instance.deadline_start = validated_data.get('deadline_start', instance.deadline_start)
         instance.deadline_end = validated_data.get('deadline_end', instance.deadline_end)
-        
+
         instance.save()
         logger.info(f"Updated task: {instance}")
         return instance
@@ -170,7 +225,7 @@ class TaskSerializer(serializers.ModelSerializer):
             data = super().to_representation(instance)
             # Добавляем ID в корень объекта
             data['id'] = instance.task_id
-            
+
             # Форматируем deadline в нужный формат
             if data.get('deadline_start') or data.get('deadline_end'):
                 data['deadline'] = {
@@ -179,7 +234,7 @@ class TaskSerializer(serializers.ModelSerializer):
                 }
             else:
                 data['deadline'] = None
-            
+
             # Логируем полные данные для отладки
             logger.info("Full task representation: %s", json.dumps(data, ensure_ascii=False))
             return data

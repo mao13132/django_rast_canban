@@ -223,11 +223,12 @@ const TaskForm = ({ className }) => {
           <div className={styles.selectLabel}>Статус</div>
           <select
             name="status"
-            value={formData.status}
+            value={formData.status || ''}
             onChange={handleChange}
             className={styles.select}
             required
           >
+            <option value="">Без статуса</option>
             {statuses.map(status => (
               <option key={status.id} value={status.id}>
                 {status.name}
