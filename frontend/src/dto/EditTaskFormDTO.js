@@ -35,7 +35,7 @@ export const normalizeFormData = (task) => {
 // Преобразование данных формы в формат для бэкенда
 export const toBackend = (formData, newFiles = [], existingFiles = []) => {
     const formDataObj = new FormData();
-
+    
     // Добавляем основные поля
     formDataObj.append('title', formData.title);
     formDataObj.append('description', formData.description);

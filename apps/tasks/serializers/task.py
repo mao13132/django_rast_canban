@@ -204,6 +204,13 @@ class TaskSerializer(serializers.ModelSerializer):
         """
         logger.info(f"Updating task {instance.task_id} with data: {validated_data}")
 
+        # Получаем файлы из request
+        files = self.context['request'].FILES.getlist('attachments')
+        existing_attachments = self.context['request'].data.getlist('existing_attachments')
+        logger.info(f"Received files: {files}")
+        logger.info(f"Existing attachments: {existing_attachments}")
+
+        # Обновляем основные поля
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.status_id = validated_data.get('status_id', instance.status_id)
@@ -214,6 +221,23 @@ class TaskSerializer(serializers.ModelSerializer):
         instance.deadline_end = validated_data.get('deadline_end', instance.deadline_end)
 
         instance.save()
+
+        # Удаляем старые вложения, которых нет в списке existing_attachments
+        current_attachments = instance.attachments.all()
+        for attachment in current_attachments:
+            if str(attachment.attachment_id) not in existing_attachments:
+                attachment.delete()
+
+        # Добавляем новые файлы
+        for file in files:
+            TaskAttachment.objects.create(
+                task_id=instance,
+                user_id=self.context['request'].user,
+                name=file.name,
+                path=file,
+                size=file.size
+            )
+
         logger.info(f"Updated task: {instance}")
         return instance
 

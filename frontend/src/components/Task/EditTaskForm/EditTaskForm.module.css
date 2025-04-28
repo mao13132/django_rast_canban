@@ -133,6 +133,8 @@
     border: 1px solid rgba(0, 0, 0, 0.46);
     border-radius: 4px;
     background-color: #D9D9D9;
+    cursor: pointer;
+    position: relative;
 }
 
 .fileIcon {
@@ -141,7 +143,13 @@
 }
 
 .fileInput {
-    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .fileList {

@@ -32,8 +32,9 @@ const EditTaskForm = ({ className }) => {
         if (isOpen && taskData) {
             fetchCategories();
             fetchNotes();
-            setFormData(EditTaskFormDTO.normalizeFormData(taskData));
-            setFiles(taskData.attachments || []);
+            const normalizedData = EditTaskFormDTO.normalizeFormData(taskData);
+            setFormData(normalizedData);
+            setFiles(normalizedData.attachments || []);
             setNewFiles([]);
         }
     }, [isOpen, taskData, fetchCategories, fetchNotes]);
@@ -88,8 +89,8 @@ const EditTaskForm = ({ className }) => {
             const taskData = EditTaskFormDTO.toBackend(formData, newFiles, files);
             await updateTask(formData.id, taskData);
             await fetchTasks();
-            closeForm();
             showNotification('Задача успешно обновлена', 'success', 3000, 'bottom');
+            closeForm();
         } catch (err) {
             console.error('Error updating task:', err);
             if (err.response?.data) {
@@ -149,9 +150,7 @@ const EditTaskForm = ({ className }) => {
                 {error && <div className={styles.error}>{error}</div>}
 
                 <div className={styles.contentwrapper}>
-
                     <div className={styles.leftWrapper}>
-
                         <div className={styles.formGroup}>
                             <div className={styles.selectLabel}>Редактировать описание</div>
                             <textarea
@@ -174,15 +173,16 @@ const EditTaskForm = ({ className }) => {
 
                         <div className={styles.formGroup}>
                             <div className={styles.selectLabel}>Прикрепить файл</div>
-                            <div className={styles.fileUpload}>
+                            <label className={styles.fileUpload}>
                                 <img src="/assets/file.png" alt="Файл" className={styles.fileIcon} />
+                                <span>Выберите файл</span>
                                 <input
                                     type="file"
                                     multiple
                                     onChange={handleFileChange}
                                     className={styles.fileInput}
                                 />
-                            </div>
+                            </label>
                             {(files.length > 0 || newFiles.length > 0) && (
                                 <div className={styles.fileList}>
                                     {files.map((file, index) => (
@@ -213,8 +213,6 @@ const EditTaskForm = ({ className }) => {
                             )}
                         </div>
 
-
-
                         <div className={styles.actions}>
                             <button type="button" onClick={closeForm} className={styles.cancelButton}>
                                 Отмена
@@ -226,13 +224,11 @@ const EditTaskForm = ({ className }) => {
                                 Сохранить изменения
                             </button>
                         </div>
-
                     </div>
 
                     <div className={styles.divider}></div>
 
                     <div className={styles.rightWrapper}>
-
                         <div className={styles.formGroup}>
                             <div className={styles.selectLabel}>Название задачи</div>
                             <input
@@ -245,7 +241,6 @@ const EditTaskForm = ({ className }) => {
                                 required
                             />
                         </div>
-
 
                         <div className={styles.formGroup}>
                             <div className={styles.selectLabel}>Приоритет</div>
@@ -266,6 +261,7 @@ const EditTaskForm = ({ className }) => {
                                 loading={categoriesLoading}
                             />
                         </div>
+
                         <div className={styles.formGroup}>
                             <div className={styles.selectLabel}>Заметка</div>
                             <NoteSelect
@@ -275,7 +271,6 @@ const EditTaskForm = ({ className }) => {
                                 loading={notesLoading}
                             />
                         </div>
-
 
                         <div className={styles.formGroup}>
                             <div className={styles.deadlineGroup}>
@@ -299,11 +294,7 @@ const EditTaskForm = ({ className }) => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-
-
                 </div>
             </div>
         </div>
