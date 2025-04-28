@@ -44,7 +44,6 @@
   justify-content: center;
   gap: var(--padding-card);
   min-width: 0;
-  flex: 1;
 }
 
 .iconTitle {

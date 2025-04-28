@@ -213,4 +213,22 @@ export const createEmptyForm = () => ({
   },
   attachments: [],
   days_remaining: null
-}); 
+});
+
+// Нормализация данных для формы редактирования
+export const normalizeEditFormData = (task) => {
+  return {
+    id: task.id,
+    title: task.title || '',
+    description: task.description || '',
+    priority: task.priority || 'block',
+    status: task.status?.id || '',
+    category: task.category?.id || '',
+    note: task.note?.id || '',
+    deadline: {
+      start: task.deadline?.start || '',
+      end: task.deadline?.end || ''
+    },
+    attachments: task.attachments || []
+  };
+}; 

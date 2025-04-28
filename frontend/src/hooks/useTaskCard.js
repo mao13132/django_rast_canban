@@ -1,10 +1,10 @@
 import { useTaskStore } from '../store/taskStore';
-import { useTaskForm } from '../context/TaskFormContext';
+import { useEditTaskForm } from '../context/EditTaskFormContext';
 import { getPriorityIcon } from '../utils/PriorityIcons';
 
 export const useTaskCard = (task) => {
   const { updateTask, deleteTask } = useTaskStore();
-  const { openEditForm } = useTaskForm();
+  const { openEditForm } = useEditTaskForm();
 
   const handleStatusChange = (e) => {
     updateTask(task.id, { status: e.target.value });

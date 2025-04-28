@@ -3,6 +3,7 @@ import { useTaskStore } from '../../store/taskStore';
 import Header from '../../components/Header/Header';
 import TaskColumn from '../../components/Task/TaskColumn';
 import TaskForm from '../../components/Task/TaskForm';
+import EditTaskForm from '../../components/Task/EditTaskForm';
 import SubHeader from '../../components/SubHeader/SubHeader';
 import TaskControls from '../../components/TaskControls/TaskControls';
 import styles from './Dashboard.module.css';
@@ -201,6 +202,7 @@ const Dashboard = () => {
         </div>
 
         <TaskForm />
+        <EditTaskForm />
       </main>
     </div>
   );

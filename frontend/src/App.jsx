@@ -11,6 +11,7 @@ import { NotePopupProvider } from './context/NotePopupContext';
 import Popup from './components/Popup';
 import Profile from './components/Profile/ProfilePopup/ProfilePopup.jsx';
 import AppRoutes from './routes/AppRoutes';
+import { EditTaskFormProvider } from './context/EditTaskFormContext';
 import './App.css';
 
 function App() {
@@ -21,15 +22,17 @@ function App() {
           <NotificationProvider>
             <TaskSearchProvider>
               <TaskFormProvider>
-                <ProfileProvider>
-                  <CategoryPopupProvider>
-                    <NotePopupProvider>
-                      <AppRoutes />
-                      <Popup />
-                      <Profile />
-                    </NotePopupProvider>
-                  </CategoryPopupProvider>
-                </ProfileProvider>
+                <EditTaskFormProvider>
+                  <ProfileProvider>
+                    <CategoryPopupProvider>
+                      <NotePopupProvider>
+                        <AppRoutes />
+                        <Popup />
+                        <Profile />
+                      </NotePopupProvider>
+                    </CategoryPopupProvider>
+                  </ProfileProvider>
+                </EditTaskFormProvider>
               </TaskFormProvider>
             </TaskSearchProvider>
           </NotificationProvider>

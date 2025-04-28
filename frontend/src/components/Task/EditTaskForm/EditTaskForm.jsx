@@ -1,0 +1,309 @@
+import React, { useState, useEffect } from 'react';
+import { useEditTaskForm } from '../../../context/EditTaskFormContext';
+import { useTaskStore } from '../../../store/taskStore';
+import { useNotification } from '../../../context/NotificationContext';
+import * as TaskDTO from '../../../dto/TaskDTO';
+import styles from './EditTaskForm.module.css';
+import PrioritySelect from '../TaskForm/PrioritySelect/PrioritySelect';
+import CategorySelect from '../TaskForm/CategorySelect/CategorySelect';
+import NoteSelect from '../TaskForm/NoteSelect/NoteSelect';
+import DateTimeSelect from '../TaskForm/DateTimeSelect/DateTimeSelect';
+
+const EditTaskForm = ({ className }) => {
+    const { isOpen, taskData, closeForm, updateTaskData, loading, error, setLoading, setError } = useEditTaskForm();
+    const {
+        updateTask,
+        deleteTask,
+        fetchCategories,
+        fetchNotes,
+        categories,
+        statuses,
+        categoriesLoading,
+        notesLoading
+    } = useTaskStore();
+    const { showNotification } = useNotification();
+
+    const [formData, setFormData] = useState(TaskDTO.createEmptyForm());
+    const [files, setFiles] = useState([]);
+    const [newFiles, setNewFiles] = useState([]);
+
+    useEffect(() => {
+        if (isOpen && taskData) {
+            // Загружаем категории и заметки при открытии формы
+            fetchCategories();
+            fetchNotes();
+            setFormData(TaskDTO.normalizeEditFormData(taskData));
+            setFiles(taskData.attachments || []);
+            setNewFiles([]);
+        }
+    }, [isOpen, taskData, fetchCategories, fetchNotes]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name.startsWith('deadline.')) {
+            const field = name.split('.')[1];
+            setFormData(prev => ({
+                ...prev,
+                deadline: {
+                    ...prev.deadline,
+                    [field]: value
+                }
+            }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        }
+    };
+
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        setNewFiles(prev => [...prev, ...selectedFiles]);
+    };
+
+    const removeFile = (index, isNew = false) => {
+        if (isNew) {
+            setNewFiles(prev => prev.filter((_, i) => i !== index));
+        } else {
+            setFiles(prev => prev.filter((_, i) => i !== index));
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!e.isTrusted) return;
+
+        setLoading(true);
+        setError(null);
+
+        if (!formData.title) {
+            showNotification('Название задачи обязательно', 'error', 3000, 'bottom');
+            setLoading(false);
+            return;
+        }
+
+        if (!formData.status) {
+            showNotification('Статус задачи обязателен', 'error', 3000, 'bottom');
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const taskData = TaskDTO.toBackend(formData, newFiles, files);
+            await updateTask(taskData.id, taskData);
+            showNotification('Задача успешно обновлена', 'success', 3000, 'bottom');
+            closeForm();
+        } catch (err) {
+            console.error('Error updating task:', err);
+            if (err.response?.data) {
+                const errorData = err.response.data;
+                if (typeof errorData === 'object') {
+                    const errorMessages = Object.entries(errorData)
+                        .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
+                        .join('\n');
+                    showNotification(errorMessages, 'error', 3000, 'bottom');
+                } else {
+                    showNotification(errorData, 'error', 3000, 'bottom');
+                }
+            } else {
+                showNotification('Ошибка при обновлении задачи', 'error', 3000, 'bottom');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!taskData?.id) return;
+
+        try {
+            await deleteTask(taskData.id);
+            showNotification('Задача успешно удалена', 'success', 3000, 'bottom');
+            closeForm();
+        } catch (err) {
+            console.error('Error deleting task:', err);
+            showNotification('Ошибка при удалении задачи', 'error', 3000, 'bottom');
+        }
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className={`${styles.overlay} ${className || ''}`}>
+            <form className={styles.form} onSubmit={handleSubmit}>
+                <div className={styles.header}>
+                    <h2>Редактировать задачу</h2>
+
+                    <select
+                        name="status"
+                        value={formData.status || ''}
+                        onChange={handleChange}
+                        className={`${styles.select} ${styles.headerSelect}`}
+                        required
+                    >
+                        <option value="">Без статуса</option>
+                        {statuses.map(status => (
+                            <option key={status.id} value={status.id}>
+                                {status.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {error && <div className={styles.error}>{error}</div>}
+
+                <div className={styles.formGroup}>
+                    <div className={styles.selectLabel}>Название задачи</div>
+                    <input
+                        type="text"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleChange}
+                        placeholder=""
+                        className={styles.input}
+                        required
+                    />
+                </div>
+
+                <div className={styles.formGroup}>
+                    <div className={styles.selectLabel}>Приоритет</div>
+                    <PrioritySelect
+                        value={formData.priority}
+                        onChange={handleChange}
+                        className={styles.select}
+                    />
+                </div>
+
+                <div className={styles.formGroup}>
+                    <div className={styles.selectLabel}>Описание</div>
+                    <textarea
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        placeholder=""
+                        className={styles.textarea}
+                    />
+                </div>
+
+                <div className={styles.formGroup}>
+                    <div className={styles.selectLabel}>Прикрепить файл</div>
+                    <div className={styles.fileUpload}>
+                        <img src="/assets/file.png" alt="Файл" className={styles.fileIcon} />
+                        <input
+                            type="file"
+                            multiple
+                            onChange={handleFileChange}
+                            className={styles.fileInput}
+                        />
+                    </div>
+                    {(files.length > 0 || newFiles.length > 0) && (
+                        <div className={styles.fileList}>
+                            {files.map((file, index) => (
+                                <div key={`existing-${index}`} className={styles.fileItem}>
+                                    <span>{file.name}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeFile(index, false)}
+                                        className={styles.removeFile}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                            {newFiles.map((file, index) => (
+                                <div key={`new-${index}`} className={styles.fileItem}>
+                                    <span>{file.name}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeFile(index, true)}
+                                        className={styles.removeFile}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                <div className={styles.formGroup}>
+                    <div className={styles.selectLabel}>Категория</div>
+                    <CategorySelect
+                        value={formData.category}
+                        onChange={handleChange}
+                        categories={categories}
+                        className={styles.select}
+                        loading={categoriesLoading}
+                    />
+                </div>
+
+                <div className={styles.formGroup}>
+                    <div className={styles.selectLabel}>Заметка</div>
+                    <NoteSelect
+                        value={formData.note}
+                        onChange={handleChange}
+                        className={styles.select}
+                        loading={notesLoading}
+                    />
+                </div>
+
+                <div className={styles.formGroup}>
+                    <div className={styles.selectLabel}>Статус</div>
+                    <select
+                        name="status"
+                        value={formData.status || ''}
+                        onChange={handleChange}
+                        className={styles.select}
+                        required
+                    >
+                        <option value="">Без статуса</option>
+                        {statuses.map(status => (
+                            <option key={status.id} value={status.id}>
+                                {status.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                    <div className={styles.deadlineGroup}>
+                        <div className={styles.dateWrapper}>
+                            <label>Начало:</label>
+                            <DateTimeSelect
+                                name="deadline.start"
+                                value={formData.deadline.start}
+                                onChange={handleChange}
+                                placeholder=""
+                            />
+                        </div>
+                        <div className={styles.dateWrapper}>
+                            <label>Конец:</label>
+                            <DateTimeSelect
+                                name="deadline.end"
+                                value={formData.deadline.end}
+                                onChange={handleChange}
+                                placeholder=""
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.actions}>
+                    <button type="button" onClick={closeForm} className={styles.cancelButton}>
+                        Отмена
+                    </button>
+                    <button type="button" onClick={handleDelete} className={styles.deleteButton}>
+                        Удалить задачу
+                    </button>
+                    <button type="submit" className={styles.submitButton} disabled={loading}>
+                        Сохранить изменения
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default EditTaskForm; 

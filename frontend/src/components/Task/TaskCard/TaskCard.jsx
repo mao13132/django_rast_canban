@@ -5,7 +5,6 @@ import { getPriorityIcon } from '../../../utils/PriorityIcons';
 
 const TaskCard = ({ task }) => {
   const {
-    handleDelete,
     handleEdit,
     formatDate,
     getPriorityText
