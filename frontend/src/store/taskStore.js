@@ -375,4 +375,19 @@ export const useTaskStore = create((set, get) => ({
       set({ notesLoading: false });
     }
   },
+
+  // Получение заметки по ID
+  getNote: async (noteId) => {
+    try {
+      set({ notesLoading: true });
+      const response = await notesAPI.getNote(noteId);
+      const note = NoteDTO.fromBackend(response.data);
+      return note;
+    } catch (err) {
+      console.error('Ошибка при получении заметки:', err);
+      throw err;
+    } finally {
+      set({ notesLoading: false });
+    }
+  },
 })); 

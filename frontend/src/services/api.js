@@ -138,6 +138,8 @@ export const categoriesAPI = {
 export const notesAPI = {
   getNotes: () => 
     axiosInstance.get(API_ENDPOINTS.NOTES),
+  getNote: (noteId) => 
+    axiosInstance.get(API_ENDPOINTS.NOTE(noteId)),
   createNote: (noteData) => 
     axiosInstance.post(API_ENDPOINTS.NOTES, noteData),
   updateNote: (noteId, noteData) => 
