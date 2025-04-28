@@ -255,3 +255,10 @@
   color: rgba(0, 0, 0, 0.46);
   cursor: not-allowed;
 } 
+
+.dateWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  font-weight: 500;
+}

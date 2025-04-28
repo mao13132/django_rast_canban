@@ -7,6 +7,7 @@ import styles from './TaskForm.module.css';
 import PrioritySelect from './PrioritySelect/PrioritySelect';
 import CategorySelect from './CategorySelect/CategorySelect';
 import NoteSelect from './NoteSelect/NoteSelect';
+import DateTimeSelect from './DateTimeSelect/DateTimeSelect';
 
 const TaskForm = ({ className }) => {
   const { isOpen, mode, initialData, closeForm } = useTaskForm();
@@ -236,24 +237,22 @@ const TaskForm = ({ className }) => {
 
         <div className={styles.formGroup}>
           <div className={styles.deadlineGroup}>
-            <div>
+            <div className={styles.dateWrapper}>
               <label>Начало:</label>
-              <input
-                type="datetime-local"
+              <DateTimeSelect
                 name="deadline.start"
                 value={formData.deadline.start}
                 onChange={handleChange}
-                className={styles.dateInput}
+                placeholder=""
               />
             </div>
-            <div>
+            <div className={styles.dateWrapper}>
               <label>Конец:</label>
-              <input
-                type="datetime-local"
+              <DateTimeSelect
                 name="deadline.end"
                 value={formData.deadline.end}
                 onChange={handleChange}
-                className={styles.dateInput}
+                placeholder=""
               />
             </div>
           </div>
