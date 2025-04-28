@@ -14,7 +14,6 @@ import { useTaskSearch } from '../../context/TaskSearchContext';
 const Dashboard = () => {
   const {
     tasks,
-    loading,
     error,
     fetchTasks,
     createTask,
@@ -153,13 +152,6 @@ const Dashboard = () => {
       />
     ));
   }, [statuses, tasksByStatus, handleUpdateTask, handleDeleteTask, handleUpdateTaskStatus]);
-
-  if (loading) return (
-    <>
-      <Header />
-      <div className={styles.loading}>Загрузка...</div>
-    </>
-  );
 
   if (error) return (
     <>

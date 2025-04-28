@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useEditTaskForm } from '../../../context/EditTaskFormContext';
 import { useTaskStore } from '../../../store/taskStore';
 import { useNotification } from '../../../context/NotificationContext';
-import * as TaskDTO from '../../../dto/TaskDTO';
+import * as EditTaskFormDTO from '../../../dto/EditTaskFormDTO';
 import styles from './EditTaskForm.module.css';
 import PrioritySelect from '../TaskForm/PrioritySelect/PrioritySelect';
 import CategorySelect from '../TaskForm/CategorySelect/CategorySelect';
@@ -16,6 +16,7 @@ const EditTaskForm = ({ className }) => {
         deleteTask,
         fetchCategories,
         fetchNotes,
+        fetchTasks,
         categories,
         statuses,
         categoriesLoading,
@@ -23,16 +24,15 @@ const EditTaskForm = ({ className }) => {
     } = useTaskStore();
     const { showNotification } = useNotification();
 
-    const [formData, setFormData] = useState(TaskDTO.createEmptyForm());
+    const [formData, setFormData] = useState(EditTaskFormDTO.createEmptyForm());
     const [files, setFiles] = useState([]);
     const [newFiles, setNewFiles] = useState([]);
 
     useEffect(() => {
         if (isOpen && taskData) {
-            // Загружаем категории и заметки при открытии формы
             fetchCategories();
             fetchNotes();
-            setFormData(TaskDTO.normalizeEditFormData(taskData));
+            setFormData(EditTaskFormDTO.normalizeFormData(taskData));
             setFiles(taskData.attachments || []);
             setNewFiles([]);
         }
@@ -70,31 +70,26 @@ const EditTaskForm = ({ className }) => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!e.isTrusted) return;
-
-        setLoading(true);
-        setError(null);
-
+    const handleSubmit = async () => {
         if (!formData.title) {
             showNotification('Название задачи обязательно', 'error', 3000, 'bottom');
-            setLoading(false);
             return;
         }
 
         if (!formData.status) {
             showNotification('Статус задачи обязателен', 'error', 3000, 'bottom');
-            setLoading(false);
             return;
         }
 
+        setLoading(true);
+        setError(null);
+
         try {
-            const taskData = TaskDTO.toBackend(formData, newFiles, files);
-            await updateTask(taskData.id, taskData);
-            showNotification('Задача успешно обновлена', 'success', 3000, 'bottom');
+            const taskData = EditTaskFormDTO.toBackend(formData, newFiles, files);
+            await updateTask(formData.id, taskData);
+            await fetchTasks();
             closeForm();
+            showNotification('Задача успешно обновлена', 'success', 3000, 'bottom');
         } catch (err) {
             console.error('Error updating task:', err);
             if (err.response?.data) {
@@ -120,6 +115,7 @@ const EditTaskForm = ({ className }) => {
 
         try {
             await deleteTask(taskData.id);
+            await fetchTasks();
             showNotification('Задача успешно удалена', 'success', 3000, 'bottom');
             closeForm();
         } catch (err) {
@@ -131,11 +127,10 @@ const EditTaskForm = ({ className }) => {
     if (!isOpen) return null;
 
     return (
-        <div className={`${styles.overlay} ${className || ''}`}>
-            <form className={styles.form} onSubmit={handleSubmit}>
+        <div className={`${styles.overlay} ${className || ''}`} onClick={closeForm}>
+            <div className={styles.form} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.header}>
                     <h2>Редактировать задачу</h2>
-
                     <select
                         name="status"
                         value={formData.status || ''}
@@ -250,24 +245,6 @@ const EditTaskForm = ({ className }) => {
                 </div>
 
                 <div className={styles.formGroup}>
-                    <div className={styles.selectLabel}>Статус</div>
-                    <select
-                        name="status"
-                        value={formData.status || ''}
-                        onChange={handleChange}
-                        className={styles.select}
-                        required
-                    >
-                        <option value="">Без статуса</option>
-                        {statuses.map(status => (
-                            <option key={status.id} value={status.id}>
-                                {status.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className={styles.formGroup}>
                     <div className={styles.deadlineGroup}>
                         <div className={styles.dateWrapper}>
                             <label>Начало:</label>
@@ -297,11 +274,11 @@ const EditTaskForm = ({ className }) => {
                     <button type="button" onClick={handleDelete} className={styles.deleteButton}>
                         Удалить задачу
                     </button>
-                    <button type="submit" className={styles.submitButton} disabled={loading}>
+                    <button type="button" onClick={handleSubmit} className={styles.submitButton} disabled={loading}>
                         Сохранить изменения
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     );
 };

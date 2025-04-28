@@ -61,12 +61,12 @@ export const fromBackend = (data) => {
  */
 export const toBackend = (formData, files = []) => {
   const formDataObj = new FormData();
-  
+
   // Основные поля (всегда отправляем, даже если пустые)
   formDataObj.append('title', formData.title);
   formDataObj.append('description', formData.description);
   formDataObj.append('priority', formData.priority || 'medium');
-  
+
   // ID статуса и категории (обязательные поля)
   if (formData.status) {
     formDataObj.append('status_id', formData.status);
@@ -127,7 +127,7 @@ export const toForm = (data) => {
  */
 const normalizeEntity = (entity) => {
   if (!entity) return null;
-  
+
   // Если уже в нужном формате
   if (entity.id && entity.name) {
     return {
@@ -137,17 +137,17 @@ const normalizeEntity = (entity) => {
       color: entity.color || '#A0A9F3'
     };
   }
-  
+
   // Если пришел только id
   if (typeof entity === 'number' || typeof entity === 'string') {
-    return { 
-      id: Number(entity), 
+    return {
+      id: Number(entity),
       name: '',
       order: 0,
       color: '#A0A9F3'
     };
   }
-  
+
   return null;
 };
 
@@ -156,7 +156,7 @@ const normalizeEntity = (entity) => {
  */
 const normalizeNote = (note) => {
   if (!note) return null;
-  
+
   // Если уже в нужном формате
   if (note.id && note.title) {
     return {
@@ -167,18 +167,18 @@ const normalizeNote = (note) => {
       is_archived: note.is_archived || false
     };
   }
-  
+
   // Если пришел только id
   if (typeof note === 'number' || typeof note === 'string') {
-    return { 
-      id: Number(note), 
+    return {
+      id: Number(note),
       title: '',
       content: '',
       is_pinned: false,
       is_archived: false
     };
   }
-  
+
   return null;
 };
 
@@ -187,7 +187,7 @@ const normalizeNote = (note) => {
  */
 const normalizeAttachments = (attachments) => {
   if (!attachments) return [];
-  
+
   return attachments.map(attachment => ({
     id: attachment.attachment_id,
     name: attachment.name,
@@ -214,21 +214,3 @@ export const createEmptyForm = () => ({
   attachments: [],
   days_remaining: null
 });
-
-// Нормализация данных для формы редактирования
-export const normalizeEditFormData = (task) => {
-  return {
-    id: task.id,
-    title: task.title || '',
-    description: task.description || '',
-    priority: task.priority || 'block',
-    status: task.status?.id || '',
-    category: task.category?.id || '',
-    note: task.note?.id || '',
-    deadline: {
-      start: task.deadline?.start || '',
-      end: task.deadline?.end || ''
-    },
-    attachments: task.attachments || []
-  };
-}; 
