@@ -33,49 +33,11 @@
   box-shadow: var(--box-shadow);
 }
 
-.pinnedWrapperIcon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 34px;
-  height: 34px;
-
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.logoImage {
+.noteTextArea {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
 }
 
-.createFormIcons {
-  position: absolute;
-  bottom: 5px;
-  left: 0;
-  border: 2px solid red;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: row;
-  gap: 0 70px;
-}
 
-.iconWrapper {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.textIcon {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
 
 .pinnedSection,
 .otherSection {
@@ -92,4 +54,33 @@
   color: #000000;
   margin: 0;
   line-height: 1.445;
+}
+
+.noteEditor {
+  width: 90%;
+  height: 200px;
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow-y: auto;
+  background: white;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  outline: none;
+}
+
+.noteEditor:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.noteEditor ul {
+  padding-left: 20px;
+}
+
+.noteEditor:empty:before {
+  content: 'Введите текст заметки...';
+  color: #999;
 }
