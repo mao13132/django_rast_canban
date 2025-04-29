@@ -6,6 +6,12 @@ const NoteEditor = ({ className }) => {
 
     const handleFormatting = (formatType) => {
         const selection = window.getSelection();
+        
+        // Проверяем, есть ли выделенный текст
+        if (!selection || selection.isCollapsed || !selection.toString().trim()) {
+            return; // Если текст не выделен, прекращаем выполнение функции
+        }
+
         const range = selection.getRangeAt(0);
         let element;
 
@@ -42,7 +48,7 @@ const NoteEditor = ({ className }) => {
     return (
         <div className={`${styles.createForm} ${className}`}>
             <div className={styles.pinnedWrapperIcon}>
-                <img src="/assets/pinned.png" alt="Закрепить" className={styles.logoImage} />
+                <img src="/assets/pinned.png" alt="Закрепить" className={styles.pinnedImage} />
             </div>
 
             <div className={styles.wrapperInput}>
@@ -50,7 +56,7 @@ const NoteEditor = ({ className }) => {
                     type="text"
                     name="title"
                     placeholder="Название"
-                    className={styles.input}
+                    className={styles.inputTitle}
                     required
                 />
                 <div
@@ -78,6 +84,11 @@ const NoteEditor = ({ className }) => {
                 <div className={styles.iconWrapper} onClick={() => handleFormatting('strikethrough')}>
                     <img src="/assets/text.png" alt="Зачеркнутый" className={styles.textIcon} />
                 </div>
+            </div>
+
+            <div className={styles.actions}>
+                <div className={styles.close}>Закрыть</div>
+                <div className={styles.create}>Создать</div>
             </div>
         </div>
     );

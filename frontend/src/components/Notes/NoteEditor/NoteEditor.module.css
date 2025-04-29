@@ -4,11 +4,7 @@
     border-radius: 8px;
     padding: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 2px solid red;
-
 }
-
-
 
 .pinnedWrapperIcon {
     display: flex;
@@ -22,42 +18,92 @@
     right: 20px;
 }
 
-.logoImage {
+.pinnedImage {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.pinnedImage:hover {
+    transform: scale(1.1);
 }
 
 .wrapperInput {
-    border: 2px solid blue;
     width: 100%;
     padding-right: 50px;
 
+    gap: 20px;
+
     display: flex;
     flex-direction: column;
-    
+
+}
+
+.inputTitle {
+    font-size: 48px;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    padding-left: 12px;
+}
+
+.inputTitle::placeholder {
+    font-size: 48px;
+    font-weight: bold;
 }
 
 .noteEditor {
-    min-height: 100px;
-    border: 1px solid #E0E0E0;
+    height: 130px;
+    font-size: 36px;
     border-radius: 4px;
     padding: 12px;
     margin-bottom: 12px;
     outline: none;
-
-    border: 5px solid red;
+    overflow-y: auto;
 }
 
 .createFormIcons {
     position: absolute;
-    bottom: 5px;
+    bottom: 20px;
     left: 0;
-    border: 2px solid red;
     padding: 0 20px;
     display: flex;
     flex-direction: row;
     gap: 0 70px;
+}
+
+.actions {
+    position: absolute;
+    right: 50px;
+    bottom: 20px;
+
+    display: flex;
+    flex-direction: row;
+    justify-self: center;
+    align-items: center;
+    gap: 0 20px;
+}
+
+.close,
+.create {
+    box-shadow: var(--box-shadow);
+    border-radius: 20px;
+    padding: 5px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: black;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease-in-out;
+}
+
+.close:hover,
+.create:hover {
+    transform: scale(1.05);
 }
 
 .iconWrapper {
@@ -74,6 +120,12 @@
     height: 100%;
     object-fit: contain;
     cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease-in-out;
+}
+
+.textIcon:hover {
+    transform: scale(1.1);
 }
 
 .noteEditor:empty:before {
