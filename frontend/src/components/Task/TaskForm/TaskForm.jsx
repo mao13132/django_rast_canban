@@ -215,7 +215,7 @@ const TaskForm = ({ className }) => {
             className={styles.select}
             required
           >
-            <option value="">Без статуса</option>
+            <option value="">Укажите статус</option>
             {statuses.map(status => (
               <option key={status.id} value={status.id}>
                 {status.name}

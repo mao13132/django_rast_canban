@@ -208,6 +208,136 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2025-04-28T19:29:58.634Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "12",
+    "object_repr": "тестовая",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Deadline end\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2025-04-28T19:30:08.855Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "10",
+    "object_repr": "Просрочкаdf",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Deadline end\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2025-04-28T19:56:16.668Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "12",
+    "object_repr": "тестовая",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2025-04-28T19:56:16.684Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "10",
+    "object_repr": "Просрочкаdf",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2025-04-28T19:56:16.698Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "8",
+    "object_repr": "Первая задача123123123123",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2025-04-29T06:55:44.374Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "mao13132@gmail.com",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"\\u0410\\u0432\\u0430\\u0442\\u0430\\u0440\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2025-04-29T07:19:11.951Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "5",
+    "object_repr": "На проверке",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Order\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2025-04-29T07:19:11.955Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "4",
+    "object_repr": "Завершено",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Order\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2025-04-29T07:19:25.270Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "1",
+    "object_repr": "Сделать",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Order\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2025-04-29T07:19:34.327Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "1",
+    "object_repr": "Сделать",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Order\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -836,15 +966,15 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$600000$1D52q37SHPtPvFzfkj2kXH$VfwHjPyyk8M+B2IUUDQtPH9krdX7egexul1mrYB33vk=",
-    "last_login": "2025-04-28T14:52:59.749Z",
+    "last_login": "2025-04-28T14:52:59Z",
     "is_superuser": true,
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2025-04-28T14:51:59.578Z",
+    "date_joined": "2025-04-28T14:51:59Z",
     "email": "mao13132@gmail.com",
-    "first_name": null,
-    "last_name": null,
-    "avatar": "",
+    "first_name": "Дмитрий",
+    "last_name": "Фамилия",
+    "avatar": "avatars/diDLb8BV5kg_t6vPk9v.jpg",
     "groups": [],
     "user_permissions": []
   }
@@ -896,7 +1026,7 @@
   "fields": {
     "name": "Завершено",
     "user_id": 1,
-    "order": 3,
+    "order": 4,
     "color": "#84c22e"
   }
 },
@@ -906,7 +1036,7 @@
   "fields": {
     "name": "На проверке",
     "user_id": 1,
-    "order": 1,
+    "order": 3,
     "color": "#A0A9F3"
   }
 },
@@ -919,81 +1049,363 @@
   }
 },
 {
-  "model": "tasks.task",
-  "pk": 8,
+  "model": "tasks.taskcategory",
+  "pk": 2,
   "fields": {
-    "user_id": 1,
-    "title": "Первая задача123123123123",
-    "description": "Описание первый задачи",
-    "status_id": 1,
-    "category_id": 1,
-    "note_id": 1,
-    "priority": "low",
-    "deadline_start": null,
-    "deadline_end": null
+    "name": "Категория 2",
+    "user_id": 1
   }
 },
 {
   "model": "tasks.task",
-  "pk": 9,
+  "pk": 13,
   "fields": {
     "user_id": 1,
-    "title": "Временная задача",
-    "description": "выставляем время",
+    "title": "Первая задача",
+    "description": "Описание первой",
     "status_id": 5,
     "category_id": 1,
     "note_id": 1,
+    "priority": "low",
+    "deadline_start": "2025-04-28T19:56:00Z",
+    "deadline_end": "2025-04-30T08:56:00Z",
+    "created_at": "2025-04-28T20:00:18.361Z",
+    "updated_at": "2025-04-28T21:06:42.805Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 14,
+  "fields": {
+    "user_id": 1,
+    "title": "вторая задача22",
+    "description": "Описание",
+    "status_id": 2,
+    "category_id": 2,
+    "note_id": 1,
+    "priority": "medium",
+    "deadline_start": "2025-04-28T20:02:00Z",
+    "deadline_end": "2025-04-30T00:08:00Z",
+    "created_at": "2025-04-28T20:03:09.409Z",
+    "updated_at": "2025-04-28T21:06:09.266Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 15,
+  "fields": {
+    "user_id": 1,
+    "title": "Третья задача",
+    "description": "3",
+    "status_id": 5,
+    "category_id": 2,
+    "note_id": 1,
+    "priority": "high",
+    "deadline_start": "2025-04-24T23:09:00Z",
+    "deadline_end": "2025-05-14T23:09:00Z",
+    "created_at": "2025-04-28T20:07:59.008Z",
+    "updated_at": "2025-04-28T20:07:59.008Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 16,
+  "fields": {
+    "user_id": 1,
+    "title": "Готовая задача",
+    "description": "фыыв",
+    "status_id": 3,
+    "category_id": 1,
+    "note_id": 1,
     "priority": "block",
-    "deadline_start": "2025-04-17T16:40:00Z",
-    "deadline_end": "2025-05-01T16:54:00Z"
+    "deadline_start": "2025-04-28T20:17:00Z",
+    "deadline_end": "2025-05-02T00:21:00Z",
+    "created_at": "2025-04-28T20:17:48.036Z",
+    "updated_at": "2025-04-28T20:17:48.036Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 17,
+  "fields": {
+    "user_id": 1,
+    "title": "Завершенная",
+    "description": "апр",
+    "status_id": 4,
+    "category_id": 2,
+    "note_id": 1,
+    "priority": "low",
+    "deadline_start": "2025-04-28T20:17:00Z",
+    "deadline_end": "2025-04-30T00:21:00Z",
+    "created_at": "2025-04-28T20:22:12.193Z",
+    "updated_at": "2025-04-28T20:22:12.193Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 18,
+  "fields": {
+    "user_id": 1,
+    "title": "тттт",
+    "description": "",
+    "status_id": 5,
+    "category_id": null,
+    "note_id": null,
+    "priority": "block",
+    "deadline_start": "2025-04-28T20:25:00Z",
+    "deadline_end": "2025-04-30T01:30:00Z",
+    "created_at": "2025-04-28T20:26:08.705Z",
+    "updated_at": "2025-04-28T21:18:02.397Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 19,
+  "fields": {
+    "user_id": 1,
+    "title": "111111111",
+    "description": "ироывиьоаиы",
+    "status_id": 4,
+    "category_id": null,
+    "note_id": null,
+    "priority": "medium",
+    "deadline_start": "2025-04-28T20:53:00Z",
+    "deadline_end": "2025-05-01T09:55:00Z",
+    "created_at": "2025-04-28T20:53:27.854Z",
+    "updated_at": "2025-04-29T06:56:59.918Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 20,
+  "fields": {
+    "user_id": 1,
+    "title": "Ещё одна задача",
+    "description": "123",
+    "status_id": 1,
+    "category_id": 2,
+    "note_id": 1,
+    "priority": "high",
+    "deadline_start": "2025-04-29T06:57:00Z",
+    "deadline_end": "2025-05-03T10:57:00Z",
+    "created_at": "2025-04-29T06:57:41.277Z",
+    "updated_at": "2025-04-29T06:57:58.216Z"
   }
 },
 {
   "model": "tasks.taskattachment",
-  "pk": 4,
+  "pk": 21,
+  "fields": {
+    "name": "m9DL65JNvYc.jpg",
+    "path": "task_attachments/m9DL65JNvYc_p8JKhG3.jpg",
+    "size": 98513,
+    "uploaded_at": "2025-04-28T20:00:18.383Z",
+    "user_id": 1,
+    "task_id": 13
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 22,
+  "fields": {
+    "name": "m9DL65JNvYc.jpg",
+    "path": "task_attachments/m9DL65JNvYc_fxo7P9s.jpg",
+    "size": 98513,
+    "uploaded_at": "2025-04-28T20:03:09.434Z",
+    "user_id": 1,
+    "task_id": 14
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 23,
   "fields": {
     "name": "li_VjanopfA.jpg",
-    "path": "task_attachments/li_VjanopfA_kqFXGKk.jpg",
+    "path": "task_attachments/li_VjanopfA_nFDSEk1.jpg",
     "size": 112618,
-    "uploaded_at": "2025-04-28T15:41:19.827Z",
+    "uploaded_at": "2025-04-28T20:07:59.026Z",
     "user_id": 1,
-    "task_id": 8
+    "task_id": 15
   }
 },
 {
   "model": "tasks.taskattachment",
-  "pk": 5,
+  "pk": 24,
   "fields": {
     "name": "gvgwIMIlxb0.jpg",
-    "path": "task_attachments/gvgwIMIlxb0_QUddupN.jpg",
+    "path": "task_attachments/gvgwIMIlxb0_2gb4guM.jpg",
     "size": 98802,
-    "uploaded_at": "2025-04-28T15:41:19.845Z",
+    "uploaded_at": "2025-04-28T20:07:59.043Z",
     "user_id": 1,
-    "task_id": 8
+    "task_id": 15
   }
 },
 {
   "model": "tasks.taskattachment",
-  "pk": 6,
+  "pk": 25,
   "fields": {
     "name": "m9DL65JNvYc.jpg",
-    "path": "task_attachments/m9DL65JNvYc_cXvySEs.jpg",
+    "path": "task_attachments/m9DL65JNvYc_9TeNP8v.jpg",
     "size": 98513,
-    "uploaded_at": "2025-04-28T15:41:19.862Z",
+    "uploaded_at": "2025-04-28T20:07:59.059Z",
     "user_id": 1,
-    "task_id": 8
+    "task_id": 15
   }
 },
 {
   "model": "tasks.taskattachment",
-  "pk": 7,
+  "pk": 26,
+  "fields": {
+    "name": "li_VjanopfA.jpg",
+    "path": "task_attachments/li_VjanopfA_XxaElgm.jpg",
+    "size": 112618,
+    "uploaded_at": "2025-04-28T20:17:48.053Z",
+    "user_id": 1,
+    "task_id": 16
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 27,
+  "fields": {
+    "name": "gvgwIMIlxb0.jpg",
+    "path": "task_attachments/gvgwIMIlxb0_wrlH93a.jpg",
+    "size": 98802,
+    "uploaded_at": "2025-04-28T20:17:48.068Z",
+    "user_id": 1,
+    "task_id": 16
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 28,
   "fields": {
     "name": "m9DL65JNvYc.jpg",
-    "path": "task_attachments/m9DL65JNvYc_aFZXieK.jpg",
+    "path": "task_attachments/m9DL65JNvYc_pTSoB9N.jpg",
     "size": 98513,
-    "uploaded_at": "2025-04-28T15:57:44.045Z",
+    "uploaded_at": "2025-04-28T20:17:48.083Z",
     "user_id": 1,
-    "task_id": 9
+    "task_id": 16
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 29,
+  "fields": {
+    "name": "li_VjanopfA.jpg",
+    "path": "task_attachments/li_VjanopfA_SfumYBz.jpg",
+    "size": 112618,
+    "uploaded_at": "2025-04-28T20:22:12.218Z",
+    "user_id": 1,
+    "task_id": 17
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 30,
+  "fields": {
+    "name": "li_VjanopfA.jpg",
+    "path": "task_attachments/li_VjanopfA_BWosvFP.jpg",
+    "size": 112618,
+    "uploaded_at": "2025-04-28T21:06:09.288Z",
+    "user_id": 1,
+    "task_id": 14
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 31,
+  "fields": {
+    "name": "gvgwIMIlxb0.jpg",
+    "path": "task_attachments/gvgwIMIlxb0_TYSt7hK.jpg",
+    "size": 98802,
+    "uploaded_at": "2025-04-28T21:06:09.307Z",
+    "user_id": 1,
+    "task_id": 14
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 32,
+  "fields": {
+    "name": "m9DL65JNvYc.jpg",
+    "path": "task_attachments/m9DL65JNvYc_Cm7qnVs.jpg",
+    "size": 98513,
+    "uploaded_at": "2025-04-28T21:06:09.323Z",
+    "user_id": 1,
+    "task_id": 14
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 33,
+  "fields": {
+    "name": "li_VjanopfA.jpg",
+    "path": "task_attachments/li_VjanopfA_tejaxkw.jpg",
+    "size": 112618,
+    "uploaded_at": "2025-04-29T06:56:17.757Z",
+    "user_id": 1,
+    "task_id": 19
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 34,
+  "fields": {
+    "name": "gvgwIMIlxb0.jpg",
+    "path": "task_attachments/gvgwIMIlxb0_QfE4q1H.jpg",
+    "size": 98802,
+    "uploaded_at": "2025-04-29T06:56:17.773Z",
+    "user_id": 1,
+    "task_id": 19
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 35,
+  "fields": {
+    "name": "m9DL65JNvYc.jpg",
+    "path": "task_attachments/m9DL65JNvYc_JeizcX3.jpg",
+    "size": 98513,
+    "uploaded_at": "2025-04-29T06:56:17.786Z",
+    "user_id": 1,
+    "task_id": 19
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 36,
+  "fields": {
+    "name": "li_VjanopfA.jpg",
+    "path": "task_attachments/li_VjanopfA_kUWfsGe.jpg",
+    "size": 112618,
+    "uploaded_at": "2025-04-29T06:57:41.294Z",
+    "user_id": 1,
+    "task_id": 20
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 37,
+  "fields": {
+    "name": "gvgwIMIlxb0.jpg",
+    "path": "task_attachments/gvgwIMIlxb0_EbHArvI.jpg",
+    "size": 98802,
+    "uploaded_at": "2025-04-29T06:57:41.311Z",
+    "user_id": 1,
+    "task_id": 20
+  }
+},
+{
+  "model": "tasks.taskattachment",
+  "pk": 38,
+  "fields": {
+    "name": "m9DL65JNvYc.jpg",
+    "path": "task_attachments/m9DL65JNvYc_y6Yb7Ch.jpg",
+    "size": 98513,
+    "uploaded_at": "2025-04-29T06:57:41.327Z",
+    "user_id": 1,
+    "task_id": 20
   }
 }
 ]

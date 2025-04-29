@@ -110,7 +110,7 @@ class Task(models.Model):
         # Вычисляем разницу в днях
         delta = deadline - now
         days = delta.days
-        
+
         # Если дедлайн уже прошел, возвращаем 0
         if days < 0:
             return 0
