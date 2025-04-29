@@ -1,21 +1,19 @@
-# Django REST Canban API
+# Django REST Kanban
 
-Backend-приложение на Django с REST API для управления задачами, файлами, заметками и ссылками.
+## Описание проекта
+Это Kanban-доска, реализованная с использованием Django REST Framework. Проект позволяет управлять задачами в стиле Kanban-методологии.
 
-## Технологии
-
+## Требования
+- Python 3.8+
 - Django 4.x
 - Django REST Framework
-- MySQL 8+
-- djoser (для авторизации)
-- drf-spectacular (для OpenAPI-документации)
 
-## Установка
+## Установка и запуск
 
 1. Клонируйте репозиторий:
 ```bash
-git clone https://github.com/your-username/django-rest-canban.git
-cd django-rest-canban
+git clone <your-repository-url>
+cd django_rest_canban
 ```
 
 2. Создайте виртуальное окружение и активируйте его:
@@ -244,4 +242,4 @@ frontend/
 - `/files/trash` - Страница корзины файлов
 - `/profile` - Страница профиля
 - `/profile/edit` - Страница редактирования профиля
-- `*` - Редирект на главную страницу 
+- `*` - Редирект на главную страницу

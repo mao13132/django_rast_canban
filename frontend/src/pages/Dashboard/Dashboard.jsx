@@ -94,17 +94,6 @@ const Dashboard = () => {
     return result;
   }, [filteredTasks, statuses, sortBy]);
 
-  // Мемоизированные обработчики
-  const handleCreateTask = useCallback(async (taskData) => {
-    try {
-      await createTask(taskData);
-      showNotification('Задача успешно создана', 'success');
-    } catch (err) {
-      console.error('Ошибка при создании задачи:', err);
-      showNotification('Ошибка при создании задачи', 'error');
-    }
-  }, [createTask, showNotification]);
-
   const handleUpdateTask = useCallback(async (taskId, taskData) => {
     try {
       await updateTask(taskId, taskData);
@@ -165,8 +154,7 @@ const Dashboard = () => {
       <main className={styles.main}>
         <Header
           navigationLinks={[
-            { label: 'Заметки', path: '/notes' },
-            { label: 'Архив заметок', path: '/archive' },
+            { label: 'Главная страница', path: '/' },
             { label: 'Файлы', path: '/files' }
           ]}
         />
@@ -175,7 +163,7 @@ const Dashboard = () => {
           <SubHeader
             title="Доска задач"
             navLinks={[
-              { label: 'Заметки', path: '/notes', isActive: true },
+              { label: 'Заметки', path: '/notes' },
               { label: 'Архив заметок', path: '/archive' },
               { label: 'Хранилище', path: '/files' }
             ]}
