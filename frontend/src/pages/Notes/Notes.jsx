@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
 import NoteList from '../../components/Notes/NoteList/NoteList';
-import SearchBar from '../../components/Notes/SearchBar/SearchBar';
+import SearchBar from '../../components/UI/SearchBar';
 import SubHeader from '../../components/SubHeader/SubHeader';
 import TaskControls from '../../components/TaskControls/TaskControls';
 import NoteEditor from '../../components/Notes/NoteEditor/NoteEditor';
@@ -34,7 +34,7 @@ const Notes = () => {
           <SearchBar
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder='Поиск задач'
+            placeholder='Поиск заметок'
           />
 
           <div className={styles.content}>

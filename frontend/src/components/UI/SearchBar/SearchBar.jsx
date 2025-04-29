@@ -3,7 +3,7 @@ import styles from './SearchBar.module.css';
 
 const SearchBar = ({ value, onChange, placeholder }) => {
   return (
-    <div className={styles.searchBar}>
+    <div className={styles.searchBar}> 
       <input
         type="text"
         value={value}
