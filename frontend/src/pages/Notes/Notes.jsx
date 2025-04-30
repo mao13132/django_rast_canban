@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNotification } from '../../context/NotificationContext';
+import { useNoteEditor } from '../../context/NoteEditorContext';
 import Header from '../../components/Header';
 import NoteList from '../../components/Notes/NoteList/NoteList';
 import SearchBar from '../../components/UI/SearchBar';
@@ -13,6 +14,7 @@ const Notes = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { fetchNotes, getFilteredNotes, updateNote, deleteNote } = useNoteStore();
   const { showNotification } = useNotification();
+  const { isEditorVisible } = useNoteEditor();
 
   useEffect(() => {
     fetchNotes();
@@ -112,9 +114,11 @@ const Notes = () => {
           />
 
           <div className={styles.content}>
-            <div className={styles.formWrapper}>
-              <NoteEditor className={styles.createForm} />
-            </div>
+            {isEditorVisible && (
+              <div className={styles.formWrapper}>
+                <NoteEditor className={styles.createForm} />
+              </div>
+            )}
 
             <section className={styles.pinnedSection}>
               <h2>Закрепленные заметки</h2>

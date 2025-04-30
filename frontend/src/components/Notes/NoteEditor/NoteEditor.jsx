@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useNoteStore } from '../../../store/noteStore';
 import { useNotification } from '../../../context/NotificationContext';
+import { useNoteEditor } from '../../../context/NoteEditorContext';
 import styles from './NoteEditor.module.css';
 
 const NoteEditor = ({ className }) => {
@@ -118,10 +119,13 @@ const NoteEditor = ({ className }) => {
         }
     };
 
+    const { hideEditor } = useNoteEditor();
+
     const handleClose = () => {
         setTitle('');
         setIsPinned(false);
         textAreaRef.current.innerHTML = '';
+        hideEditor();
     };
 
     return (
