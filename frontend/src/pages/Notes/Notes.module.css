@@ -9,6 +9,12 @@
   padding: var(--padding-wrapper);
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
+}
+
 .notes {
   width: 100%;
 }

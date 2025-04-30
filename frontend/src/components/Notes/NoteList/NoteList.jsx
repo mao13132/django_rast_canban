@@ -2,9 +2,10 @@ import React from 'react';
 import NoteCard from '../NoteCard/NoteCard';
 import styles from './NoteList.module.css';
 
-const NoteList = ({ notes, onPin, onArchive, onDelete }) => {
+const NoteList = ({ notes, onPin, onArchive, onDelete, className }) => {
   return (
-    <div className={styles.list}>
+    <div className={`${styles.list} ${className}`}
+    >
       {notes.map(note => (
         <NoteCard
           key={note.note_id}

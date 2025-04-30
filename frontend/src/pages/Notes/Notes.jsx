@@ -52,9 +52,8 @@ const Notes = () => {
           <SubHeader
             title="Заметки"
             navLinks={[
-              { label: 'Заметки', path: '/notes', isActive: true },
               { label: 'Архив заметок', path: '/archive' },
-              { label: 'Хранилище', path: '/files' }
+              { label: 'Доска задач', path: '/' }
             ]}
             rightComponent={<TaskControls />}
           />
@@ -77,6 +76,7 @@ const Notes = () => {
                 onPin={handlePin}
                 onArchive={handleArchive}
                 onDelete={handleDelete}
+                className={styles.pinnedList}
               />
             </section>
 
@@ -87,6 +87,7 @@ const Notes = () => {
                 onPin={handlePin}
                 onArchive={handleArchive}
                 onDelete={handleDelete}
+                className={styles.otherList}
               />
             </section>
           </div>
