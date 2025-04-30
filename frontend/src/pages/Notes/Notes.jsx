@@ -77,6 +77,7 @@ const Notes = () => {
                 onArchive={handleArchive}
                 onDelete={handleDelete}
                 className={styles.pinnedList}
+                color={`#dcf0bb`}
               />
             </section>
 
@@ -88,6 +89,7 @@ const Notes = () => {
                 onArchive={handleArchive}
                 onDelete={handleDelete}
                 className={styles.otherList}
+                color={`#ebdfc8`}
               />
             </section>
           </div>

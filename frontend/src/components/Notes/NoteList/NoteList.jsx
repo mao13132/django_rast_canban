@@ -2,7 +2,7 @@ import React from 'react';
 import NoteCard from '../NoteCard/NoteCard';
 import styles from './NoteList.module.css';
 
-const NoteList = ({ notes, onPin, onArchive, onDelete, className }) => {
+const NoteList = ({ notes, onPin, onArchive, onDelete, className, color = '#dcf0bb' }) => {
   return (
     <div className={`${styles.list} ${className}`}
     >
@@ -13,6 +13,7 @@ const NoteList = ({ notes, onPin, onArchive, onDelete, className }) => {
           onPin={onPin}
           onArchive={onArchive}
           onDelete={onDelete}
+          color={color}
         />
       ))}
     </div>
