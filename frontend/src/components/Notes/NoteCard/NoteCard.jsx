@@ -26,6 +26,22 @@ const NoteCard = ({ note, onPin, onArchive, onDelete, color }) => {
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: content }}
       />
+
+      <div className={styles.otherActions}>
+        <img
+          onClick={() => onArchive(note.id)}
+          src={"/assets/archives.png"}
+          alt="Закрепить"
+          className={`${styles.pinnedImage} ${isPinned ? styles.active : ''}`}
+        />
+
+        <img
+          onClick={() => onDelete(note.id)}
+          src={"/assets/close.png"}
+          alt="Удалить"
+          className={`${styles.pinnedImage} ${isPinned ? styles.active : ''}`}
+        />
+      </div>
     </div>
   );
 };

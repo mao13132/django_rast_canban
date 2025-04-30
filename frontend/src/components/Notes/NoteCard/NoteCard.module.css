@@ -86,8 +86,26 @@
   color: #000000;
   margin: 0;
   line-height: 1.445;
-} 
+}
 
 .pinnedImage {
   cursor: pointer;
+}
+
+.otherActions {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
+.otherActions img {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.otherActions img:hover {
+  transform: scale(1.1);
 }
