@@ -1,8 +1,70 @@
 .container {
+  position: relative;
   background: #F2F2F2;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .contentWrapper {
+  flex: 1;
   padding: var(--padding-wrapper);
+  display: flex;
+  flex-direction: column;
+}
+
+.createFormIcons {
+  display: flex;
+  flex-direction: row;
+  gap: 0 70px;
+}
+
+.titleInput {
+  font-size: 47px;
+  width: 100%;
+  border: none;
+  font-weight: bold;
+  background: none;
+  outline: none;
+  margin-bottom: 30px;
+}
+
+.contentInput {
+  flex: 1;
+  min-height: 100px;
+
+  outline: none;
+  border: none;
+  background: none;
+  font-size: 40px;
+  margin-bottom: 60px;
+}
+
+.createFormIcons img {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.createFormIcons img:hover {
+  transform: scale(1.1);
+}
+
+.actions {
+  margin-top: 20px;
+  padding: 20px 100px;
+  border-top: 2px solid rgba(0, 0, 0, 0.46);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0 100px;
+}
+
+.btn {
+  font-size: 42px;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.saveButton {
+  background-color: #9EA7F5;
 }
