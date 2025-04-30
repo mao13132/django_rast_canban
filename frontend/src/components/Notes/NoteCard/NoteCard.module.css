@@ -6,6 +6,8 @@
   position: relative;
   border: 2px solid rgba(0, 0, 0, 0.46);
   box-shadow: var(--box-shadow);
+  height: 367px;
+  width: 426px;
 }
 
 .pinned {
