@@ -1,16 +1,32 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './NoteCard.module.css';
 
 const NoteCard = ({ note, onPin, onArchive, onDelete, onUnarchive, color }) => {
   const { title, content, is_pinned: isPinned, is_archived: isArchived } = note;
+  const navigate = useNavigate();
 
   const handlePinClick = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     onPin(note.id);
   };
 
+  const handleCardClick = (e) => {
+    // Проверяем, что клик был не по кнопкам действий и не по контенту
+    if (!e.target.closest(`.${styles.actions}`) &&
+      !e.target.closest(`.${styles.otherActions}`) &&
+      !e.target.closest(`.${styles.content}`)) {
+      navigate(`/notes/${note.id}/edit`);
+    }
+  };
+
   return (
-    <div className={`${styles.card} ${isPinned ? styles.pinned : ''}`} style={{ backgroundColor: color }}>
+    <div
+      className={`${styles.card} ${isPinned ? styles.pinned : ''}`}
+      style={{ backgroundColor: color, cursor: 'pointer' }}
+      onClick={handleCardClick}
+    >
       <div className={styles.header}>
         <h3 className={styles.title}>{title}</h3>
         <div className={styles.actions}>
