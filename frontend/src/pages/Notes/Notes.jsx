@@ -1,14 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import NoteList from '../../components/Notes/NoteList/NoteList';
 import SearchBar from '../../components/UI/SearchBar';
 import SubHeader from '../../components/SubHeader/SubHeader';
 import TaskControls from '../../components/TaskControls/TaskControls';
 import NoteEditor from '../../components/Notes/NoteEditor/NoteEditor';
+import { useNoteStore } from '../../store/noteStore';
 import styles from './Notes.module.css';
 
 const Notes = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { fetchNotes, getFilteredNotes, updateNote, deleteNote } = useNoteStore();
+
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
+
+  const handlePin = async (id) => {
+    const note = getFilteredNotes(searchQuery).find(n => n.note_id === id);
+    if (note) {
+      await updateNote(id, { ...note, is_pinned: !note.is_pinned });
+    }
+  };
+
+  const handleArchive = async (id) => {
+    const note = getFilteredNotes(searchQuery).find(n => n.note_id === id);
+    if (note) {
+      await updateNote(id, { ...note, is_archived: !note.is_archived });
+    }
+  };
+
+  const handleDelete = async (id) => {
+    await deleteNote(id);
+  };
+
+  // Используем параметр type в getFilteredNotes
+  const pinnedNotes = getFilteredNotes(searchQuery, 'pinned');
+  const otherNotes = getFilteredNotes(searchQuery, 'other');
 
   return (
     <div className={styles.notesContainer}>
@@ -42,9 +70,24 @@ const Notes = () => {
               <NoteEditor className={styles.createForm} />
             </div>
 
+            <section className={styles.pinnedSection}>
+              <h2>Закрепленные заметки</h2>
+              <NoteList 
+                notes={pinnedNotes}
+                onPin={handlePin}
+                onArchive={handleArchive}
+                onDelete={handleDelete}
+              />
+            </section>
+
             <section className={styles.otherSection}>
               <h2>Другие заметки</h2>
-              <NoteList type="other" searchQuery={searchQuery} />
+              <NoteList 
+                notes={otherNotes}
+                onPin={handlePin}
+                onArchive={handleArchive}
+                onDelete={handleDelete}
+              />
             </section>
           </div>
         </div>
