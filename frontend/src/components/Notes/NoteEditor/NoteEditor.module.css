@@ -143,8 +143,8 @@
 .checkbox {
     appearance: none;
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 30px;
+    height: 30px;
     border: 2px solid black;
     border-radius: 2px;
     background-color: transparent;
@@ -156,10 +156,10 @@
 .checkbox:checked::after {
     content: '';
     position: absolute;
-    left: 2px;
-    top: 2px;
-    width: 10px;
-    height: 5px;
+    left: 5px;
+    top: 5px;
+    width: 15px;
+    height: 10px;
     border-left: 2px solid black;
     border-bottom: 2px solid black;
     transform: rotate(-45deg);

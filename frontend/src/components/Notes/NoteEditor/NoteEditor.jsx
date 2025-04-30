@@ -13,7 +13,6 @@ const NoteEditor = ({ className }) => {
     const handleFormatting = (formatType) => {
         const selection = window.getSelection();
 
-        // Проверяем, есть ли выделенный текст
         if (!selection || selection.isCollapsed || !selection.toString().trim()) {
             return;
         }
@@ -23,16 +22,15 @@ const NoteEditor = ({ className }) => {
 
         switch (formatType) {
             case 'checkbox':
-                // Создаем контейнер для чекбокса
                 const container = document.createElement('div');
                 
-                // Создаем элемент чекбокса
                 const checkboxContainer = document.createElement('div');
                 checkboxContainer.className = styles.checkboxItem;
                 
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.className = styles.checkbox;
+                checkbox.setAttribute('data-persist', 'true'); // Добавляем атрибут для идентификации
                 
                 const label = document.createElement('label');
                 label.className = styles.checkboxLabel;
@@ -41,10 +39,8 @@ const NoteEditor = ({ className }) => {
                 checkboxContainer.appendChild(checkbox);
                 checkboxContainer.appendChild(label);
                 
-                // Добавляем чекбокс в контейнер
                 container.appendChild(checkboxContainer);
                 
-                // Добавляем перенос строки в отдельный div для сохранения структуры
                 const lineBreak = document.createElement('div');
                 lineBreak.innerHTML = '<br>';
                 container.appendChild(lineBreak);
@@ -73,7 +69,14 @@ const NoteEditor = ({ className }) => {
 
         range.insertNode(element);
         
-        // Перемещаем курсор после вставленного элемента и переноса строки
+        if (formatType === 'checkbox') {
+            // Добавляем обработчик изменения состояния чекбокса
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.addEventListener('change', (e) => {
+                e.target.setAttribute('checked', e.target.checked);
+            });
+        }
+
         const newRange = document.createRange();
         const sel = window.getSelection();
         newRange.setStartAfter(element);
@@ -89,9 +92,18 @@ const NoteEditor = ({ className }) => {
         }
 
         try {
+            // Сохраняем состояние всех чекбоксов перед отправкой
+            const content = textAreaRef.current.cloneNode(true);
+            const checkboxes = content.querySelectorAll('input[type="checkbox"][data-persist="true"]');
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    checkbox.setAttribute('checked', '');
+                }
+            });
+
             await createNote({
                 title,
-                content: textAreaRef.current.innerHTML,
+                content: content.innerHTML,
                 is_pinned: isPinned
             });
 

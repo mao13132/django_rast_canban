@@ -29,9 +29,12 @@ const NoteCard = ({ note, onPin, onArchive, onDelete, color }) => {
           </button>
         </div>
       </div>
-      <p className={styles.content}>{content}</p>
+      <div 
+        className={styles.content} 
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
     </div>
   );
 };
 
-export default NoteCard; 
+export default NoteCard;

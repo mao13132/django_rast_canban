@@ -74,6 +74,10 @@
 }
 
 .content {
+  border: 2px solid rgba(0, 0, 0, 0.46);
+  height: 200px;
+  overflow: hidden;
+  overflow-y: auto;
   font-family: 'Jost', sans-serif;
   font-size: 40px;
   font-weight: 200;
