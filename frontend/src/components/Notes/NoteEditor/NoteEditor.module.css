@@ -133,3 +133,21 @@
     color: #999;
     cursor: text;
 }
+
+.checkboxItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+}
+
+.checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.checkboxLabel {
+    cursor: pointer;
+    user-select: none;
+}

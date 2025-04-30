@@ -15,40 +15,62 @@ const NoteEditor = ({ className }) => {
 
         // Проверяем, есть ли выделенный текст
         if (!selection || selection.isCollapsed || !selection.toString().trim()) {
-            return; // Если текст не выделен, прекращаем выполнение функции
+            return;
         }
 
         const range = selection.getRangeAt(0);
         let element;
 
         switch (formatType) {
-            case 'list':
-                const listElement = document.createElement('ul');
-                const listItem = document.createElement('li');
-                listItem.appendChild(range.extractContents());
-                listElement.appendChild(listItem);
-                element = listElement;
+            case 'checkbox':
+                const checkboxContainer = document.createElement('div');
+                checkboxContainer.className = styles.checkboxItem;
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = styles.checkbox;
+                
+                const label = document.createElement('label');
+                label.className = styles.checkboxLabel;
+                label.appendChild(range.extractContents());
+                
+                checkboxContainer.appendChild(checkbox);
+                checkboxContainer.appendChild(label);
+                element = checkboxContainer;
+
+                // Добавляем перенос строки после чекбокса
+                const br = document.createElement('br');
+                checkboxContainer.appendChild(br);
                 break;
             case 'bold':
                 element = document.createElement('strong');
+                element.appendChild(range.extractContents());
                 break;
             case 'italic':
                 element = document.createElement('em');
+                element.appendChild(range.extractContents());
                 break;
             case 'underline':
                 element = document.createElement('u');
+                element.appendChild(range.extractContents());
                 break;
             case 'strikethrough':
                 element = document.createElement('s');
+                element.appendChild(range.extractContents());
                 break;
             default:
                 return;
         }
 
-        if (formatType !== 'list') {
-            element.appendChild(range.extractContents());
-        }
         range.insertNode(element);
+        
+        // Перемещаем курсор в конец вставленного элемента
+        const newRange = document.createRange();
+        const sel = window.getSelection();
+        newRange.setStartAfter(element);
+        newRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
     };
 
     const handleCreate = async () => {
@@ -111,8 +133,8 @@ const NoteEditor = ({ className }) => {
 
 
             <div className={styles.createFormIcons}>
-                <div className={styles.iconWrapper} onClick={() => handleFormatting('list')}>
-                    <img src="/assets/sortText.png" alt="Список" className={styles.textIcon} />
+                <div className={styles.iconWrapper} onClick={() => handleFormatting('checkbox')}>
+                    <img src="/assets/sortText.png" alt="Чекбокс" className={styles.textIcon} />
                 </div>
                 <div className={styles.iconWrapper} onClick={() => handleFormatting('bold')}>
                     <img src="/assets/bold.png" alt="Жирный" className={styles.textIcon} />
