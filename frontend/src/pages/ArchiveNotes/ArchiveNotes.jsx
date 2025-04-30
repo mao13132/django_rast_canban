@@ -1,36 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useNoteStore } from '../../store/noteStore';
 import Header from '../../components/Header';
-import ArchivedNoteList from '../../components/ArchiveNotes/ArchivedNoteList/ArchivedNoteList';
-import SearchBar from '../../components/ArchiveNotes/SearchBar/SearchBar';
+import { useNoteOperations } from '../../hooks/useNoteOperations';
+import SubHeader from '../../components/SubHeader/SubHeader';
+import NoteList from '../../components/Notes/NoteList/NoteList';
+import SearchBar from '../../components/UI/SearchBar';
 import styles from './ArchiveNotes.module.css';
 
 const ArchiveNotes = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const { fetchNotes, getFilteredNotes, updateNote, deleteNote } = useNoteStore();
+
+  const { handlePin, handleArchive, handleDelete, handleUnarchive } = useNoteOperations(searchQuery);
+
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
+
+  // Сначала получаем все архивные заметки
+  const archivedNotes = getFilteredNotes(searchQuery).filter(note => note.is_archived);
 
   return (
     <div className={styles.archiveContainer}>
-      <Header />
+
       <main className={styles.archive}>
-        <div className={styles.header}>
-          <h1>Архив заметок</h1>
-          <div className={styles.actions}>
-            <SearchBar 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Поиск заметок"
+        <Header
+          navigationLinks={[
+            { label: 'Главная страница', path: '/' },
+            { label: 'Файлы', path: '/files' }
+          ]}
+        />
+        <div className={styles.contentWrapper}>
+          <SubHeader
+            title="Архив заметок"
+            navLinks={[
+              { label: 'Заметки', path: '/notes' },
+              { label: 'Доска задач', path: '/' }
+            ]}
+          />
+
+          <SearchBar
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder='Поиск заметок'
+          />
+
+          <div className={styles.content}>
+            <NoteList
+              notes={archivedNotes}
+              onArchive={handleArchive}
+              onUnarchive={handleUnarchive}
+              onDelete={handleDelete}
+              className={styles.pinnedList}
+              color={`#d5d7ea`}
             />
           </div>
-        </div>
 
-        <div className={styles.subHeader}>
-          <span onClick={() => navigate('/notes')} className={styles.link}>Заметки</span>
-          <span onClick={() => navigate('/')} className={styles.link}>Доска задач</span>
-        </div>
-
-        <div className={styles.content}>
-          <ArchivedNoteList searchQuery={searchQuery} />
         </div>
       </main>
     </div>

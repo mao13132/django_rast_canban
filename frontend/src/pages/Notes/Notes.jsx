@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNotification } from '../../context/NotificationContext';
 import { useNoteEditor } from '../../context/NoteEditorContext';
 import Header from '../../components/Header';
 import NoteList from '../../components/Notes/NoteList/NoteList';
@@ -8,77 +7,18 @@ import SubHeader from '../../components/SubHeader/SubHeader';
 import NotesControls from '../../components/NotesControls/NotesControls';
 import NoteEditor from '../../components/Notes/NoteEditor/NoteEditor';
 import { useNoteStore } from '../../store/noteStore';
+import { useNoteOperations } from '../../hooks/useNoteOperations';
 import styles from './Notes.module.css';
 
 const Notes = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const { fetchNotes, getFilteredNotes, updateNote, deleteNote } = useNoteStore();
-  const { showNotification } = useNotification();
+  const { fetchNotes, getFilteredNotes } = useNoteStore();
   const { isEditorVisible } = useNoteEditor();
+  const { handlePin, handleArchive, handleDelete } = useNoteOperations(searchQuery);
 
   useEffect(() => {
     fetchNotes();
   }, [fetchNotes]);
-
-  const handlePin = async (id) => {
-    const note = getFilteredNotes(searchQuery).find(n => n.id === id);
-    if (note) {
-      try {
-        await updateNote(id, { ...note, is_pinned: !note.is_pinned });
-        await fetchNotes();
-        showNotification(
-          `Заметка ${note.is_pinned ? 'откреплена' : 'закреплена'}`, 
-          'success', 
-          3000, 
-          'bottom'
-        );
-      } catch (error) {
-        console.error('Ошибка при обновлении заметки:', error);
-        showNotification('Ошибка при обновлении заметки', 'error', 3000, 'bottom');
-      }
-    }
-  };
-
-  const handleArchive = async (id) => {
-    const note = getFilteredNotes(searchQuery).find(n => n.id === id);
-    if (note) {
-      try {
-        const confirmMessage = note.is_archived 
-          ? 'Вы уверены, что хотите разархивировать эту заметку?' 
-          : 'Вы уверены, что хотите архивировать эту заметку?';
-        
-        if (!window.confirm(confirmMessage)) return;
-
-        await updateNote(id, { ...note, is_archived: !note.is_archived });
-        await fetchNotes();
-        showNotification(
-          `Заметка ${note.is_archived ? 'разархивирована' : 'архивирована'}`,
-          'success',
-          3000,
-          'bottom'
-        );
-      } catch (error) {
-        console.error('Ошибка при архивации заметки:', error);
-        showNotification('Ошибка при архивации заметки', 'error', 3000, 'bottom');
-      }
-    }
-  };
-
-  const handleDelete = async (id) => {
-    const note = getFilteredNotes(searchQuery).find(n => n.id === id);
-    if (note) {
-      try {
-        if (!window.confirm('Вы уверены, что хотите удалить эту заметку?')) return;
-
-        await deleteNote(id);
-        await fetchNotes();
-        showNotification('Заметка успешно удалена', 'success', 3000, 'bottom');
-      } catch (error) {
-        console.error('Ошибка при удалении заметки:', error);
-        showNotification('Ошибка при удалении заметки', 'error', 3000, 'bottom');
-      }
-    }
-  };
 
   // Сначала получаем все неархивные заметки
   const activeNotes = getFilteredNotes(searchQuery).filter(note => !note.is_archived);

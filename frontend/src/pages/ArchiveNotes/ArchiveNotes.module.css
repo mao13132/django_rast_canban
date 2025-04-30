@@ -5,11 +5,12 @@
   background-color: #F2F2F2;
 }
 
+.contentWrapper {
+  padding: var(--padding-wrapper);
+}
+
 .archive {
   flex: 1;
-  padding: 20px;
-  max-width: 1400px;
-  margin: 64px auto 0;
   width: 100%;
 }
 
