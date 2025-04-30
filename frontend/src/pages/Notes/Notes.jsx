@@ -34,9 +34,12 @@ const Notes = () => {
     await deleteNote(id);
   };
 
-  // Используем параметр type в getFilteredNotes
-  const pinnedNotes = getFilteredNotes(searchQuery, 'pinned');
-  const otherNotes = getFilteredNotes(searchQuery, 'other');
+  // Сначала получаем все неархивные заметки
+  const activeNotes = getFilteredNotes(searchQuery).filter(note => !note.is_archived);
+  
+  // Затем разделяем на закрепленные и обычные
+  const pinnedNotes = activeNotes.filter(note => note.is_pinned);
+  const otherNotes = activeNotes.filter(note => !note.is_pinned);
 
   return (
     <div className={styles.notesContainer}>
