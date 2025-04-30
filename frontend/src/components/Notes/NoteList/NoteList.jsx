@@ -8,7 +8,7 @@ const NoteList = ({ notes, onPin, onArchive, onDelete, className, color = '#dcf0
     >
       {notes.map(note => (
         <NoteCard
-          key={note.note_id}
+          key={note.id}
           note={note}
           onPin={onPin}
           onArchive={onArchive}

@@ -53,7 +53,7 @@ export const useNoteStore = create((set, get) => ({
       const updatedNote = NoteDTO.fromBackend(response.data);
       set((state) => ({
         notes: state.notes.map(note => 
-          note.note_id === noteId ? updatedNote : note
+          note.id === noteId ? updatedNote : note
         )
       }));
       return updatedNote;

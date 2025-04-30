@@ -17,16 +17,28 @@ const Notes = () => {
   }, [fetchNotes]);
 
   const handlePin = async (id) => {
-    const note = getFilteredNotes(searchQuery).find(n => n.note_id === id);
+    const note = getFilteredNotes(searchQuery).find(n => n.id === id);
     if (note) {
-      await updateNote(id, { ...note, is_pinned: !note.is_pinned });
+      try {
+        await updateNote(id, { ...note, is_pinned: !note.is_pinned });
+        // Обновляем список заметок после успешного обновления
+        await fetchNotes();
+      } catch (error) {
+        console.error('Ошибка при обновлении заметки:', error);
+      }
     }
   };
 
   const handleArchive = async (id) => {
-    const note = getFilteredNotes(searchQuery).find(n => n.note_id === id);
+    const note = getFilteredNotes(searchQuery).find(n => n.id === id);
     if (note) {
-      await updateNote(id, { ...note, is_archived: !note.is_archived });
+      try {
+        await updateNote(id, { ...note, is_archived: !note.is_archived });
+        // Обновляем список заметок после успешного обновления
+        await fetchNotes();
+      } catch (error) {
+        console.error('Ошибка при архивации заметки:', error);
+      }
     }
   };
 
