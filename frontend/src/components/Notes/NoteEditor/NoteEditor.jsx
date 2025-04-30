@@ -23,6 +23,10 @@ const NoteEditor = ({ className }) => {
 
         switch (formatType) {
             case 'checkbox':
+                // Создаем контейнер для чекбокса
+                const container = document.createElement('div');
+                
+                // Создаем элемент чекбокса
                 const checkboxContainer = document.createElement('div');
                 checkboxContainer.className = styles.checkboxItem;
                 
@@ -36,11 +40,16 @@ const NoteEditor = ({ className }) => {
                 
                 checkboxContainer.appendChild(checkbox);
                 checkboxContainer.appendChild(label);
-                element = checkboxContainer;
-
-                // Добавляем перенос строки после чекбокса
-                const br = document.createElement('br');
-                checkboxContainer.appendChild(br);
+                
+                // Добавляем чекбокс в контейнер
+                container.appendChild(checkboxContainer);
+                
+                // Добавляем перенос строки в отдельный div для сохранения структуры
+                const lineBreak = document.createElement('div');
+                lineBreak.innerHTML = '<br>';
+                container.appendChild(lineBreak);
+                
+                element = container;
                 break;
             case 'bold':
                 element = document.createElement('strong');
@@ -64,7 +73,7 @@ const NoteEditor = ({ className }) => {
 
         range.insertNode(element);
         
-        // Перемещаем курсор в конец вставленного элемента
+        // Перемещаем курсор после вставленного элемента и переноса строки
         const newRange = document.createRange();
         const sel = window.getSelection();
         newRange.setStartAfter(element);
