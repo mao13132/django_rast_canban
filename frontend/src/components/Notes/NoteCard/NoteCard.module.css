@@ -7,7 +7,7 @@
   border: 2px solid rgba(0, 0, 0, 0.46);
   box-shadow: var(--box-shadow);
   height: 367px;
-  min-width: 426px;
+  width: 426px;
 }
 
 .pinned {
@@ -87,6 +87,28 @@
   color: #000000;
   margin: 0;
   line-height: 1.445;
+  
+  /* Стили для тонкого скроллбара */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent; /* Firefox */
+  
+  /* Стили для Webkit (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 }
 
 .pinnedImage {
