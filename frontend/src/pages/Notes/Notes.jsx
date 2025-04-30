@@ -4,7 +4,7 @@ import Header from '../../components/Header';
 import NoteList from '../../components/Notes/NoteList/NoteList';
 import SearchBar from '../../components/UI/SearchBar';
 import SubHeader from '../../components/SubHeader/SubHeader';
-import TaskControls from '../../components/TaskControls/TaskControls';
+import NotesControls from '../../components/NotesControls/NotesControls';
 import NoteEditor from '../../components/Notes/NoteEditor/NoteEditor';
 import { useNoteStore } from '../../store/noteStore';
 import styles from './Notes.module.css';
@@ -102,7 +102,7 @@ const Notes = () => {
               { label: 'Архив заметок', path: '/archive' },
               { label: 'Доска задач', path: '/' }
             ]}
-            rightComponent={<TaskControls />}
+            rightComponent={<NotesControls />}
           />
 
           <SearchBar
