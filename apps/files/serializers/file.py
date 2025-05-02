@@ -1,3 +1,5 @@
+import os
+
 from rest_framework import serializers
 from ..models import File
 
@@ -10,6 +12,11 @@ class FolderIdField(serializers.IntegerField):
             return int(data)
         except (ValueError, TypeError):
             return None
+            
+    def to_representation(self, value):
+        if value is None:
+            return None
+        return value.folder_id if hasattr(value, 'folder_id') else value
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -26,24 +33,33 @@ class FileSerializer(serializers.ModelSerializer):
         }
 
     def to_internal_value(self, data):
-        # Сначала получаем базовые преобразованные данные
         ret = super().to_internal_value(data)
-
-        # Явно вызываем validate для дополнительной обработки
         return self.validate(ret)
 
-    # Удаляем дублирующую валидацию из метода validate
     def validate(self, data):
-        print("Метод validate вызван!")
-        
-        # Обрабатываем булевы значения
+        # Проверяем уникальность имени файла в папке
+        if 'name' in data and 'folder_id' in data:
+            name = data['name']
+            folder_id = data['folder_id']
+            counter = 1
+            
+            # Ищем файлы с таким же именем в папке
+            while File.objects.filter(
+                name=name,
+            ).exists():
+                # Если файл существует - добавляем (1), (2) и т.д.
+                base, ext = os.path.splitext(name)
+                name = f"{base} ({counter}){ext}"
+                counter += 1
+            
+            data['name'] = name
+
         for field in ['is_favorite', 'is_trashed']:
             if field in data:
                 if isinstance(data[field], str):
                     data[field] = data[field].lower() in ('true', '1', 't', 'y', 'yes')
                 elif isinstance(data[field], int):
                     data[field] = bool(data[field])
-
         return data
 
     def validate_file(self, value):
