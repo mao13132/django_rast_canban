@@ -23,7 +23,9 @@ class File(models.Model):
         Folder,
         on_delete=models.CASCADE,
         related_name='files',
-        help_text='Папка файла'
+        help_text='Папка файла',
+        null=True,  # Добавляем null=True
+        blank=True  # Добавляем blank=True
     )
     file = models.FileField(
         upload_to='files/',

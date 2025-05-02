@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { FolderPopupProvider } from './context/FolderPopupContext';
 import { TaskFormProvider } from './context/TaskFormContext';
 import { FileMenuProvider } from './context/FileMenuContext';
+import { FilePopupProvider } from './context/FilePopupContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { PopupProvider } from './context/PopupContext';
 import { ProfileProvider } from './context/ProfileContext';
@@ -19,35 +20,37 @@ import './App.css';
 
 function App() {
   return (
-    <FileMenuProvider>
-      <FolderPopupProvider>
-        <NoteEditorProvider>
-          <BrowserRouter>
-            <AuthProvider>
-              <PopupProvider>
-                <NotificationProvider>
-                  <TaskSearchProvider>
-                    <TaskFormProvider>
-                      <EditTaskFormProvider>
-                        <ProfileProvider>
-                          <CategoryPopupProvider>
-                            <NotePopupProvider>
-                              <AppRoutes />
-                              <Popup />
-                              <Profile />
-                            </NotePopupProvider>
-                          </CategoryPopupProvider>
-                        </ProfileProvider>
-                      </EditTaskFormProvider>
-                    </TaskFormProvider>
-                  </TaskSearchProvider>
-                </NotificationProvider>
-              </PopupProvider>
-            </AuthProvider>
-          </BrowserRouter>
-        </NoteEditorProvider>
-      </FolderPopupProvider>
-    </FileMenuProvider>
+    <FilePopupProvider>
+      <FileMenuProvider>
+        <FolderPopupProvider>
+          <NoteEditorProvider>
+            <BrowserRouter>
+              <AuthProvider>
+                <PopupProvider>
+                  <NotificationProvider>
+                    <TaskSearchProvider>
+                      <TaskFormProvider>
+                        <EditTaskFormProvider>
+                          <ProfileProvider>
+                            <CategoryPopupProvider>
+                              <NotePopupProvider>
+                                <AppRoutes />
+                                <Popup />
+                                <Profile />
+                              </NotePopupProvider>
+                            </CategoryPopupProvider>
+                          </ProfileProvider>
+                        </EditTaskFormProvider>
+                      </TaskFormProvider>
+                    </TaskSearchProvider>
+                  </NotificationProvider>
+                </PopupProvider>
+              </AuthProvider>
+            </BrowserRouter>
+          </NoteEditorProvider>
+        </FolderPopupProvider>
+      </FileMenuProvider>
+    </FilePopupProvider>
   );
 }
 

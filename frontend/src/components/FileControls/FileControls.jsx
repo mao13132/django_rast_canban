@@ -1,25 +1,32 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useFolderPopup } from '../../context/FolderPopupContext';
+import { useFilePopup } from '../../context/FilePopupContext';
 import ContextMenu from './ContextMenu/ContextMenu';
 import { useFileMenu } from '../../context/FileMenuContext';
 import FolderPopup from './FolderPopup/FolderPopup';
+import FilePopup from './FilePopup/FilePopup';
 import styles from './FileControls.module.css';
 
 const FileControls = () => {
   const { folderId } = useParams();
-  const { openPopup } = useFolderPopup();
+  const { openPopup: openFolderPopup } = useFolderPopup();
+  const { openPopup: openFilePopup } = useFilePopup();
   const {
     isMenuVisible,
     setIsMenuVisible,
     handleUploadFolder,
-    handleUploadFile,
     handleUploadLink
   } = useFileMenu();
 
   const handleCreateFolder = () => {
     setIsMenuVisible(false);
-    openPopup(folderId);
+    openFolderPopup(folderId);
+  };
+
+  const handleUploadFile = () => {
+    setIsMenuVisible(false);
+    openFilePopup(folderId);
   };
 
   const menuItems = [
@@ -58,6 +65,7 @@ const FileControls = () => {
         menuItems={menuItems}
       />
       <FolderPopup />
+      <FilePopup />
     </div>
   );
 };
