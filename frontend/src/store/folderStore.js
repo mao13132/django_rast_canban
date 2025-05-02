@@ -39,7 +39,13 @@ export const useFolderStore = create((set, get) => ({
     const { currentFolder } = get();
     try {
       set({ isLoading: true });
-      const folderData = FolderDTO.toBackend({ name, parent_id: currentFolder });
+      const folderData = FolderDTO.toBackend({ 
+        name: name, // Исправляем передачу имени
+        parent_id: currentFolder,
+        is_favorite: false,
+        is_trashed: false
+      });
+      debugger
       const response = await foldersAPI.createFolder(folderData);
       const newFolder = FolderDTO.fromBackend(response.data);
       

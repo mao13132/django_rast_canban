@@ -54,4 +54,4 @@ class Folder(models.Model):
         """
         if self.parent_id:
             return f"{self.parent_id.get_full_path()}/{self.name}"
-        return self.name
+        return f"/{self.name}"  # Добавляем слеш для корневых папок

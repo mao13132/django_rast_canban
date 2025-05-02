@@ -60,6 +60,15 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
         </div>
         
         <div className={styles.breadcrumbs}>
+          <span key="root">
+            <span 
+              className={styles.breadcrumbLink}
+              onClick={() => navigate('/files')}
+            >
+              Главная
+            </span>
+          </span>
+          {breadcrumbs.length > 0 && ' / '}
           {breadcrumbs.map((crumb, index) => (
             <span key={crumb.id}>
               <span 

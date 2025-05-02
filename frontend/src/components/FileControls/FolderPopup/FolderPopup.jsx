@@ -12,7 +12,8 @@ const FolderPopup = () => {
 
     const handleSubmit = async () => {
         try {
-            await createFolder({ name, parent_id: currentFolderId });
+            // Передаем объект с name и parent_id
+            await createFolder(name);
             showNotification('Папка успешно создана', 'success', 3000, 'bottom');
             closePopup();
             setName('');
