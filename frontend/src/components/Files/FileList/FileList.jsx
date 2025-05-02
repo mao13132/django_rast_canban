@@ -1,43 +1,54 @@
 import React from 'react';
 import styles from './FileList.module.css';
 import FileItem from '../FileItem';
+import { useFolderStore } from '../../../store/folderStore';
 
 const FileList = ({ type = 'all' }) => {
-  const files = [
-    { id: 1, name: 'Учеба', type: 'folder', size: '15 КБ', isFavorite: true },
-    { id: 2, name: 'Работа', type: 'folder', size: '176 КБ', isFavorite: false },
-    { id: 3, name: 'Отчет.doc', type: 'file', size: '17 КБ', isFavorite: true },
-    { id: 4, name: 'Фото.jpg', type: 'file', size: '10 КБ', isFavorite: false },
-    { id: 5, name: 'Презентация.pptx', type: 'file', size: '6 КБ', isFavorite: true },
-    { id: 6, name: 'Клип.mp4', type: 'file', size: '1 ГБ', isFavorite: false },
-    { id: 7, name: 'Google Keep', type: 'link', size: '6 КБ', isFavorite: true },
-  ];
+  const { folders, isLoading, error } = useFolderStore();
 
-  const filteredFiles = files.filter(file => {
+  const filteredFolders = folders.filter(folder => {
     switch (type) {
       case 'favorite':
-        return file.isFavorite;
+        return folder.is_favorite;
       case 'trash':
-        return file.isDeleted;
+        return folder.is_trashed;
       default:
-        return true;
+        return !folder.is_trashed;
     }
   });
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (error) {
+    return <div>Ошибка: {error}</div>;
+  }
 
   return (
     <div className={styles.fileList}>
       <div className={styles.headers}>
-        <span className={styles.header}>Папки</span>
-        <span className={styles.header}>Файлы</span>
+        <span className={styles.header}>Название</span>
+        <span className={styles.header}>Тип</span>
         <span className={styles.header}>Размер</span>
       </div>
       <div className={styles.items}>
-        {filteredFiles.map(file => (
-          <FileItem key={file.id} file={file} />
+        {filteredFolders.map(folder => (
+          <FileItem 
+            key={folder.id} 
+            file={{
+              id: folder.id,
+              name: folder.name,
+              type: 'folder',
+              size: folder.size || '—',
+              isFavorite: folder.is_favorite,
+              isDeleted: folder.is_trashed
+            }} 
+          />
         ))}
       </div>
     </div>
   );
 };
 
-export default FileList; 
+export default FileList;

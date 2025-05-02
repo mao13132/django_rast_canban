@@ -6,7 +6,6 @@ class FolderSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели Folder.
     """
-
     class Meta:
         model = Folder
         fields = [

@@ -22,12 +22,8 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    fetchFolders(folderId);
-  }, [folderId]);
-
-  const handleFolderClick = (folder) => {
-    navigate(`/files/folder/${folder.folder_id}`);
-  };
+    fetchFolders(folderId || null);
+  }, [folderId, fetchFolders]);
 
   return (
     <div className={styles.container}>
@@ -52,56 +48,35 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
           <SearchBar
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder='Поиск заметок'
+            placeholder='Поиск файлов и папок'
           />
 
-          <FileList type={type} />
-          <StorageInfo />
-        </div>
-        
-        <div className={styles.breadcrumbs}>
-          <span key="root">
+          <div className={styles.breadcrumbs}>
             <span 
               className={styles.breadcrumbLink}
               onClick={() => navigate('/files')}
             >
               Главная
             </span>
-          </span>
-          {breadcrumbs.length > 0 && ' / '}
-          {breadcrumbs.map((crumb, index) => (
-            <span key={crumb.id}>
-              <span 
-                className={styles.breadcrumbLink}
-                onClick={() => navigate(
-                  crumb.id ? `/files/folder/${crumb.id}` : '/files'
-                )}
-              >
-                {crumb.name}
+            {breadcrumbs.length > 0 && ' / '}
+            {breadcrumbs.map((crumb, index) => (
+              <span key={crumb.id}>
+                <span 
+                  className={styles.breadcrumbLink}
+                  onClick={() => navigate(
+                    crumb.id ? `/files/folder/${crumb.id}` : '/files'
+                  )}
+                >
+                  {crumb.name}
+                </span>
+                {index < breadcrumbs.length - 1 && ' / '}
               </span>
-              {index < breadcrumbs.length - 1 && ' / '}
-            </span>
-          ))}
-        </div>
-
-        {isLoading ? (
-          <div>Загрузка...</div>
-        ) : error ? (
-          <div>Ошибка: {error}</div>
-        ) : (
-          <div className={styles.folderGrid}>
-            {folders.map(folder => (
-              <div
-                key={folder.folder_id}
-                className={styles.folderItem}
-                onClick={() => handleFolderClick(folder)}
-              >
-                <img src="/assets/folder.png" alt="Папка" />
-                <span>{folder.name}</span>
-              </div>
             ))}
           </div>
-        )}
+
+          <FileList type={type} />
+          <StorageInfo />
+        </div>
       </main>
     </div>
   );
