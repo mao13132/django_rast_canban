@@ -1,0 +1,35 @@
+import React from 'react';
+import styles from './ContextMenu.module.css';
+
+/**
+ * Универсальный компонент контекстного меню
+ * @param {Object} props - Свойства компонента
+ * @param {boolean} props.isVisible - Флаг видимости меню
+ * @param {Array<{label: string, onClick: Function, icon?: string}>} props.menuItems - Массив пунктов меню
+ */
+const ContextMenu = ({ isVisible, menuItems }) => {
+  if (!isVisible) return null;
+
+  return (
+    <div className={styles.menu}>
+      {menuItems.map((item, index) => (
+        <button 
+          key={index} 
+          className={styles.menuItem} 
+          onClick={item.onClick}
+        >
+          {item.icon && (
+            <img 
+              src={item.icon} 
+              alt={item.label} 
+              className={styles.menuIcon}
+            />
+          )}
+          {item.label}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default ContextMenu;

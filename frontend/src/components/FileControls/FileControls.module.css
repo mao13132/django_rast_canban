@@ -1,4 +1,5 @@
 .controls {
+    position: relative;  /* Добавляем для правильного позиционирования меню */
     display: flex;
     align-items: center;
     gap: 40px;
@@ -17,6 +18,15 @@
 
 .createButton:hover {
     background: rgb(180, 179, 179);
+}
+
+/* Добавляем стили для контейнера меню */
+.menuWrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    margin-top: 8px;
 }
 
 .imageContainer {

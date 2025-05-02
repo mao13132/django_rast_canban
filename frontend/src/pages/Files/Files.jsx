@@ -19,7 +19,7 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
             { label: 'Доска задач', path: '/dashboard' }
           ]}
         />
-
+ 
         <div className={styles.contentWrapper}>
           <SubHeader
             title={title}
