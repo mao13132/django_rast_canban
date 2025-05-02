@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useFolderStore } from '../../store/folderStore';
+import { useFileStore } from '../../store/fileStore';
 import styles from './Files.module.css';
 import Header from '../../components/Header';
 import FileControls from '../../components/FileControls/FileControls';
@@ -15,14 +16,21 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
   const { 
     folders,
     fetchFolders,
-    isLoading,
-    error 
+    isLoading: foldersLoading,
+    error: foldersError 
   } = useFolderStore();
+  const {
+    files,
+    fetchFiles,
+    isLoading: filesLoading,
+    error: filesError
+  } = useFileStore();
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchFolders(folderId || null);
-  }, [folderId, fetchFolders]);
+    fetchFiles(folderId || null);
+  }, [folderId, fetchFolders, fetchFiles]);
 
   const handleBack = () => {
     navigate(-1); // Используем встроенную навигацию браузера для возврата назад

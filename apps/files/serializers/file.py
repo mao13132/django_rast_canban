@@ -40,7 +40,6 @@ class FileSerializer(serializers.ModelSerializer):
         # Проверяем уникальность имени файла в папке
         if 'name' in data and 'folder_id' in data:
             name = data['name']
-            folder_id = data['folder_id']
             counter = 1
             
             # Ищем файлы с таким же именем в папке

@@ -11,25 +11,26 @@ class FileViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return File.objects.filter(user=self.request.user)
+        """
+        Возвращает файлы текущего пользователя.
+        Если указан folder_id в параметрах запроса, возвращает файлы в этой папке.
+        Если folder_id не указан или равен null, возвращает файлы без папки (в корне).
+        """
+        queryset = File.objects.filter(user_id=self.request.user)
+        folder_id = self.request.query_params.get('folder_id', None)
+        
+        if folder_id == 'null' or folder_id is None:
+            return queryset.filter(folder_id__isnull=True)
+        return queryset.filter(folder_id=folder_id)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        # Сохраняем файл в MEDIA_ROOT
-        file_obj = serializer.validated_data['file']
-        file_name = serializer.validated_data.get('name', file_obj.name)
-        file_path = f'{file_name}'
-        
-        with open(f'media/{file_path}', 'wb+') as destination:
-            for chunk in file_obj.chunks():
-                destination.write(chunk)
-
-        # Сохраняем запись в БД
+    
+        # Сохраняем запись в БД (файл сохранится автоматически через FileField)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-
+    
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
