@@ -162,4 +162,49 @@ export const attachmentsAPI = {
     }),
 };
 
-export default axiosInstance; 
+export const foldersAPI = {
+  getFolders: (parentId = null) => 
+    axiosInstance.get(API_ENDPOINTS.FOLDERS, { params: { parent_id: parentId } }),
+  
+  getFolder: (folderId) => 
+    axiosInstance.get(API_ENDPOINTS.FOLDER(folderId)),
+  
+  getFolderByName: (name) => 
+    axiosInstance.get(API_ENDPOINTS.FOLDERS, { params: { name } }),
+  
+  createFolder: (folderData) => 
+    axiosInstance.post(API_ENDPOINTS.FOLDERS, folderData),
+  
+  updateFolder: (folderId, folderData) => 
+    axiosInstance.put(API_ENDPOINTS.FOLDER(folderId), folderData),
+  
+  deleteFolder: (folderId) => 
+    axiosInstance.delete(API_ENDPOINTS.FOLDER(folderId))
+};
+
+export const filesAPI = {
+  getFiles: (params = {}) => 
+    axiosInstance.get(API_ENDPOINTS.FILES, { params }),
+  
+  getFile: (fileId) => 
+    axiosInstance.get(API_ENDPOINTS.FILE(fileId)),
+  
+  uploadFile: (fileData) => {
+    const formData = new FormData();
+    formData.append('file', fileData.file);
+    formData.append('name', fileData.name);
+    formData.append('folder_id', fileData.folder_id);
+    formData.append('is_favorite', fileData.is_favorite);
+    formData.append('is_trashed', fileData.is_trashed);
+    
+    return axiosInstance.post(API_ENDPOINTS.FILES, formData);
+  },
+  
+  updateFile: (fileId, fileData) => 
+    axiosInstance.put(API_ENDPOINTS.FILE(fileId), fileData),
+  
+  deleteFile: (fileId) => 
+    axiosInstance.delete(API_ENDPOINTS.FILE(fileId))
+};
+
+export default axiosInstance;

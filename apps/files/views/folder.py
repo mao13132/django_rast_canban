@@ -14,10 +14,10 @@ class FolderViewSet(viewsets.ModelViewSet):
         """
         Возвращает только папки текущего пользователя
         """
-        return Folder.objects.filter(user=self.request.user)
+        return Folder.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         """
         При создании папки автоматически устанавливает текущего пользователя
         """
-        serializer.save(user=self.request.user)
+        serializer.save(user_id=self.request.user)

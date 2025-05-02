@@ -34,4 +34,10 @@ export const API_ENDPOINTS = {
   ATTACHMENTS: `${API_BASE_URL}/tasks/attachments/`,
   ATTACHMENT: (id) => `${API_BASE_URL}/tasks/attachments/${id}/`,
   ATTACHMENT_DOWNLOAD: (id) => `${API_BASE_URL}/tasks/attachments/${id}/download/`,
-}; 
+  
+  // Файлы и папки
+  FILES: `${API_BASE_URL}/files/files/`,
+  FILE: (id) => `${API_BASE_URL}/files/files/${id}/`,
+  FOLDERS: `${API_BASE_URL}/files/folders/`,
+  FOLDER: (id) => `${API_BASE_URL}/files/folders/${id}/`,
+};

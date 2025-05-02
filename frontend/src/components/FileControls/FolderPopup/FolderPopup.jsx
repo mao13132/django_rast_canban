@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useFolderPopup } from '../../../context/FolderPopupContext';
-import { useFolderStore } from '../../../stores/folderStore';
+import { useFolderStore } from '../../../store/folderStore';
 import { useNotification } from '../../../context/NotificationContext';
 import styles from './FolderPopup.module.css';
 

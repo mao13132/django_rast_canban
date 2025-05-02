@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useFolderStore } from '../../stores/folderStore';
+import { useFolderStore } from '../../store/folderStore';
 import styles from './Files.module.css';
 import Header from '../../components/Header';
 import FileControls from '../../components/FileControls/FileControls';
