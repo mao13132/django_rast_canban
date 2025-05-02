@@ -52,3 +52,11 @@
   height: 64px;
   margin-bottom: 8px;
 }
+
+.backButton {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}

@@ -14,7 +14,6 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
   const navigate = useNavigate();
   const { 
     folders,
-    breadcrumbs,
     fetchFolders,
     isLoading,
     error 
@@ -24,6 +23,10 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
   useEffect(() => {
     fetchFolders(folderId || null);
   }, [folderId, fetchFolders]);
+
+  const handleBack = () => {
+    navigate(-1); // Используем встроенную навигацию браузера для возврата назад
+  };
 
   return (
     <div className={styles.container}>
@@ -51,28 +54,14 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
             placeholder='Поиск файлов и папок'
           />
 
-          <div className={styles.breadcrumbs}>
-            <span 
-              className={styles.breadcrumbLink}
-              onClick={() => navigate('/files')}
+          {folderId && (
+            <button 
+              className={styles.backButton}
+              onClick={handleBack}
             >
-              Главная
-            </span>
-            {breadcrumbs.length > 0 && ' / '}
-            {breadcrumbs.map((crumb, index) => (
-              <span key={crumb.id}>
-                <span 
-                  className={styles.breadcrumbLink}
-                  onClick={() => navigate(
-                    crumb.id ? `/files/folder/${crumb.id}` : '/files'
-                  )}
-                >
-                  {crumb.name}
-                </span>
-                {index < breadcrumbs.length - 1 && ' / '}
-              </span>
-            ))}
-          </div>
+              ← Назад
+            </button>
+          )}
 
           <FileList type={type} />
           <StorageInfo />

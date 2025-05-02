@@ -6,7 +6,6 @@ export const useFolderStore = create((set, get) => ({
   // Состояние
   currentFolder: null,
   folders: [],
-  breadcrumbs: [],
   isLoading: false,
   error: null,
 
@@ -17,15 +16,14 @@ export const useFolderStore = create((set, get) => ({
   // Загрузка папок для текущей директории
   fetchFolders: async (parentId = null) => {
     try {
-      set({ isLoading: true });
       const response = await foldersAPI.getFolders(parentId);
       const normalizedFolders = response.data.map(FolderDTO.fromBackend);
+      
       set({ 
         folders: normalizedFolders,
         currentFolder: parentId,
         error: null
       });
-      await get().updateBreadcrumbs(parentId);
     } catch (err) {
       console.error('Ошибка при загрузке папок:', err);
       set({ error: 'Ошибка при загрузке папок', folders: [] });
@@ -40,12 +38,11 @@ export const useFolderStore = create((set, get) => ({
     try {
       set({ isLoading: true });
       const folderData = FolderDTO.toBackend({ 
-        name: name, // Исправляем передачу имени
+        name: name,
         parent_id: currentFolder,
         is_favorite: false,
         is_trashed: false
       });
-      debugger
       const response = await foldersAPI.createFolder(folderData);
       const newFolder = FolderDTO.fromBackend(response.data);
       
@@ -62,40 +59,4 @@ export const useFolderStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-
-  // Обновление хлебных крошек
-  updateBreadcrumbs: async (folderId) => {
-    if (!folderId) {
-      set({ breadcrumbs: [] });
-      return;
-    }
-
-    try {
-      set({ isLoading: true });
-      const response = await foldersAPI.getFolder(folderId);
-      const folder = FolderDTO.fromBackend(response.data);
-      const path = folder.get_full_path.split('/');
-      
-      const breadcrumbs = await Promise.all(
-        path.map(async (name, index) => {
-          if (index === 0) {
-            return { id: null, name: 'Главная' };
-          }
-          const folderResponse = await foldersAPI.getFolderByName(name);
-          const folderData = FolderDTO.fromBackend(folderResponse.data[0]);
-          return {
-            id: folderData.id,
-            name: folderData.name
-          };
-        })
-      );
-      
-      set({ breadcrumbs, error: null });
-    } catch (err) {
-      console.error('Ошибка при обновлении пути:', err);
-      set({ error: 'Ошибка при обновлении пути' });
-    } finally {
-      set({ isLoading: false });
-    }
-  }
 }));
