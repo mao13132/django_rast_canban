@@ -40,4 +40,5 @@ export const API_ENDPOINTS = {
   FILE: (id) => `${API_BASE_URL}/files/files/${id}/`,
   FOLDERS: `${API_BASE_URL}/files/folders/`,
   FOLDER: (id) => `${API_BASE_URL}/files/folders/${id}/`,
+  FOLDER_UPLOAD: `${API_BASE_URL}/files/folders/upload/`,
 };

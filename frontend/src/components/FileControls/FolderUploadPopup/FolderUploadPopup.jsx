@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { useFolderUpload } from '../../../context/FolderUploadContext';
-import { useFolderStore } from '../../../store/folderStore';
+import { useFolderUploadStore } from '../../../store/folderUploadStore';
 import { useNotification } from '../../../context/NotificationContext';
 import styles from './FolderUploadPopup.module.css';
 
 const FolderUploadPopup = () => {
     const { isOpen, closePopup, currentFolderId } = useFolderUpload();
-    const { uploadFolderWithFiles } = useFolderStore();
+    const { uploadFolderWithFiles, isUploading, progress } = useFolderUploadStore();
     const { showNotification } = useNotification();
     const folderInputRef = useRef(null);
 
@@ -41,11 +41,18 @@ const FolderUploadPopup = () => {
                         directory=""
                         style={{ display: 'none' }}
                     />
-                    <div 
-                        className={styles.dropzone}
-                        onClick={() => folderInputRef.current?.click()}
-                    >
-                        Нажмите для выбора папки
+                    <div className={styles.dropzone} onClick={() => folderInputRef.current?.click()}>
+                        {isUploading ? (
+                            <div className={styles.progress}>
+                                <div 
+                                    className={styles.progressBar} 
+                                    style={{ width: `${progress}%` }}
+                                />
+                                <span>{progress}%</span>
+                            </div>
+                        ) : (
+                            'Нажмите для выбора папки'
+                        )}
                     </div>
                 </div>
                 <div className={styles.actions}>
@@ -53,6 +60,7 @@ const FolderUploadPopup = () => {
                         type="button"
                         className={styles.cancelButton}
                         onClick={closePopup}
+                        disabled={isUploading}
                     >
                         Отменить
                     </button>

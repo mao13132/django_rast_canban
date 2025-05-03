@@ -39,7 +39,7 @@ axiosInstance.interceptors.response.use(
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
           const response = await axios.post(API_ENDPOINTS.REFRESH_TOKEN, { refresh: refreshToken });
-          
+
           if (response.data.access) {
             localStorage.setItem('accessToken', response.data.access);
             // Повторяем исходный запрос с новым токеном
@@ -59,136 +59,136 @@ axiosInstance.interceptors.response.use(
 
 // API методы аутентификации
 export const authAPI = {
-  login: (email, password) => 
+  login: (email, password) =>
     axiosInstance.post(API_ENDPOINTS.LOGIN, { email, password }),
-  register: (userData) => 
+  register: (userData) =>
     axiosInstance.post(API_ENDPOINTS.REGISTER, {
       email: userData.email,
       password: userData.password,
       re_password: userData.re_password
     }),
-  getUser: () => 
+  getUser: () =>
     axiosInstance.get(API_ENDPOINTS.USER),
 };
 
 // API методы для работы с пользователями
 export const usersAPI = {
-  getProfile: () => 
+  getProfile: () =>
     axiosInstance.get(API_ENDPOINTS.PROFILE),
-  updateProfile: (userData) => 
+  updateProfile: (userData) =>
     axiosInstance.patch(API_ENDPOINTS.PROFILE, userData),
 };
 
 // API методы для работы с задачами
 export const tasksAPI = {
-  getTasks: (params = {}) => 
+  getTasks: (params = {}) =>
     axiosInstance.get(API_ENDPOINTS.TASKS, { params }),
-  getTask: (taskId) => 
+  getTask: (taskId) =>
     axiosInstance.get(API_ENDPOINTS.TASK(taskId)),
-  createTask: (formData) => 
+  createTask: (formData) =>
     axiosInstance.post(API_ENDPOINTS.TASKS, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     }),
-  updateTask: (taskId, taskData) => 
+  updateTask: (taskId, taskData) =>
     axiosInstance.put(API_ENDPOINTS.TASK(taskId), taskData),
-  deleteTask: (taskId) => 
+  deleteTask: (taskId) =>
     axiosInstance.delete(API_ENDPOINTS.TASK(taskId)),
-  updateTaskStatus: (taskId, status) => 
+  updateTaskStatus: (taskId, status) =>
     axiosInstance.patch(API_ENDPOINTS.TASK(taskId), { status_id: status }),
-  getFilteredTasks: (params) => 
+  getFilteredTasks: (params) =>
     axiosInstance.get(API_ENDPOINTS.TASKS, { params }),
-  bulkUpdateTasks: (taskIds, updateData) => 
-    axiosInstance.patch(API_ENDPOINTS.BULK_UPDATE_TASKS, { 
-      ids: taskIds, 
-      ...updateData 
+  bulkUpdateTasks: (taskIds, updateData) =>
+    axiosInstance.patch(API_ENDPOINTS.BULK_UPDATE_TASKS, {
+      ids: taskIds,
+      ...updateData
     }),
-  bulkDeleteTasks: (taskIds) => 
-    axiosInstance.post(API_ENDPOINTS.BULK_DELETE_TASKS, { 
-      ids: taskIds 
+  bulkDeleteTasks: (taskIds) =>
+    axiosInstance.post(API_ENDPOINTS.BULK_DELETE_TASKS, {
+      ids: taskIds
     }),
 };
 
 // API методы для работы со статусами задач
 export const statusesAPI = {
-  getStatuses: () => 
+  getStatuses: () =>
     axiosInstance.get(API_ENDPOINTS.STATUSES),
-  createStatus: (statusData) => 
+  createStatus: (statusData) =>
     axiosInstance.post(API_ENDPOINTS.STATUSES, statusData),
-  updateStatus: (statusId, statusData) => 
+  updateStatus: (statusId, statusData) =>
     axiosInstance.patch(API_ENDPOINTS.STATUS(statusId), statusData),
-  deleteStatus: (statusId) => 
+  deleteStatus: (statusId) =>
     axiosInstance.delete(API_ENDPOINTS.STATUS(statusId)),
 };
 
 // API методы для работы с категориями задач
 export const categoriesAPI = {
-  getCategories: () => 
+  getCategories: () =>
     axiosInstance.get(API_ENDPOINTS.CATEGORIES),
-  createCategory: (categoryData) => 
+  createCategory: (categoryData) =>
     axiosInstance.post(API_ENDPOINTS.CATEGORIES, categoryData),
-  updateCategory: (categoryId, categoryData) => 
+  updateCategory: (categoryId, categoryData) =>
     axiosInstance.patch(API_ENDPOINTS.CATEGORY(categoryId), categoryData),
-  deleteCategory: (categoryId) => 
+  deleteCategory: (categoryId) =>
     axiosInstance.delete(API_ENDPOINTS.CATEGORY(categoryId)),
 };
 
 // API методы для работы с заметками
 export const notesAPI = {
-  getNotes: () => 
+  getNotes: () =>
     axiosInstance.get(API_ENDPOINTS.NOTES),
-  getNote: (noteId) => 
+  getNote: (noteId) =>
     axiosInstance.get(API_ENDPOINTS.NOTE(noteId)),
-  createNote: (noteData) => 
+  createNote: (noteData) =>
     axiosInstance.post(API_ENDPOINTS.NOTES, noteData),
-  updateNote: (noteId, noteData) => 
+  updateNote: (noteId, noteData) =>
     axiosInstance.put(API_ENDPOINTS.NOTE(noteId), noteData),
-  deleteNote: (noteId) => 
+  deleteNote: (noteId) =>
     axiosInstance.delete(API_ENDPOINTS.NOTE(noteId)),
 };
 
 // API методы для работы с вложениями
 export const attachmentsAPI = {
-  getAttachments: () => 
+  getAttachments: () =>
     axiosInstance.get(API_ENDPOINTS.ATTACHMENTS),
-  createAttachment: (attachmentData) => 
+  createAttachment: (attachmentData) =>
     axiosInstance.post(API_ENDPOINTS.ATTACHMENTS, attachmentData),
-  deleteAttachment: (attachmentId) => 
+  deleteAttachment: (attachmentId) =>
     axiosInstance.delete(API_ENDPOINTS.ATTACHMENT(attachmentId)),
-  downloadAttachment: (attachmentId) => 
+  downloadAttachment: (attachmentId) =>
     axiosInstance.get(API_ENDPOINTS.ATTACHMENT_DOWNLOAD(attachmentId), {
       responseType: 'blob'
     }),
 };
 
 export const foldersAPI = {
-  getFolders: (parentId = null) => 
+  getFolders: (parentId = null) =>
     axiosInstance.get(API_ENDPOINTS.FOLDERS, { params: { parent_id: parentId } }),
-  
-  getFolder: (folderId) => 
+
+  getFolder: (folderId) =>
     axiosInstance.get(API_ENDPOINTS.FOLDER(folderId)),
-  
-  getFolderByName: (name) => 
+
+  getFolderByName: (name) =>
     axiosInstance.get(API_ENDPOINTS.FOLDERS, { params: { name } }),
-  
-  createFolder: (folderData) => 
+
+  createFolder: (folderData) =>
     axiosInstance.post(API_ENDPOINTS.FOLDERS, folderData),
-  
-  updateFolder: (folderId, folderData) => 
+
+  updateFolder: (folderId, folderData) =>
     axiosInstance.put(API_ENDPOINTS.FOLDER(folderId), folderData),
-  
-  deleteFolder: (folderId) => 
+
+  deleteFolder: (folderId) =>
     axiosInstance.delete(API_ENDPOINTS.FOLDER(folderId))
 };
 
 export const filesAPI = {
-  getFiles: (params = {}) => 
+  getFiles: (params = {}) =>
     axiosInstance.get(API_ENDPOINTS.FILES, { params }),
-  
-  getFile: (fileId) => 
+
+  getFile: (fileId) =>
     axiosInstance.get(API_ENDPOINTS.FILE(fileId)),
-  
+
   uploadFile: (fileData) => {
     const formData = new FormData();
     formData.append('file', fileData.file);
@@ -196,15 +196,25 @@ export const filesAPI = {
     formData.append('folder_id', fileData.folder_id);
     formData.append('is_favorite', fileData.is_favorite);
     formData.append('is_trashed', fileData.is_trashed);
-    
+
     return axiosInstance.post(API_ENDPOINTS.FILES, formData);
   },
-  
-  updateFile: (fileId, fileData) => 
+
+  updateFile: (fileId, fileData) =>
     axiosInstance.put(API_ENDPOINTS.FILE(fileId), fileData),
-  
-  deleteFile: (fileId) => 
+
+  deleteFile: (fileId) =>
     axiosInstance.delete(API_ENDPOINTS.FILE(fileId))
+};
+
+export const folderUploadAPI = {
+  uploadFolderWithFiles: async (formData) => {
+    return axiosInstance.post(API_ENDPOINTS.FOLDER_UPLOAD, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  }
 };
 
 export default axiosInstance;
