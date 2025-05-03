@@ -2,10 +2,12 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useFolderPopup } from '../../context/FolderPopupContext';
 import { useFilePopup } from '../../context/FilePopupContext';
+import { useLinkPopup } from '../../context/LinkPopupContext';
 import ContextMenu from './ContextMenu/ContextMenu';
 import { useFileMenu } from '../../context/FileMenuContext';
 import FolderPopup from './FolderPopup/FolderPopup';
 import FilePopup from './FilePopup/FilePopup';
+import LinkPopup from './LinkPopup/LinkPopup';
 import { useFolderUpload } from '../../context/FolderUploadContext';
 import FolderUploadPopup from './FolderUploadPopup/FolderUploadPopup';
 import styles from './FileControls.module.css';
@@ -14,12 +16,12 @@ const FileControls = () => {
   const { folderId } = useParams();
   const { openPopup: openFolderPopup } = useFolderPopup();
   const { openPopup: openFilePopup } = useFilePopup();
+  const { openPopup: openLinkPopup } = useLinkPopup();
   const { openPopup: openFolderUploadPopup } = useFolderUpload();
   const {
     isMenuVisible,
     setIsMenuVisible,
-    handleUploadFolder,
-    handleUploadLink
+    handleUploadFolder
   } = useFileMenu();
 
   const handleCreateFolder = () => {
@@ -35,6 +37,11 @@ const FileControls = () => {
   const handleUploadFilesFolder = () => {
     setIsMenuVisible(false);
     openFolderUploadPopup(folderId);
+  };
+
+  const handleUploadLink = () => {
+    setIsMenuVisible(false);
+    openLinkPopup(folderId);
   };
 
   const menuItems = [
@@ -74,6 +81,7 @@ const FileControls = () => {
       />
       <FolderPopup />
       <FilePopup />
+      <LinkPopup />
       <FolderUploadPopup />
     </div>
   );

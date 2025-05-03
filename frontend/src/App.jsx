@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { LinkPopupProvider } from './context/LinkPopupContext';
 import { FolderPopupProvider } from './context/FolderPopupContext';
-import { FolderUploadProvider } from './context/FolderUploadContext'; 
+import { FolderUploadProvider } from './context/FolderUploadContext';
 import { TaskFormProvider } from './context/TaskFormContext';
 import { FileMenuProvider } from './context/FileMenuContext';
 import { FilePopupProvider } from './context/FilePopupContext';
@@ -21,39 +22,41 @@ import './App.css';
 
 function App() {
   return (
-    <FolderUploadProvider>
-      <FilePopupProvider>
-        <FileMenuProvider>
-          <FolderPopupProvider>
-            <NoteEditorProvider>
-              <BrowserRouter>
-                <AuthProvider>
-                  <PopupProvider>
-                    <NotificationProvider>
-                      <TaskSearchProvider>
-                        <TaskFormProvider>
-                          <EditTaskFormProvider>
-                            <ProfileProvider>
-                              <CategoryPopupProvider>
-                                <NotePopupProvider>
-                                  <AppRoutes />
-                                  <Popup />
-                                  <Profile />
-                                </NotePopupProvider>
-                              </CategoryPopupProvider>
-                            </ProfileProvider>
-                          </EditTaskFormProvider>
-                        </TaskFormProvider>
-                      </TaskSearchProvider>
-                    </NotificationProvider>
-                  </PopupProvider>
-                </AuthProvider>
-              </BrowserRouter>
-            </NoteEditorProvider>
-          </FolderPopupProvider>
-        </FileMenuProvider>
-      </FilePopupProvider>
-    </FolderUploadProvider>
+    <LinkPopupProvider>
+      <FolderUploadProvider>
+        <FilePopupProvider>
+          <FileMenuProvider>
+            <FolderPopupProvider>
+              <NoteEditorProvider>
+                <BrowserRouter>
+                  <AuthProvider>
+                    <PopupProvider>
+                      <NotificationProvider>
+                        <TaskSearchProvider>
+                          <TaskFormProvider>
+                            <EditTaskFormProvider>
+                              <ProfileProvider>
+                                <CategoryPopupProvider>
+                                  <NotePopupProvider>
+                                    <AppRoutes />
+                                    <Popup />
+                                    <Profile />
+                                  </NotePopupProvider>
+                                </CategoryPopupProvider>
+                              </ProfileProvider>
+                            </EditTaskFormProvider>
+                          </TaskFormProvider>
+                        </TaskSearchProvider>
+                      </NotificationProvider>
+                    </PopupProvider>
+                  </AuthProvider>
+                </BrowserRouter>
+              </NoteEditorProvider>
+            </FolderPopupProvider>
+          </FileMenuProvider>
+        </FilePopupProvider>
+      </FolderUploadProvider>
+    </LinkPopupProvider>
   );
 }
 
