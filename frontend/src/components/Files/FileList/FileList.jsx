@@ -77,8 +77,6 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
     <div className={styles.fileList}>
       <div className={styles.headers}>
         <span className={styles.header}>Название</span>
-        <span className={styles.header}>Тип</span>
-        <span className={styles.header}>Размер</span>
       </div>
       <div className={styles.items}>
         {filteredFolders.map(folder => (
