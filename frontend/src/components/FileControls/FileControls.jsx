@@ -6,6 +6,8 @@ import ContextMenu from './ContextMenu/ContextMenu';
 import { useFileMenu } from '../../context/FileMenuContext';
 import FolderPopup from './FolderPopup/FolderPopup';
 import FilePopup from './FilePopup/FilePopup';
+import { useFolderUpload } from '../../context/FolderUploadContext';
+import FolderUploadPopup from './FolderUploadPopup/FolderUploadPopup';
 import styles from './FileControls.module.css';
 
 const FileControls = () => {
@@ -29,6 +31,13 @@ const FileControls = () => {
     openFilePopup(folderId);
   };
 
+  const { openPopup: openFolderUploadPopup } = useFolderUpload();
+
+  const handleUploadFilesFolder = () => {
+    setIsMenuVisible(false);
+    openFolderUploadPopup(folderId);
+  };
+
   const menuItems = [
     {
       label: 'Создать папку',
@@ -37,7 +46,7 @@ const FileControls = () => {
     },
     {
       label: 'Загрузить папку',
-      onClick: handleUploadFolder,
+      onClick: handleUploadFilesFolder,
       icon: '/assets/upload-folder.png'
     },
     {
@@ -66,6 +75,7 @@ const FileControls = () => {
       />
       <FolderPopup />
       <FilePopup />
+      <FolderUploadPopup />
     </div>
   );
 };
