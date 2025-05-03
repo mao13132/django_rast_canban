@@ -12,6 +12,7 @@
 
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .fileItem:hover {
@@ -59,6 +60,26 @@
 
 .restoreButton {
   color: #4CAF50;
+}
+
+.menuWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: relative;  /* Добавляем для правильного позиционирования меню */
+}
+
+.menuWrapper {
+  position: relative;
+  padding: 20px;
+}
+
+.leftPositionedMenu {
+  position: absolute !important;
+  left: -200px !important;
+  top: 50px !important;
 }
 
 .menu {

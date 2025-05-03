@@ -7,21 +7,21 @@ import styles from './ContextMenu.module.css';
  * @param {boolean} props.isVisible - Флаг видимости меню
  * @param {Array<{label: string, onClick: Function, icon?: string}>} props.menuItems - Массив пунктов меню
  */
-const ContextMenu = ({ isVisible, menuItems }) => {
+const ContextMenu = ({ isVisible, menuItems, className = '' }) => {
   if (!isVisible) return null;
 
   return (
-    <div className={styles.menu}>
+    <div className={`${styles.menu} ${className}`}>
       {menuItems.map((item, index) => (
-        <button 
-          key={index} 
-          className={styles.menuItem} 
+        <button
+          key={index}
+          className={styles.menuItem}
           onClick={item.onClick}
         >
           {item.icon && (
-            <img 
-              src={item.icon} 
-              alt={item.label} 
+            <img
+              src={item.icon}
+              alt={item.label}
               className={styles.menuIcon}
             />
           )}
