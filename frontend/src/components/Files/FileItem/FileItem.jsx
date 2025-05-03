@@ -1,8 +1,10 @@
 import React from 'react';
+import { useFileSize } from '../../../hooks/useFileSize';
 import styles from './FileItem.module.css';
 
 const FileItem = ({ file }) => {
   const { name, type, size, isFavorite, isDeleted } = file;
+  const formattedSize = useFileSize(size);
 
   const getIcon = () => {
     switch (type) {
@@ -26,7 +28,7 @@ const FileItem = ({ file }) => {
       </div>
 
       <div className={styles.size}>
-        <span className={styles.text}>{size}</span>
+        <span className={styles.text}>{formattedSize}</span>
         {isDeleted && (
           <button
             className={styles.restoreButton}
@@ -48,4 +50,4 @@ const FileItem = ({ file }) => {
   );
 };
 
-export default FileItem; 
+export default FileItem;
