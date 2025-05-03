@@ -14,22 +14,29 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
   const { folderId } = useParams();
   const navigate = useNavigate();
   const { 
-    folders,
     fetchFolders,
-    isLoading: foldersLoading,
-    error: foldersError 
   } = useFolderStore();
   const {
-    files,
     fetchFiles,
-    isLoading: filesLoading,
-    error: filesError
   } = useFileStore();
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchFolders(folderId || null);
     fetchFiles(folderId || null);
+
+    // Добавляем слушатель события загрузки папки
+    const handleFolderUploaded = () => {
+      fetchFolders(folderId || null);
+      fetchFiles(folderId || null);
+    };
+
+    window.addEventListener('folderUploaded', handleFolderUploaded);
+
+    // Очищаем слушатель при размонтировании
+    return () => {
+      window.removeEventListener('folderUploaded', handleFolderUploaded);
+    };
   }, [folderId, fetchFolders, fetchFiles]);
 
   const handleBack = () => {

@@ -38,6 +38,10 @@ export const useFolderUploadStore = create((set, get) => ({
             const response = await folderUploadAPI.uploadFolderWithFiles(uploadData);
             const result = FolderUploadDTO.fromBackend(response.data);
 
+            // Вызываем обновление списка файлов и папок через события
+            const event = new CustomEvent('folderUploaded', { detail: result });
+            window.dispatchEvent(event);
+
             set({ isUploading: false, progress: 100 });
             return result;
         } catch (err) {
