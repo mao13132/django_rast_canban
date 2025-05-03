@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from ..models import Link
 from ..serializers import LinkSerializer
 
+
 class LinkViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы со ссылками.
@@ -19,4 +20,4 @@ class LinkViewSet(viewsets.ModelViewSet):
         """
         При создании ссылки автоматически устанавливает текущего пользователя как владельца
         """
-        serializer.save(user_id=self.request.user) 
+        serializer.save(user_id=self.request.user)

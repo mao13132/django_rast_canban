@@ -1,17 +1,30 @@
 import React, { useState } from 'react';
 import { useLinkPopup } from '../../../context/LinkPopupContext';
 import { useNotification } from '../../../context/NotificationContext';
+import { useLinkStore } from '../../../store/linkStore';
 import styles from './LinkPopup.module.css';
 
 const LinkPopup = () => {
     const { isOpen, closePopup, currentFolderId } = useLinkPopup();
     const { showNotification } = useNotification();
+    const { createLink, isLoading } = useLinkStore();
     const [name, setName] = useState('');
     const [url, setUrl] = useState('');
 
     const handleSubmit = async () => {
+        if (!url) {
+            showNotification('URL обязателен', 'error', 3000, 'bottom');
+            return;
+        }
+
         try {
-            // TODO: Добавить логику создания ссылки
+            await createLink({
+                url,
+                name,
+                is_favorite: false,
+                is_trashed: false
+            });
+            
             showNotification('Ссылка успешно создана', 'success', 3000, 'bottom');
             closePopup();
             setName('');
@@ -46,6 +59,7 @@ const LinkPopup = () => {
                         placeholder="URL ссылки"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
+                        required
                     />
                 </div>
                 <div className={styles.actions}>
@@ -53,14 +67,15 @@ const LinkPopup = () => {
                         type="button"
                         className={styles.submitButton}
                         onClick={handleSubmit}
-                        disabled={!name || !url}
+                        disabled={!url || isLoading}
                     >
-                        Сохранить
+                        {isLoading ? 'Сохранение...' : 'Сохранить'}
                     </button>
                     <button
                         type="button"
                         className={styles.cancelButton}
                         onClick={closePopup}
+                        disabled={isLoading}
                     >
                         Отменить
                     </button>

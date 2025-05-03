@@ -10,9 +10,9 @@ class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Link
         fields = [
-            'link_id', 'url', 'is_favorite', 'is_trashed', 'user_id'
+            'link_id', 'url', 'is_favorite', 'is_trashed'
         ]
-        read_only_fields = []
+        read_only_fields = ['link_id']
 
     def validate_user_id(self, value):
         """
