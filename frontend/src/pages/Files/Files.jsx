@@ -40,7 +40,7 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
   }, [folderId, fetchFolders, fetchFiles]);
 
   const handleBack = () => {
-    navigate(-1); // Используем встроенную навигацию браузера для возврата назад
+    navigate(-1);
   };
 
   return (
@@ -78,7 +78,7 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
             </button>
           )}
 
-          <FileList type={type} />
+          <FileList type={type} searchQuery={searchQuery} />
           <StorageInfo />
         </div>
       </main>

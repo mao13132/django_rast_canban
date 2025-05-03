@@ -5,31 +5,35 @@ import FileItem from '../FileItem';
 import { useFolderStore } from '../../../store/folderStore';
 import { useFileStore } from '../../../store/fileStore';
 
-const FileList = ({ type = 'all' }) => {
+const FileList = ({ type = 'all', searchQuery = '' }) => {
   const { folders, isLoading: foldersLoading, error: foldersError } = useFolderStore();
   const { files, isLoading: filesLoading, error: filesError } = useFileStore();
   const navigate = useNavigate();
 
   const filteredFolders = folders.filter(folder => {
-    switch (type) {
-      case 'favorite':
-        return folder.is_favorite;
-      case 'trash':
-        return folder.is_trashed;
-      default:
-        return !folder.is_trashed;
-    }
+    // Сначала фильтруем по типу
+    const typeFilter = type === 'favorite' ? folder.is_favorite :
+                      type === 'trash' ? folder.is_trashed :
+                      !folder.is_trashed;
+    
+    // Затем фильтруем по поисковому запросу
+    const searchFilter = !searchQuery || 
+                        folder.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return typeFilter && searchFilter;
   });
 
   const filteredFiles = files.filter(file => {
-    switch (type) {
-      case 'favorite':
-        return file.is_favorite;
-      case 'trash':
-        return file.is_trashed;
-      default:
-        return !file.is_trashed;
-    }
+    // Сначала фильтруем по типу
+    const typeFilter = type === 'favorite' ? file.is_favorite :
+                      type === 'trash' ? file.is_trashed :
+                      !file.is_trashed;
+    
+    // Затем фильтруем по поисковому запросу
+    const searchFilter = !searchQuery || 
+                        file.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return typeFilter && searchFilter;
   });
 
   const isLoading = foldersLoading || filesLoading;
