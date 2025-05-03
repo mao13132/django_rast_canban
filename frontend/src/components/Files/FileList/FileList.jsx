@@ -1,43 +1,53 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './FileList.module.css';
 import FileItem from '../FileItem';
 import { useFolderStore } from '../../../store/folderStore';
 import { useFileStore } from '../../../store/fileStore';
+import { useLinkStore } from '../../../store/linkStore';
 
 const FileList = ({ type = 'all', searchQuery = '' }) => {
   const { folders, isLoading: foldersLoading, error: foldersError } = useFolderStore();
   const { files, isLoading: filesLoading, error: filesError } = useFileStore();
+  const { links, isLoading: linksLoading, error: linksError } = useLinkStore();
   const navigate = useNavigate();
+  const { folderId } = useParams();
 
   const filteredFolders = folders.filter(folder => {
     // Сначала фильтруем по типу
     const typeFilter = type === 'favorite' ? folder.is_favorite :
-                      type === 'trash' ? folder.is_trashed :
-                      !folder.is_trashed;
-    
+      type === 'trash' ? folder.is_trashed :
+        !folder.is_trashed;
+
     // Затем фильтруем по поисковому запросу
-    const searchFilter = !searchQuery || 
-                        folder.name.toLowerCase().includes(searchQuery.toLowerCase());
-    
+    const searchFilter = !searchQuery ||
+      folder.name.toLowerCase().includes(searchQuery.toLowerCase());
+
     return typeFilter && searchFilter;
   });
 
   const filteredFiles = files.filter(file => {
     // Сначала фильтруем по типу
     const typeFilter = type === 'favorite' ? file.is_favorite :
-                      type === 'trash' ? file.is_trashed :
-                      !file.is_trashed;
-    
+      type === 'trash' ? file.is_trashed :
+        !file.is_trashed;
+
     // Затем фильтруем по поисковому запросу
-    const searchFilter = !searchQuery || 
-                        file.name.toLowerCase().includes(searchQuery.toLowerCase());
-    
+    const searchFilter = !searchQuery ||
+      file.name.toLowerCase().includes(searchQuery.toLowerCase());
+
     return typeFilter && searchFilter;
   });
 
-  const isLoading = foldersLoading || filesLoading;
-  const error = foldersError || filesError;
+  const filteredLinks = !folderId && links ? links.filter(link => {
+    // Фильтруем ссылки только по поисковому запросу, так как у них нет типов
+    const searchFilter = !searchQuery ||
+      link.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return searchFilter;
+  }) : [];
+
+  const isLoading = foldersLoading || filesLoading || linksLoading;
+  const error = foldersError || filesError || linksError;
 
   const handleFileClick = (fileId) => {
     // TODO: Добавить обработку клика по файлу
@@ -46,6 +56,13 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
 
   const handleFolderClick = (folderId) => {
     navigate(`/files/folder/${folderId}`);
+  };
+
+  const handleLinkClick = (url) => {
+    const confirmOpen = window.confirm('Вы уверены, что хотите открыть ссылку?');
+    if (confirmOpen) {
+      window.open(url, '_blank');
+    }
   };
 
   if (isLoading) {
@@ -66,7 +83,7 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
       <div className={styles.items}>
         {filteredFolders.map(folder => (
           <div key={`folder-${folder.id}`} onClick={() => handleFolderClick(folder.id)}>
-            <FileItem 
+            <FileItem
               file={{
                 id: folder.id,
                 name: folder.name,
@@ -74,13 +91,13 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
                 size: folder.size || '—',
                 isFavorite: folder.is_favorite,
                 isDeleted: folder.is_trashed
-              }} 
+              }}
             />
           </div>
         ))}
         {filteredFiles.map(file => (
           <div key={`file-${file.id}`} onClick={() => handleFileClick(file.id)}>
-            <FileItem 
+            <FileItem
               file={{
                 id: file.id,
                 name: file.name,
@@ -88,7 +105,21 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
                 size: file.size || '—',
                 isFavorite: file.is_favorite,
                 isDeleted: file.is_trashed
-              }} 
+              }}
+            />
+          </div>
+        ))}
+        {!folderId && filteredLinks.map(link => (
+          <div key={`link-${link.id}`} onClick={() => handleLinkClick(link.url)}>
+            <FileItem
+              file={{
+                id: link.id,
+                name: link.url,
+                type: 'link',
+                size: '—',
+                isFavorite: false,
+                isDeleted: false
+              }}
             />
           </div>
         ))}

@@ -6,6 +6,7 @@ import styles from './Files.module.css';
 import Header from '../../components/Header';
 import FileControls from '../../components/FileControls/FileControls';
 import SearchBar from '../../components/UI/SearchBar';
+import { useLinkStore } from '../../store/linkStore';
 import SubHeader from '../../components/SubHeader/SubHeader';
 import FileList from '../../components/Files/FileList';
 import StorageInfo from '../../components/Files/StorageInfo';
@@ -13,9 +14,10 @@ import StorageInfo from '../../components/Files/StorageInfo';
 const Files = ({ title = "Все файлы", type = "all" }) => {
   const { folderId } = useParams();
   const navigate = useNavigate();
-  const { 
+  const {
     fetchFolders,
   } = useFolderStore();
+  const { fetchLinks } = useLinkStore()
   const {
     fetchFiles,
   } = useFileStore();
@@ -24,6 +26,7 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
   useEffect(() => {
     fetchFolders(folderId || null);
     fetchFiles(folderId || null);
+    fetchLinks();
 
     // Добавляем слушатель события загрузки папки
     const handleFolderUploaded = () => {
@@ -37,7 +40,7 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
     return () => {
       window.removeEventListener('folderUploaded', handleFolderUploaded);
     };
-  }, [folderId, fetchFolders, fetchFiles]);
+  }, [folderId, fetchFolders, fetchFiles, fetchLinks]);
 
   const handleBack = () => {
     navigate(-1);
@@ -52,7 +55,7 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
             { label: 'Доска задач', path: '/dashboard' }
           ]}
         />
- 
+
         <div className={styles.contentWrapper}>
           <SubHeader
             title={title}
@@ -70,7 +73,7 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
           />
 
           {folderId && (
-            <button 
+            <button
               className={styles.backButton}
               onClick={handleBack}
             >
