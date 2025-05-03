@@ -15,8 +15,6 @@ export const useFolderUploadStore = create((set, get) => ({
         try {
             set({ isUploading: true, progress: 0, error: null });
 
-            debugger
-
             // Получаем структуру папки
             const folderPath = files[0].webkitRelativePath;
             const folderName = folderPath.split('/')[0];
