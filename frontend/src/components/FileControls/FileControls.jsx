@@ -14,6 +14,7 @@ const FileControls = () => {
   const { folderId } = useParams();
   const { openPopup: openFolderPopup } = useFolderPopup();
   const { openPopup: openFilePopup } = useFilePopup();
+  const { openPopup: openFolderUploadPopup } = useFolderUpload();
   const {
     isMenuVisible,
     setIsMenuVisible,
@@ -30,8 +31,6 @@ const FileControls = () => {
     setIsMenuVisible(false);
     openFilePopup(folderId);
   };
-
-  const { openPopup: openFolderUploadPopup } = useFolderUpload();
 
   const handleUploadFilesFolder = () => {
     setIsMenuVisible(false);

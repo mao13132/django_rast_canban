@@ -1,25 +1,24 @@
-import React, { useRef } from 'react';
-import { useFilePopup } from '../../../context/FilePopupContext';
+import React, { useState } from 'react';
+import { useFolderPopup } from '../../../context/FolderPopupContext';
 import { useFolderStore } from '../../../store/folderStore';
 import { useNotification } from '../../../context/NotificationContext';
 import styles from './FolderPopup.module.css';
 
 const FolderPopup = () => {
-    const { isOpen, closePopup, currentFolderId } = useFilePopup();
-    const { uploadFolder } = useFolderStore();
+    const { isOpen, closePopup, currentFolderId } = useFolderPopup();
+    const { createFolder } = useFolderStore();
     const { showNotification } = useNotification();
-    const folderInputRef = useRef(null);
+    const [name, setName] = useState('');
 
-    const handleFolderChange = async (event) => {
-        const files = event.target.files;
-        if (!files || files.length === 0) return;
-
+    const handleSubmit = async () => {
         try {
-            await uploadFolder(files, currentFolderId);
-            showNotification('Папка успешно загружена', 'success', 3000, 'bottom');
+            // Передаем объект с name и parent_id
+            await createFolder(name);
+            showNotification('Папка успешно создана', 'success', 3000, 'bottom');
             closePopup();
+            setName('');
         } catch (error) {
-            showNotification('Ошибка при загрузке папки', 'error', 3000, 'bottom');
+            showNotification('Ошибка при создании папки', 'error', 3000, 'bottom');
         }
     };
 
@@ -29,27 +28,27 @@ const FolderPopup = () => {
         <div className={styles.overlay}>
             <div className={styles.popup}>
                 <div className={styles.header}>
-                    <h2>Загрузить папку</h2>
+                    <h2>Создать папку</h2>
                     <button className={styles.closeButton} onClick={closePopup}>×</button>
                 </div>
                 <div className={styles.formGroup}>
                     <input
-                        type="file"
-                        ref={folderInputRef}
-                        onChange={handleFolderChange}
-                        style={{ display: 'none' }}
-                        webkitdirectory="true"
-                        directory="true"
-                        multiple
+                        type="text"
+                        className={styles.input}
+                        placeholder="Название папки"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
-                    <div 
-                        className={styles.dropzone}
-                        onClick={() => folderInputRef.current?.click()}
-                    >
-                        Выберите папку для загрузки
-                    </div>
                 </div>
                 <div className={styles.actions}>
+                    <button
+                        type="button"
+                        className={styles.submitButton}
+                        onClick={handleSubmit}
+                        disabled={!name}
+                    >
+                        Сохранить
+                    </button>
                     <button
                         type="button"
                         className={styles.cancelButton}
