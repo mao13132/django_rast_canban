@@ -124,5 +124,28 @@ export const useFileStore = create((set, get) => ({
         } finally {
             set({ isLoading: false });
         }
-    }
+    },
+    
+    renameFile: async (fileId, newName) => {
+        try {
+            set({ isLoading: true });
+            const response = await filesAPI.updateFile(fileId, { name: newName });
+            const updatedFile = FileDTO.fromBackend(response.data);
+            
+            set(state => ({
+                files: state.files.map(file => 
+                    file.id === fileId ? updatedFile : file
+                ),
+                error: null
+            }));
+            
+            return updatedFile;
+        } catch (err) {
+            console.error('Ошибка при переименовании файла:', err);
+            set({ error: 'Ошибка при переименовании файла' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 }));

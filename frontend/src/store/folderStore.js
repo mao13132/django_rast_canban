@@ -121,5 +121,27 @@ export const useFolderStore = create((set, get) => ({
         } finally {
             set({ isLoading: false });
         }
-    }
+    },
+    
+    renameFolder: async (folderId, newName) => {
+        try {
+            set({ isLoading: true });
+            const response = await foldersAPI.updateFolder(folderId, { name: newName });
+            const updatedFolder = FolderDTO.fromBackend(response.data);
+            
+            set(state => ({
+                folders: state.folders.map(folder =>
+                    folder.id === folderId ? updatedFolder : folder
+                ),
+                error: null
+            }));
+            return updatedFolder;
+        } catch (err) {
+            console.error('Ошибка при переименовании папки:', err);
+            set({ error: 'Ошибка при переименовании папки' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 }));

@@ -83,3 +83,45 @@ class FileViewSet(viewsets.ModelViewSet):
         file.save()
         serializer = self.get_serializer(file)
         return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        """
+        Обновляет файл с подробным логированием для отладки.
+        Использует get_file_by_id для получения объекта файла.
+        """
+        try:
+            # Получаем объект файла через get_file_by_id
+            instance = self.get_file_by_id(kwargs.get('pk'))
+
+            # Создаем и валидируем сериализатор
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # Сохраняем изменения
+            self.perform_update(serializer)
+
+            return Response(serializer.data)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def perform_update(self, serializer):
+        """
+        Выполняет обновление файла с учетом folder_id
+        """
+        folder_id = serializer.validated_data.get('folder_id')
+        folder = None
+
+        if folder_id is not None:
+            folder = get_object_or_404(
+                Folder,
+                folder_id=folder_id,
+                user_id=self.request.user
+            )
+
+        serializer.save(folder_id=folder)

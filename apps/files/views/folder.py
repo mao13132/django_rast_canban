@@ -172,3 +172,45 @@ class FolderViewSet(viewsets.ModelViewSet):
         folder.save()
         serializer = self.get_serializer(folder)
         return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        """
+        Обновляет папку с подробным логированием для отладки.
+        Использует get_folder_by_id для получения объекта папки.
+        """
+        try:
+            # Получаем объект папки через get_folder_by_id
+            instance = self.get_folder_by_id(kwargs.get('pk'))
+
+            # Создаем и валидируем сериализатор
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # Сохраняем изменения
+            self.perform_update(serializer)
+
+            return Response(serializer.data)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def perform_update(self, serializer):
+        """
+        Выполняет обновление папки с учетом parent_id
+        """
+        parent_id = serializer.validated_data.get('parent_id')
+        parent = None
+
+        if parent_id is not None:
+            parent = get_object_or_404(
+                Folder,
+                folder_id=parent_id,
+                user_id=self.request.user
+            )
+
+        serializer.save(parent_id=parent)
