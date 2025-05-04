@@ -60,8 +60,8 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
           <SubHeader
             title={title}
             navLinks={[
-              { label: 'Избранное', path: '/files/favorite' },
-              { label: 'Корзина', path: '/files/trash' }
+              { label: type === 'all' ? 'Избранное' : 'Все файлы', path: type === 'all' ? '/files/favorite' : '/files' },
+              { label: type === 'trash' ? 'Избранное' : 'Корзина', path: type === 'trash' ? '/files/favorite' : '/files/trash' }
             ]}
             rightComponent={<FileControls />}
           />
