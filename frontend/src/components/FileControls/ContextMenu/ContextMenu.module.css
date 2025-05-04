@@ -11,17 +11,35 @@
 }
 
 .menuItem {
-  padding: 8px 16px;
   cursor: pointer;
-  display: block;
   width: 100%;
-  text-align: left;
   border: none;
   background: none;
   font-size: 14px;
   color: #333;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  padding: 8px 5px;
+  gap: 10px;
+  white-space: nowrap;
 }
 
 .menuItem:hover {
   background-color: #f5f5f5;
+}
+
+.wrapperImg {
+  position: relative;
+  height: 34px;
+  width: 30px;
+}
+
+.menuIcon {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+
 }

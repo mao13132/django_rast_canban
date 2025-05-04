@@ -19,11 +19,13 @@ const ContextMenu = ({ isVisible, menuItems, className = '' }) => {
           onClick={item.onClick}
         >
           {item.icon && (
-            <img
-              src={item.icon}
-              alt={item.label}
-              className={styles.menuIcon}
-            />
+            <div className={styles.wrapperImg}>
+              <img
+                src={item.icon}
+                alt={item.label}
+                className={styles.menuIcon}
+              />
+            </div>
           )}
           {item.label}
         </button>
