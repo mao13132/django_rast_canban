@@ -76,35 +76,40 @@ export const useFileItemMenu = (file) => {
       });
   };
 
-  const handleDownload = async () => {
-    try {
-      const response = await foldersAPI.downloadFolder(file.id);
-      
-      // Создаем ссылку для скачивания
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `${file.name}.zip`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
+  const { downloadFile } = useFileStore();
 
-      showNotification(
-        'Скачивание началось',
-        'success',
-        3000,
-        'bottom'
-      );
-    } catch (error) {
-      console.error('Ошибка при скачивании папки:', error);
-      showNotification(
-        'Ошибка при скачивании папки',
-        'error',
-        3000,
-        'bottom'
-      );
-    }
+  const handleDownload = async () => {
+      try {
+          if (file.type === 'folder') {
+              const response = await foldersAPI.downloadFolder(file.id);
+              // Создаем ссылку для скачивания
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', `${file.name}.zip`);
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+              window.URL.revokeObjectURL(url);
+          } else if (file.type === 'file') {
+              await downloadFile(file.id);
+          }
+  
+          showNotification(
+              'Скачивание началось',
+              'success',
+              3000,
+              'bottom'
+          );
+      } catch (error) {
+          console.error('Ошибка при скачивании:', error);
+          showNotification(
+              `Ошибка при скачивании ${file.type === 'folder' ? 'папки' : 'файла'}`,
+              'error',
+              3000,
+              'bottom'
+          );
+      }
   };
 
   const menuItems = {

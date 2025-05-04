@@ -195,6 +195,10 @@ export const foldersAPI = {
 export const filesAPI = {
   getFiles: (params = {}) =>
     axiosInstance.get(API_ENDPOINTS.FILES, { params }),
+  downloadFile: (fileId) =>
+    axiosInstance.get(API_ENDPOINTS.FILE_DOWNLOAD(fileId), {
+      responseType: 'blob'
+    }),
 
   getFile: (fileId) =>
     axiosInstance.get(API_ENDPOINTS.FILE(fileId)),

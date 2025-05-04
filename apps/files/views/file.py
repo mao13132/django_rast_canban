@@ -1,3 +1,4 @@
+from django.http import FileResponse
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -125,3 +126,20 @@ class FileViewSet(viewsets.ModelViewSet):
             )
 
         serializer.save(folder_id=folder)
+
+    @action(detail=True, methods=['get'])
+    def download(self, request, pk=None):
+        """
+        Скачивание файла
+        """
+        file = self.get_file_by_id(pk)
+        
+        try:
+            response = FileResponse(file.file, as_attachment=True)
+            response['Content-Disposition'] = f'attachment; filename="{file.name}"'
+            return response
+        except Exception as e:
+            return Response(
+                {'error': 'Ошибка при скачивании файла'},
+                status=status.HTTP_400_BAD_REQUEST
+            )

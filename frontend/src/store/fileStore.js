@@ -148,4 +148,36 @@ export const useFileStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
+    
+    downloadFile: async (fileId) => {
+        try {
+            set({ isLoading: true });
+            const response = await filesAPI.downloadFile(fileId);
+            
+            // Создаем blob из полученных данных
+            const blob = new Blob([response.data]);
+            const url = window.URL.createObjectURL(blob);
+            
+            // Получаем информацию о файле из текущего состояния
+            const file = get().files.find(f => f.id === fileId);
+            const fileName = file ? file.name : 'downloaded_file';
+            
+            // Создаем ссылку для скачивания
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+            
+            set({ error: null });
+        } catch (err) {
+            console.error('Ошибка при скачивании файла:', err);
+            set({ error: 'Ошибка при скачивании файла' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 }));
