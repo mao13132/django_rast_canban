@@ -1,3 +1,5 @@
+import os
+
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -223,7 +225,7 @@ class FolderViewSet(viewsets.ModelViewSet):
             'folders': [],
             'files': []
         }
-        
+
         # Получаем все дочерние папки
         children = Folder.objects.filter(parent_id=folder)
         for child in children:
@@ -231,12 +233,43 @@ class FolderViewSet(viewsets.ModelViewSet):
             child_content = self.get_all_children(child)
             result['folders'].extend(child_content['folders'])
             result['files'].extend(child_content['files'])
-        
+
         # Получаем все файлы в текущей папке
         files = File.objects.filter(folder_id=folder)
         result['files'].extend(files)
-        
+
         return result
+
+    def perform_destroy(self, instance):
+        """
+        Рекурсивно удаляет папку со всем содержимым (файлы и подпапки)
+        1. Получает все дочерние элементы
+        2. Удаляет файлы физически с диска
+        3. Удаляет записи из базы данных
+        """
+
+        try:
+            # Получаем все содержимое папки
+            content = self.get_all_children(instance)
+
+            # Удаляем все файлы физически
+            for file in content['files']:
+                from core import settings
+                file_path = os.path.join(settings.MEDIA_ROOT, str(file.file))
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                file.delete()
+
+            # Удаляем все подпапки (уже пустые)
+            # Сортируем по уровню вложенности (глубже -> выше)
+            for folder in content['folders']:
+                folder.delete()
+
+            # Удаляем саму папку
+            instance.delete()
+
+        except Exception as e:
+            raise Exception(f"Ошибка при удалении папки: {str(e)}")
 
     @action(detail=True, methods=['get'])
     def download(self, request, pk=None):
@@ -248,7 +281,7 @@ class FolderViewSet(viewsets.ModelViewSet):
         from django.http import HttpResponse
         from django.conf import settings
         import tempfile
-        
+
         folder = self.get_folder_by_id(pk)
         if not folder:
             return Response(
@@ -269,12 +302,12 @@ class FolderViewSet(viewsets.ModelViewSet):
                     # Создаем путь относительно корневой папки
                     folder_path = []
                     current = folder_obj
-                    
+
                     # Собираем путь от текущей папки до корневой
                     while current and current != folder:
                         folder_path.insert(0, current.name)
                         current = current.parent_id
-                    
+
                     # Если это не корневая папка, добавляем её в архив
                     if folder_obj != folder:
                         archive_path = os.path.join(folder.name, *folder_path)
@@ -285,15 +318,15 @@ class FolderViewSet(viewsets.ModelViewSet):
                     # Создаем путь к файлу
                     file_path = []
                     current = file_obj.folder_id
-                    
+
                     # Собираем путь от папки файла до корневой
                     while current and current != folder:
                         file_path.insert(0, current.name)
                         current = current.parent_id
-                    
+
                     # Создаем полный путь в архиве
                     archive_path = os.path.join(folder.name, *file_path, file_obj.name)
-                    
+
                     # Получаем физический путь к файлу
                     file_full_path = os.path.join(settings.MEDIA_ROOT, str(file_obj.file))
                     if os.path.exists(file_full_path):
