@@ -1,3 +1,5 @@
+import { RenamePopupProvider } from './context/RenamePopupContext';
+import RenamePopup from './components/FileControls/RenamePopup/RenamePopup';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -23,39 +25,42 @@ import './App.css';
 function App() {
   return (
     <LinkPopupProvider>
-      <FolderUploadProvider>
-        <FilePopupProvider>
-          <FileMenuProvider>
-            <FolderPopupProvider>
-              <NoteEditorProvider>
-                <BrowserRouter>
-                  <AuthProvider>
-                    <PopupProvider>
-                      <NotificationProvider>
-                        <TaskSearchProvider>
-                          <TaskFormProvider>
-                            <EditTaskFormProvider>
-                              <ProfileProvider>
-                                <CategoryPopupProvider>
-                                  <NotePopupProvider>
-                                    <AppRoutes />
-                                    <Popup />
-                                    <Profile />
-                                  </NotePopupProvider>
-                                </CategoryPopupProvider>
-                              </ProfileProvider>
-                            </EditTaskFormProvider>
-                          </TaskFormProvider>
-                        </TaskSearchProvider>
-                      </NotificationProvider>
-                    </PopupProvider>
-                  </AuthProvider>
-                </BrowserRouter>
-              </NoteEditorProvider>
-            </FolderPopupProvider>
-          </FileMenuProvider>
-        </FilePopupProvider>
-      </FolderUploadProvider>
+      <RenamePopupProvider>
+        <FolderUploadProvider>
+          <FilePopupProvider>
+            <FileMenuProvider>
+              <FolderPopupProvider>
+                <NoteEditorProvider>
+                  <BrowserRouter>
+                    <AuthProvider>
+                      <PopupProvider>
+                        <NotificationProvider>
+                          <TaskSearchProvider>
+                            <TaskFormProvider>
+                              <EditTaskFormProvider>
+                                <ProfileProvider>
+                                  <CategoryPopupProvider>
+                                    <NotePopupProvider>
+                                      <AppRoutes />
+                                      <RenamePopup />
+                                      <Popup />
+                                      <Profile />
+                                    </NotePopupProvider>
+                                  </CategoryPopupProvider>
+                                </ProfileProvider>
+                              </EditTaskFormProvider>
+                            </TaskFormProvider>
+                          </TaskSearchProvider>
+                        </NotificationProvider>
+                      </PopupProvider>
+                    </AuthProvider>
+                  </BrowserRouter>
+                </NoteEditorProvider>
+              </FolderPopupProvider>
+            </FileMenuProvider>
+          </FilePopupProvider>
+        </FolderUploadProvider>
+      </RenamePopupProvider>
     </LinkPopupProvider>
   );
 }

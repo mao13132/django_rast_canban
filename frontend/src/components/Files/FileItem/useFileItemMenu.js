@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNotification } from '../../../context/NotificationContext';
 import { useFolderStore } from '../../../store/folderStore';
 import { useFileStore } from '../../../store/fileStore';
+import { useRenamePopup } from '../../../context/RenamePopupContext';
 
 export const useFileItemMenu = (file) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -64,6 +65,16 @@ export const useFileItemMenu = (file) => {
     }
   };
 
+  const { openPopup: openRenamePopup } = useRenamePopup();
+
+  const handleRename = () => {
+      openRenamePopup({
+          id: file.id,
+          type: file.type,
+          name: file.name
+      });
+  };
+
   const menuItems = {
     folder: [
       {
@@ -73,7 +84,7 @@ export const useFileItemMenu = (file) => {
       },
       {
         label: 'Переименовать',
-        onClick: () => handleAction(() => console.log('Rename')),
+        onClick: () => handleAction(() => handleRename()),
         icon: '/assets/rename.png'
       },
       {
