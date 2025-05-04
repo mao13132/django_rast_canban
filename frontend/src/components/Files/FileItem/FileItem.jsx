@@ -7,7 +7,12 @@ import styles from './FileItem.module.css';
 const FileItem = ({ file }) => {
   const { name, type, size, isDeleted } = file;
   const formattedSize = useFileSize(size);
-  const { isMenuVisible, setIsMenuVisible, getMenuItems } = useFileItemMenu(file);
+  const { 
+    isMenuVisible, 
+    setIsMenuVisible, 
+    getMenuItems, 
+    handleTrash
+  } = useFileItemMenu(file);
 
   const getIcon = () => {
     switch (type) {
@@ -29,8 +34,22 @@ const FileItem = ({ file }) => {
       </div>
 
       {isDeleted && (
-        <button className={styles.restoreButton} title="Восстановить">
-          🔄
+        <button 
+          className={styles.restoreButton} 
+          title="Восстановить"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleTrash();
+          }}
+        >
+          <div className={styles.ImageContainer}>
+            <img
+              src="/assets/backup.png"
+              alt="Восстановить"
+              className={styles.iconDes}
+            />
+          </div>
+          <span>Восстановить</span>
         </button>
       )}
 

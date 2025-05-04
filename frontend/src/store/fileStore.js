@@ -13,7 +13,7 @@ export const useFileStore = create((set, get) => ({
     // Действия
     setLoading: (loading) => set({ isLoading: loading }),
     setError: (error) => set({ error }),
-    
+
     fetchTotalSize: async () => {
         try {
             set({ isLoading: true });
@@ -45,6 +45,10 @@ export const useFileStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
+    
+    clearFiles: () => {
+        set({ files: [] });
+    },
 
     // Загрузка файла
     uploadFile: async (file, folderId = null) => {
@@ -57,7 +61,7 @@ export const useFileStore = create((set, get) => ({
                 is_favorite: false,
                 is_trashed: false
             });
-            
+
             const response = await filesAPI.uploadFile(fileData);
             const newFile = FileDTO.fromBackend(response.data);
 
@@ -74,20 +78,20 @@ export const useFileStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
-    
+
     toggleFavorite: async (fileId) => {
         try {
             set({ isLoading: true });
             const response = await filesAPI.toggleFileFavorite(fileId);
             const updatedFile = FileDTO.fromBackend(response.data);
-            
+
             set(state => ({
-                files: state.files.map(file => 
+                files: state.files.map(file =>
                     file.id === fileId ? updatedFile : file
                 ),
                 error: null
             }));
-            
+
             return updatedFile;
         } catch (err) {
             console.error('Ошибка при изменении избранного:', err);
@@ -97,20 +101,20 @@ export const useFileStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
-    
+
     toggleTrash: async (fileId) => {
         try {
             set({ isLoading: true });
             const response = await filesAPI.toggleTrash(fileId);
             const updatedFile = FileDTO.fromBackend(response.data);
-            
+
             set(state => ({
-                files: state.files.map(file => 
+                files: state.files.map(file =>
                     file.id === fileId ? updatedFile : file
                 ),
                 error: null
             }));
-            
+
             return updatedFile;
         } catch (err) {
             console.error('Ошибка при изменении статуса корзины:', err);
@@ -120,12 +124,12 @@ export const useFileStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
-    
+
     deleteFile: async (fileId) => {
         try {
             set({ isLoading: true });
             await filesAPI.deleteFile(fileId);
-            
+
             set(state => ({
                 files: state.files.filter(file => file.id !== fileId),
                 error: null
@@ -138,20 +142,20 @@ export const useFileStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
-    
+
     renameFile: async (fileId, newName) => {
         try {
             set({ isLoading: true });
             const response = await filesAPI.updateFile(fileId, { name: newName });
             const updatedFile = FileDTO.fromBackend(response.data);
-            
+
             set(state => ({
-                files: state.files.map(file => 
+                files: state.files.map(file =>
                     file.id === fileId ? updatedFile : file
                 ),
                 error: null
             }));
-            
+
             return updatedFile;
         } catch (err) {
             console.error('Ошибка при переименовании файла:', err);
@@ -161,20 +165,20 @@ export const useFileStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
-    
+
     downloadFile: async (fileId) => {
         try {
             set({ isLoading: true });
             const response = await filesAPI.downloadFile(fileId);
-            
+
             // Создаем blob из полученных данных
             const blob = new Blob([response.data]);
             const url = window.URL.createObjectURL(blob);
-            
+
             // Получаем информацию о файле из текущего состояния
             const file = get().files.find(f => f.id === fileId);
             const fileName = file ? file.name : 'downloaded_file';
-            
+
             // Создаем ссылку для скачивания
             const link = document.createElement('a');
             link.href = url;
@@ -183,7 +187,7 @@ export const useFileStore = create((set, get) => ({
             link.click();
             link.remove();
             window.URL.revokeObjectURL(url);
-            
+
             set({ error: null });
         } catch (err) {
             console.error('Ошибка при скачивании файла:', err);

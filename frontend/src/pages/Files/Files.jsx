@@ -16,10 +16,12 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
   const navigate = useNavigate();
   const {
     fetchFolders,
+    clearFolders,
   } = useFolderStore();
   const { fetchLinks } = useLinkStore()
   const {
     fetchFiles,
+    clearFiles,
   } = useFileStore();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -30,6 +32,8 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
 
     // Добавляем слушатель события загрузки папки
     const handleFolderUploaded = () => {
+      clearFiles();
+      clearFolders();
       fetchFolders(folderId || null);
       fetchFiles(folderId || null);
     };
@@ -69,7 +73,7 @@ const Files = ({ title = "Все файлы", type = "all" }) => {
           <SearchBar
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder='Поиск файлов и папок'
+            placeholder='Поиск файлов'
           />
 
           {folderId && (

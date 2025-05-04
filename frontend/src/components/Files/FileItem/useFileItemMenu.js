@@ -259,6 +259,7 @@ export const useFileItemMenu = (file) => {
 
   return {
     isMenuVisible,
+    handleTrash,
     setIsMenuVisible,
     getMenuItems: () => menuItems[file.type] || []
   };

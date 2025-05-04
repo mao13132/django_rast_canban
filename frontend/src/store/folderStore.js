@@ -18,8 +18,8 @@ export const useFolderStore = create((set, get) => ({
     try {
       const response = await foldersAPI.getFolders(parentId);
       const normalizedFolders = response.data.map(FolderDTO.fromBackend);
-      
-      set({ 
+
+      set({
         folders: normalizedFolders,
         currentFolder: parentId,
         error: null
@@ -31,13 +31,16 @@ export const useFolderStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+  clearFolders: () => {
+    set({ folders: [] });
+  },
 
   // Создание новой папки
   createFolder: async (name) => {
     const { currentFolder } = get();
     try {
       set({ isLoading: true });
-      const folderData = FolderDTO.toBackend({ 
+      const folderData = FolderDTO.toBackend({
         name: name,
         parent_id: currentFolder,
         is_favorite: false,
@@ -45,7 +48,7 @@ export const useFolderStore = create((set, get) => ({
       });
       const response = await foldersAPI.createFolder(folderData);
       const newFolder = FolderDTO.fromBackend(response.data);
-      
+
       set(state => ({
         folders: [...state.folders, newFolder],
         error: null
@@ -66,7 +69,7 @@ export const useFolderStore = create((set, get) => ({
       set({ isLoading: true });
       const response = await foldersAPI.toggleFolderFavorite(folderId);
       const updatedFolder = FolderDTO.fromBackend(response.data);
-      
+
       set(state => ({
         folders: state.folders.map(folder =>
           folder.id === folderId ? updatedFolder : folder
@@ -82,73 +85,73 @@ export const useFolderStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-    
-    toggleTrash: async (folderId) => {
-        try {
-            set({ isLoading: true });
-            const response = await foldersAPI.toggleTrash(folderId);
-            const updatedFolder = FolderDTO.fromBackend(response.data);
-            
-            set(state => ({
-                folders: state.folders.map(folder =>
-                    folder.id === folderId ? updatedFolder : folder
-                ),
-                error: null
-            }));
-            return updatedFolder;
-        } catch (err) {
-            console.error('Ошибка при изменении статуса корзины:', err);
-            set({ error: 'Ошибка при изменении статуса корзины' });
-            throw err;
-        } finally {
-            set({ isLoading: false });
-        }
-    },
-    
-    deleteFolder: async (folderId) => {
-        try {
-            set({ isLoading: true });
-            await foldersAPI.deleteFolder(folderId);
-            
-            set(state => ({
-                folders: state.folders.filter(folder => folder.id !== folderId),
-                error: null
-            }));
-        } catch (err) {
-            console.error('Ошибка при удалении папки:', err);
-            set({ error: 'Ошибка при удалении папки' });
-            throw err;
-        } finally {
-            set({ isLoading: false });
-        }
-    },
-    
-    renameFolder: async (folderId, newName) => {
-        try {
-            set({ isLoading: true });
-            const response = await foldersAPI.updateFolder(folderId, { name: newName });
-            const updatedFolder = FolderDTO.fromBackend(response.data);
-            
-            set(state => ({
-                folders: state.folders.map(folder =>
-                    folder.id === folderId ? updatedFolder : folder
-                ),
-                error: null
-            }));
-            return updatedFolder;
-        } catch (err) {
-            console.error('Ошибка при переименовании папки:', err);
-            set({ error: 'Ошибка при переименовании папки' });
-            throw err;
-        } finally {
-            set({ isLoading: false });
-        }
-    },
+
+  toggleTrash: async (folderId) => {
+    try {
+      set({ isLoading: true });
+      const response = await foldersAPI.toggleTrash(folderId);
+      const updatedFolder = FolderDTO.fromBackend(response.data);
+
+      set(state => ({
+        folders: state.folders.map(folder =>
+          folder.id === folderId ? updatedFolder : folder
+        ),
+        error: null
+      }));
+      return updatedFolder;
+    } catch (err) {
+      console.error('Ошибка при изменении статуса корзины:', err);
+      set({ error: 'Ошибка при изменении статуса корзины' });
+      throw err;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  deleteFolder: async (folderId) => {
+    try {
+      set({ isLoading: true });
+      await foldersAPI.deleteFolder(folderId);
+
+      set(state => ({
+        folders: state.folders.filter(folder => folder.id !== folderId),
+        error: null
+      }));
+    } catch (err) {
+      console.error('Ошибка при удалении папки:', err);
+      set({ error: 'Ошибка при удалении папки' });
+      throw err;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  renameFolder: async (folderId, newName) => {
+    try {
+      set({ isLoading: true });
+      const response = await foldersAPI.updateFolder(folderId, { name: newName });
+      const updatedFolder = FolderDTO.fromBackend(response.data);
+
+      set(state => ({
+        folders: state.folders.map(folder =>
+          folder.id === folderId ? updatedFolder : folder
+        ),
+        error: null
+      }));
+      return updatedFolder;
+    } catch (err) {
+      console.error('Ошибка при переименовании папки:', err);
+      set({ error: 'Ошибка при переименовании папки' });
+      throw err;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
   downloadFolder: async (folderId, fileName) => {
     try {
       set({ isLoading: true });
       const response = await foldersAPI.downloadFolder(folderId);
-      
+
       // Создаем ссылку для скачивания
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
@@ -158,7 +161,7 @@ export const useFolderStore = create((set, get) => ({
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      
+
       set({ error: null });
       return true;
     } catch (err) {

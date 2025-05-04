@@ -16,7 +16,7 @@
 
 .fileItemTrash {
   display: grid;
-  grid-template-columns: 1fr 1fr auto auto;
+  grid-template-columns: minmax(5%, 65%) 15% 15% 5%;
   gap: 50px;
   padding: 10px;
   background: #FFFFFF;
@@ -92,7 +92,23 @@
 }
 
 .restoreButton {
-  color: #4CAF50;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.ImageContainer {
+  position: relative;
+  display: flex;
+  width: 35px;
+  height: auto;
+}
+
+.iconDes {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .menuWrapper {
