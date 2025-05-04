@@ -52,5 +52,46 @@ export const useLinkStore = create((set, get) => ({
         } finally {
             set({ isLoading: false });
         }
+    },
+
+    // Копирование ссылки
+    copyLink: async (url) => {
+        try {
+            await navigator.clipboard.writeText(url);
+            return true;
+        } catch (err) {
+            console.error('Ошибка при копировании ссылки:', err);
+            throw err;
+        }
+    },
+
+    // Открытие ссылки
+    openLink: async (url) => {
+        try {
+            window.open(url, '_blank', 'noopener,noreferrer');
+            return true;
+        } catch (err) {
+            console.error('Ошибка при открытии ссылки:', err);
+            throw err;
+        }
+    },
+
+    // Удаление ссылки
+    deleteLink: async (id) => {
+        try {
+            set({ isLoading: true });
+            await linksAPI.deleteLink(id);
+            
+            set(state => ({
+                links: state.links.filter(link => link.id !== id),
+                error: null
+            }));
+        } catch (err) {
+            console.error('Ошибка при удалении ссылки:', err);
+            set({ error: 'Ошибка при удалении ссылки' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
     }
 }));

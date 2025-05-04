@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNotification } from '../../../context/NotificationContext';
 import { useFolderStore } from '../../../store/folderStore';
 import { useFileStore } from '../../../store/fileStore';
+import { useLinkStore } from '../../../store/linkStore';
 import { useRenamePopup } from '../../../context/RenamePopupContext';
 
 export const useFileItemMenu = (file) => {
@@ -68,37 +69,83 @@ export const useFileItemMenu = (file) => {
   const { openPopup: openRenamePopup } = useRenamePopup();
 
   const handleRename = () => {
-      openRenamePopup({
-          id: file.id,
-          type: file.type,
-          name: file.name
-      });
+    openRenamePopup({
+      id: file.id,
+      type: file.type,
+      name: file.name
+    });
   };
 
   const { downloadFile } = useFileStore();
   const { downloadFolder } = useFolderStore();
-  
+
   const handleDownload = async (e) => {
+    try {
+      // Предотвращаем закрытие меню при скачивании
+      e.stopPropagation();
+
+      if (file.type === 'folder') {
+        await downloadFolder(file.id, file.name);
+      } else if (file.type === 'file') {
+        await downloadFile(file.id);
+      }
+
+      showNotification(
+        'Скачивание началось',
+        'success',
+        3000,
+        'bottom'
+      );
+    } catch (error) {
+      console.error('Ошибка при скачивании:', error);
+      showNotification(
+        `Ошибка при скачивании ${file.type === 'folder' ? 'папки' : 'файла'}`,
+        'error',
+        3000,
+        'bottom'
+      );
+    }
+  };
+
+  const { copyLink, openLink, deleteLink } = useLinkStore();
+
+  const handleCopyLink = async () => {
       try {
-          // Предотвращаем закрытие меню при скачивании
-          e.stopPropagation();
-          
-          if (file.type === 'folder') {
-              await downloadFolder(file.id, file.name);
-          } else if (file.type === 'file') {
-              await downloadFile(file.id);
-          }
-  
+          await copyLink(file.name);
           showNotification(
-              'Скачивание началось',
+              'Ссылка скопирована в буфер обмена',
               'success',
               3000,
               'bottom'
           );
       } catch (error) {
-          console.error('Ошибка при скачивании:', error);
+          console.error('Ошибка при копировании ссылки:', error);
           showNotification(
-              `Ошибка при скачивании ${file.type === 'folder' ? 'папки' : 'файла'}`,
+              'Ошибка при копировании ссылки',
+              'error',
+              3000,
+              'bottom'
+          );
+      }
+  };
+
+  const handleOpen = async () => {
+      try {
+          const confirmed = window.confirm(`Открыть ссылку "${file.name}"?`);
+          
+          if (confirmed) {
+              await openLink(file.name);
+              showNotification(
+                  'Ссылка открыта в новой вкладке',
+                  'success',
+                  3000,
+                  'bottom'
+              );
+          }
+      } catch (error) {
+          console.error('Ошибка при открытии ссылки:', error);
+          showNotification(
+              'Ошибка при открытии ссылки',
               'error',
               3000,
               'bottom'
@@ -137,12 +184,12 @@ export const useFileItemMenu = (file) => {
       },
       {
         label: 'Копировать',
-        onClick: () => handleAction(() => console.log('Copy')),
+        onClick: () => handleAction(() => handleCopyLink()),
         icon: '/assets/copy.png'
       },
       {
         label: 'Открыть',
-        onClick: () => handleAction(() => console.log('Open')),
+        onClick: () => handleAction(() => handleOpen()),
         icon: '/assets/open.png'
       },
       {
