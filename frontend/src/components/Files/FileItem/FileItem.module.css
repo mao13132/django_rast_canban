@@ -14,6 +14,23 @@
   position: relative;
 }
 
+.fileItemTrash {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: 50px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.82);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+}
+
 .fileItem:hover {
   box-shadow: var(--box-shadow);
 }
@@ -27,6 +44,7 @@
 }
 
 .name {
+  position: relative;
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;

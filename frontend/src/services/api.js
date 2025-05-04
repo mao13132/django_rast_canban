@@ -224,7 +224,7 @@ export const filesAPI = {
     axiosInstance.put(API_ENDPOINTS.FILE(fileId), fileData),
 
   deleteFile: (fileId) =>
-    axiosInstance.patch(API_ENDPOINTS.FILE(fileId), { is_trashed: true }),
+    axiosInstance.delete(API_ENDPOINTS.FILE(fileId)),
     
   toggleTrash: (fileId) =>
     axiosInstance.post(`${API_ENDPOINTS.FILE(fileId)}toggle_trashed/`)

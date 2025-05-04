@@ -162,6 +162,40 @@ export const useFileItemMenu = (file) => {
       }
   };
 
+  const { deleteFolder } = useFolderStore();
+  const { deleteFile } = useFileStore();
+  const { deleteLink } = useLinkStore();
+
+  const handleDelete = async () => {
+    try {
+      const confirmDelete = window.confirm('Вы уверены, что хотите удалить этот элемент безвозвратно?');
+      if (!confirmDelete) return;
+
+      if (file.type === 'folder') {
+        await deleteFolder(file.id);
+      } else if (file.type === 'file') {
+        await deleteFile(file.id);
+      } else if (file.type === 'link') {
+        await deleteLink(file.id);
+      }
+
+      showNotification(
+        'Элемент успешно удален',
+        'success',
+        3000,
+        'bottom'
+      );
+    } catch (error) {
+      console.error('Ошибка при удалении:', error);
+      showNotification(
+        'Ошибка при удалении',
+        'error',
+        3000,
+        'bottom'
+      );
+    }
+  };
+
   const menuItems = {
     folder: [
       {
@@ -176,15 +210,21 @@ export const useFileItemMenu = (file) => {
       },
       {
         label: 'Скачать',
-        onClick: (e) => handleDownload(e), // Передаем событие
+        onClick: (e) => handleDownload(e),
         icon: '/assets/download.png'
       },
-      {
-        label: file.isDeleted ? 'Восстановить' : 'Отправить в корзину',
+      !file.isDeleted && {
+        label: 'Отправить в корзину',
         onClick: () => handleAction(() => handleTrash()),
-        icon: file.isDeleted ? '/assets/restore.png' : '/assets/trash.png'
-      }
-    ],
+        icon: '/assets/trash.png'
+      },
+      file.isDeleted && {
+        label: 'Удалить навсегда',
+        onClick: () => handleAction(() => handleDelete()),
+        icon: '/assets/delete-forever.png'
+      },
+    ].filter(Boolean),
+    
     link: [
       {
         label: file.isFavorite ? 'Удалить из избранного' : 'Добавить в избранное',
@@ -201,12 +241,17 @@ export const useFileItemMenu = (file) => {
         onClick: () => handleAction(() => handleOpen()),
         icon: '/assets/open.png'
       },
-      {
-        label: file.isDeleted ? 'Восстановить' : 'Отправить в корзину',
+      file.isDeleted && {
+        label: 'Удалить навсегда',
+        onClick: () => handleAction(() => handleDelete()),
+        icon: '/assets/delete-forever.png'
+      },
+      !file.isDeleted && {
+        label: 'Отправить в корзину',
         onClick: () => handleAction(() => handleTrash()),
-        icon: file.isDeleted ? '/assets/restore.png' : '/assets/trash.png'
+        icon: '/assets/trash.png'
       }
-    ]
+    ].filter(Boolean)
   };
 
   // Файлы используют те же опции, что и папки

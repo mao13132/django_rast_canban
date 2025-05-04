@@ -1,9 +1,10 @@
 from django.http import FileResponse
-from django.db import models  # Добавляем импорт models
+from django.db import models
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
+import os
 
 from ..models import File, Folder
 from ..serializers import FileSerializer
@@ -183,3 +184,21 @@ class FileViewSet(viewsets.ModelViewSet):
                 {'error': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+    def perform_destroy(self, instance):
+        """
+        Переопределяем метод удаления для физического удаления файла
+        """
+        try:
+            # Получаем путь к физическому файлу
+            file_path = instance.file.path
+            
+            # Удаляем физический файл
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            
+            # Удаляем запись из базы данных
+            instance.delete()
+            
+        except Exception as e:
+            raise Exception(f"Ошибка при удалении файла: {str(e)}")

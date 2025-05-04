@@ -19,19 +19,23 @@ const FileItem = ({ file }) => {
   };
 
   return (
-    <div className={styles.fileItem}>
+    <div className={isDeleted ? styles.fileItemTrash : styles.fileItem}>
       <div className={styles.name}>
         <span className={styles.iconWrapper}>{getIcon()}</span>
+        <div className={styles.nameWrapper}>
+        </div>
         <span className={styles.text}>{name}</span>
+
       </div>
+
+      {isDeleted && (
+        <button className={styles.restoreButton} title="Восстановить">
+          🔄
+        </button>
+      )}
 
       <div className={styles.size}>
         <span className={styles.text}>{formattedSize}</span>
-        {isDeleted && (
-          <button className={styles.restoreButton} title="Восстановить">
-            🔄
-          </button>
-        )}
       </div>
 
       <div
