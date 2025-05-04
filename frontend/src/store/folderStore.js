@@ -144,4 +144,29 @@ export const useFolderStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
+  downloadFolder: async (folderId, fileName) => {
+    try {
+      set({ isLoading: true });
+      const response = await foldersAPI.downloadFolder(folderId);
+      
+      // Создаем ссылку для скачивания
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${fileName}.zip`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      set({ error: null });
+      return true;
+    } catch (err) {
+      console.error('Ошибка при скачивании папки:', err);
+      set({ error: 'Ошибка при скачивании папки' });
+      throw err;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));

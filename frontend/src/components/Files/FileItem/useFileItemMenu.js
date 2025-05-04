@@ -3,7 +3,6 @@ import { useNotification } from '../../../context/NotificationContext';
 import { useFolderStore } from '../../../store/folderStore';
 import { useFileStore } from '../../../store/fileStore';
 import { useRenamePopup } from '../../../context/RenamePopupContext';
-import { foldersAPI } from '../../../services/api';
 
 export const useFileItemMenu = (file) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -77,20 +76,15 @@ export const useFileItemMenu = (file) => {
   };
 
   const { downloadFile } = useFileStore();
-
-  const handleDownload = async () => {
+  const { downloadFolder } = useFolderStore();
+  
+  const handleDownload = async (e) => {
       try {
+          // Предотвращаем закрытие меню при скачивании
+          e.stopPropagation();
+          
           if (file.type === 'folder') {
-              const response = await foldersAPI.downloadFolder(file.id);
-              // Создаем ссылку для скачивания
-              const url = window.URL.createObjectURL(new Blob([response.data]));
-              const link = document.createElement('a');
-              link.href = url;
-              link.setAttribute('download', `${file.name}.zip`);
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
-              window.URL.revokeObjectURL(url);
+              await downloadFolder(file.id, file.name);
           } else if (file.type === 'file') {
               await downloadFile(file.id);
           }
@@ -126,7 +120,7 @@ export const useFileItemMenu = (file) => {
       },
       {
         label: 'Скачать',
-        onClick: () => handleAction(() => handleDownload()),
+        onClick: (e) => handleDownload(e), // Передаем событие
         icon: '/assets/download.png'
       },
       {
