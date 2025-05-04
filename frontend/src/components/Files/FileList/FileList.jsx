@@ -45,9 +45,10 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
       type === 'trash' ? link.is_trashed :
         !link.is_trashed;
 
-    // Затем фильтруем по поисковому запросу
-    const searchFilter = !searchQuery ||
-      link.name.toLowerCase().includes(searchQuery.toLowerCase());
+    // Проверяем наличие name и url перед фильтрацией
+    const searchFilter = !searchQuery || 
+      (link.name && link.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (link.url && link.url.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return typeFilter && searchFilter;
   }) : [];
@@ -118,7 +119,7 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
             <FileItem
               file={{
                 id: link.id,
-                name: link.url,
+                name: link.name || link.url, // Используем name, если есть, иначе url
                 type: 'link',
                 size: '—',
                 isFavorite: link.is_favorite,

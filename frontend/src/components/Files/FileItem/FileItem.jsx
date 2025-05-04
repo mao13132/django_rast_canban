@@ -11,9 +11,9 @@ const FileItem = ({ file }) => {
 
   const getIcon = () => {
     switch (type) {
-      case 'folder': return '📁';
-      case 'file': return '📄';
-      case 'link': return '🔗';
+      case 'folder': return <img src={file.isFavorite ? "/assets/folder-favorit.png" : "/assets/folders.png"} alt="Папка" className={styles.icon} />;
+      case 'file': return <img src={file.isFavorite ? "/assets/file-favorite.png" : "/assets/files.png"} alt="Файл" className={styles.icon} />;
+      case 'link': return <img src={"/assets/links.png"} alt="Ссылка" className={styles.icon} />;
       default: return '📄';
     }
   };
@@ -21,7 +21,7 @@ const FileItem = ({ file }) => {
   return (
     <div className={styles.fileItem}>
       <div className={styles.name}>
-        <span className={styles.icon}>{getIcon()}</span>
+        <span className={styles.iconWrapper}>{getIcon()}</span>
         <span className={styles.text}>{name}</span>
       </div>
 

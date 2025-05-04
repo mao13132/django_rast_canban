@@ -31,11 +31,20 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 20px;
 }
 
 .icon {
-  font-size: 24px;
+  position: relative;
+  width: 50px;
+  height: 80px;
+  object-fit: contain;
 }
+
+
 
 .text {
   font-family: 'Jost', sans-serif;

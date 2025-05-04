@@ -8,11 +8,24 @@ export const useFileStore = create((set, get) => ({
     files: [],
     isLoading: false,
     error: null,
+    totalSize: 0,
 
     // Действия
     setLoading: (loading) => set({ isLoading: loading }),
     setError: (error) => set({ error }),
-
+    
+    fetchTotalSize: async () => {
+        try {
+            set({ isLoading: true });
+            const response = await filesAPI.getTotalSize();
+            set({ totalSize: response.data.total_size });
+        } catch (err) {
+            console.error('Ошибка при получении размера файлов:', err);
+            set({ error: 'Ошибка при получении размера файлов' });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
     // Загрузка файлов для текущей директории
     fetchFiles: async (folderId = null) => {
         try {

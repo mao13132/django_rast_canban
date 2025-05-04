@@ -55,3 +55,36 @@ class Folder(models.Model):
         if self.parent_id:
             return f"{self.parent_id.get_full_path()}/{self.name}"
         return f"/{self.name}"  # Добавляем слеш для корневых папок
+
+    def update_size(self):
+        """
+        Пересчитывает и обновляет размер папки, учитывая размеры всех файлов
+        и подпапок внутри неё.
+        """
+        total_size = 0
+        
+        # Суммируем размеры всех файлов в текущей папке
+        for file in self.files.all():
+            total_size += file.size
+            
+        # Рекурсивно суммируем размеры всех подпапок
+        for subfolder in self.children.all():
+            subfolder.update_size()  # Обновляем размер подпапки
+            total_size += subfolder.size
+            
+        # Обновляем размер текущей папки
+        self.size = total_size
+        self.save()
+        
+        return total_size
+
+    def save(self, *args, **kwargs):
+        """
+        Переопределяем метод save для обновления размера родительской папки
+        при сохранении текущей папки
+        """
+        super().save(*args, **kwargs)
+        
+        # Обновляем размер родительской папки
+        if self.parent_id:
+            self.parent_id.update_size()

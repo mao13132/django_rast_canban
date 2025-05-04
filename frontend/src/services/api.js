@@ -206,6 +206,9 @@ export const filesAPI = {
   toggleFileFavorite: (fileId) =>
     axiosInstance.post(API_ENDPOINTS.FILE_TOGGLE_FAVORITE(fileId)),
 
+  getTotalSize: () =>
+    axiosInstance.get(API_ENDPOINTS.FILE_TOTAL_SIZE),
+
   uploadFile: (fileData) => {
     const formData = new FormData();
     formData.append('file', fileData.file);

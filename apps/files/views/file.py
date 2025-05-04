@@ -1,4 +1,5 @@
 from django.http import FileResponse
+from django.db import models  # Добавляем импорт models
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -141,5 +142,44 @@ class FileViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response(
                 {'error': 'Ошибка при скачивании файла'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+    @action(detail=False, methods=['get'])
+    def total_size(self, request):
+        """
+        Возвращает общий размер всех файлов пользователя или указанного пользователя.
+        
+        Query Parameters:
+        - user_id: ID пользователя (опционально, если не указан - используется текущий пользователь)
+        
+        Returns:
+        - total_size: общий размер в байтах
+        """
+        try:
+            # Получаем user_id из параметров запроса или используем текущего пользователя
+            user_id = request.query_params.get('user_id', request.user.id)
+            
+            # Проверяем права доступа
+            if str(user_id) != str(request.user.id) and not request.user.is_staff:
+                return Response(
+                    {'error': 'У вас нет прав для просмотра размера файлов другого пользователя'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            # Получаем общий размер всех файлов пользователя
+            total_size = File.objects.filter(user_id=user_id).aggregate(
+                total=models.Sum('size')
+            )['total'] or 0
+            
+            return Response({
+                'total_size': total_size,
+                'user_id': user_id
+            })
+            
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )

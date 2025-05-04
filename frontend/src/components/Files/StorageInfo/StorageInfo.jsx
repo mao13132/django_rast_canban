@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './StorageInfo.module.css';
+import { useFileStore } from '../../../store/fileStore';
 
 const StorageInfo = () => {
-  const used = 8;
-  const total = 10;
-  const percentage = (used / total) * 100;
+  const { totalSize, fetchTotalSize } = useFileStore();
+  
+  useEffect(() => {
+    fetchTotalSize();
+  }, []);
+
+  // Конвертируем байты в гигабайты
+  const used = Math.round((totalSize / (1024 * 1024 * 1024)) * 100) / 100;
+  const total = 10; // Максимальный размер в ГБ
+  const percentage = Math.min((used / total) * 100, 100);
 
   return (
     <div className={styles.storageInfo}>
@@ -21,4 +29,4 @@ const StorageInfo = () => {
   );
 };
 
-export default StorageInfo; 
+export default StorageInfo;
