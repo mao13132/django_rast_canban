@@ -182,7 +182,10 @@ export const foldersAPI = {
     axiosInstance.delete(API_ENDPOINTS.FOLDER(folderId)),
     
   toggleFolderFavorite: (folderId) =>
-    axiosInstance.post(`${API_ENDPOINTS.FOLDER(folderId)}toggle_favorite/`)
+    axiosInstance.post(`${API_ENDPOINTS.FOLDER(folderId)}toggle_favorite/`),
+    
+  toggleTrash: (folderId) =>
+    axiosInstance.post(`${API_ENDPOINTS.FOLDER(folderId)}toggle_trashed/`)
 };
 
 export const filesAPI = {
@@ -210,7 +213,10 @@ export const filesAPI = {
     axiosInstance.put(API_ENDPOINTS.FILE(fileId), fileData),
 
   deleteFile: (fileId) =>
-    axiosInstance.delete(API_ENDPOINTS.FILE(fileId))
+    axiosInstance.patch(API_ENDPOINTS.FILE(fileId), { is_trashed: true }),
+    
+  toggleTrash: (fileId) =>
+    axiosInstance.post(`${API_ENDPOINTS.FILE(fileId)}toggle_trashed/`)
 };
 
 export const folderUploadAPI = {

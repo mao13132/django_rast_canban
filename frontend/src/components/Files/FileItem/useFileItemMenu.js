@@ -4,40 +4,65 @@ import { useFolderStore } from '../../../store/folderStore';
 import { useFileStore } from '../../../store/fileStore';
 
 export const useFileItemMenu = (file) => {
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const { showNotification } = useNotification();
-    const { toggleFavorite: toggleFolderFavorite } = useFolderStore();
-    const { toggleFavorite: toggleFileFavorite } = useFileStore();
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const { showNotification } = useNotification();
+  const { toggleFavorite: toggleFolderFavorite, toggleTrash: toggleFolderTrash } = useFolderStore();
+  const { toggleFavorite: toggleFileFavorite, toggleTrash: toggleFileTrash } = useFileStore();
 
-    const handleAction = (action) => {
-        setIsMenuVisible(false);
-        action();
-    };
+  const handleAction = (action) => {
+    setIsMenuVisible(false);
+    action();
+  };
 
-    const handleToggleFavorite = async () => {
-        try {
-            if (file.type === 'folder') {
-                await toggleFolderFavorite(file.id);
-            } else if (file.type === 'file') {
-                await toggleFileFavorite(file.id);
-            }
-            
-            showNotification(
-                file.isFavorite ? 'Удалено из избранного' : 'Добавлено в избранное',
-                'success',
-                3000,
-                'bottom'
-            );
-        } catch (error) {
-            console.error('Ошибка при изменении статуса избранного:', error);
-            showNotification(
-                'Ошибка при изменении статуса избранного',
-                'error',
-                3000,
-                'bottom'
-            );
-        }
-    };
+  const handleToggleFavorite = async () => {
+    try {
+      if (file.type === 'folder') {
+        await toggleFolderFavorite(file.id);
+      } else if (file.type === 'file') {
+        await toggleFileFavorite(file.id);
+      }
+
+      showNotification(
+        file.isFavorite ? 'Удалено из избранного' : 'Добавлено в избранное',
+        'success',
+        3000,
+        'bottom'
+      );
+    } catch (error) {
+      console.error('Ошибка при изменении статуса избранного:', error);
+      showNotification(
+        'Ошибка при изменении статуса избранного',
+        'error',
+        3000,
+        'bottom'
+      );
+    }
+  };
+
+  const handleTrash = async () => {
+    try {
+      if (file.type === 'folder') {
+        await toggleFolderTrash(file.id);
+      } else if (file.type === 'file') {
+        await toggleFileTrash(file.id);
+      }
+
+      showNotification(
+        file.isDeleted ? 'Элемент восстановлен' : 'Элемент перемещен в корзину',
+        'success',
+        3000,
+        'bottom'
+      );
+    } catch (error) {
+      console.error('Ошибка при изменении статуса корзины:', error);
+      showNotification(
+        'Ошибка при изменении статуса корзины',
+        'error',
+        3000,
+        'bottom'
+      );
+    }
+  };
 
   const menuItems = {
     folder: [
@@ -62,9 +87,9 @@ export const useFileItemMenu = (file) => {
         icon: '/assets/download.png'
       },
       {
-        label: 'Отправить в корзину',
-        onClick: () => handleAction(() => console.log('Delete')),
-        icon: '/assets/trash.png'
+        label: file.isDeleted ? 'Восстановить' : 'Отправить в корзину',
+        onClick: () => handleAction(() => handleTrash()),
+        icon: file.isDeleted ? '/assets/restore.png' : '/assets/trash.png'
       }
     ],
     link: [
@@ -85,7 +110,7 @@ export const useFileItemMenu = (file) => {
       },
       {
         label: 'Отправить в корзину',
-        onClick: () => handleAction(() => console.log('Delete')),
+        onClick: null,
         icon: '/assets/trash.png'
       }
     ]

@@ -152,6 +152,17 @@ class FolderViewSet(viewsets.ModelViewSet):
         )
 
     @action(detail=True, methods=['post'])
+    def toggle_trashed(self, request, pk=None):
+        """
+        Переключает статус корзины для папки
+        """
+        folder = self.get_folder_by_id(pk)
+        folder.is_trashed = not folder.is_trashed
+        folder.save()
+        serializer = self.get_serializer(folder)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
     def toggle_favorite(self, request, pk=None):
         """
         Переключает статус избранного для папки

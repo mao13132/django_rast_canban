@@ -83,5 +83,46 @@ export const useFileStore = create((set, get) => ({
         } finally {
             set({ isLoading: false });
         }
+    },
+    
+    toggleTrash: async (fileId) => {
+        try {
+            set({ isLoading: true });
+            const response = await filesAPI.toggleTrash(fileId);
+            const updatedFile = FileDTO.fromBackend(response.data);
+            
+            set(state => ({
+                files: state.files.map(file => 
+                    file.id === fileId ? updatedFile : file
+                ),
+                error: null
+            }));
+            
+            return updatedFile;
+        } catch (err) {
+            console.error('Ошибка при изменении статуса корзины:', err);
+            set({ error: 'Ошибка при изменении статуса корзины' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+    
+    deleteFile: async (fileId) => {
+        try {
+            set({ isLoading: true });
+            await filesAPI.deleteFile(fileId);
+            
+            set(state => ({
+                files: state.files.filter(file => file.id !== fileId),
+                error: null
+            }));
+        } catch (err) {
+            console.error('Ошибка при удалении файла:', err);
+            set({ error: 'Ошибка при удалении файла' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
     }
 }));

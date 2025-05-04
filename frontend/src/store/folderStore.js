@@ -81,5 +81,45 @@ export const useFolderStore = create((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
-  }
+  },
+    
+    toggleTrash: async (folderId) => {
+        try {
+            set({ isLoading: true });
+            const response = await foldersAPI.toggleTrash(folderId);
+            const updatedFolder = FolderDTO.fromBackend(response.data);
+            
+            set(state => ({
+                folders: state.folders.map(folder =>
+                    folder.id === folderId ? updatedFolder : folder
+                ),
+                error: null
+            }));
+            return updatedFolder;
+        } catch (err) {
+            console.error('Ошибка при изменении статуса корзины:', err);
+            set({ error: 'Ошибка при изменении статуса корзины' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+    
+    deleteFolder: async (folderId) => {
+        try {
+            set({ isLoading: true });
+            await foldersAPI.deleteFolder(folderId);
+            
+            set(state => ({
+                folders: state.folders.filter(folder => folder.id !== folderId),
+                error: null
+            }));
+        } catch (err) {
+            console.error('Ошибка при удалении папки:', err);
+            set({ error: 'Ошибка при удалении папки' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
+    }
 }));

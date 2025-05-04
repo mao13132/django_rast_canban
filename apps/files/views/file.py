@@ -72,3 +72,14 @@ class FileViewSet(viewsets.ModelViewSet):
         file.save()
         serializer = self.get_serializer(file)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post', 'options'])
+    def toggle_trashed(self, request, pk=None):
+        """
+        Переключает статус корзины для файла
+        """
+        file = self.get_file_by_id(pk)
+        file.is_trashed = not file.is_trashed
+        file.save()
+        serializer = self.get_serializer(file)
+        return Response(serializer.data)
