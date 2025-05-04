@@ -11,6 +11,13 @@ export const useFileItemMenu = (file) => {
   const { toggleFavorite: toggleFolderFavorite, toggleTrash: toggleFolderTrash } = useFolderStore();
   const { toggleFavorite: toggleFileFavorite, toggleTrash: toggleFileTrash } = useFileStore();
 
+  const { 
+    copyLink, 
+    openLink, 
+    toggleFavorite: toggleLinkFavorite, 
+    toggleTrash: toggleLinkTrash 
+  } = useLinkStore();
+
   const handleAction = (action) => {
     setIsMenuVisible(false);
     action();
@@ -22,6 +29,8 @@ export const useFileItemMenu = (file) => {
         await toggleFolderFavorite(file.id);
       } else if (file.type === 'file') {
         await toggleFileFavorite(file.id);
+      } else if (file.type === 'link') {
+        await toggleLinkFavorite(file.id);
       }
 
       showNotification(
@@ -47,6 +56,8 @@ export const useFileItemMenu = (file) => {
         await toggleFolderTrash(file.id);
       } else if (file.type === 'file') {
         await toggleFileTrash(file.id);
+      } else if (file.type === 'link') {
+        await toggleLinkTrash(file.id);
       }
 
       showNotification(
@@ -106,8 +117,6 @@ export const useFileItemMenu = (file) => {
       );
     }
   };
-
-  const { copyLink, openLink, deleteLink } = useLinkStore();
 
   const handleCopyLink = async () => {
       try {
@@ -179,7 +188,7 @@ export const useFileItemMenu = (file) => {
     link: [
       {
         label: file.isFavorite ? 'Удалить из избранного' : 'Добавить в избранное',
-        onClick: () => handleAction(() => console.log('Toggle favorite')),
+        onClick: () => handleAction(() => handleToggleFavorite()),
         icon: file.isFavorite ? '/assets/star-filled.png' : '/assets/star.png'
       },
       {
@@ -193,9 +202,9 @@ export const useFileItemMenu = (file) => {
         icon: '/assets/open.png'
       },
       {
-        label: 'Отправить в корзину',
-        onClick: null,
-        icon: '/assets/trash.png'
+        label: file.isDeleted ? 'Восстановить' : 'Отправить в корзину',
+        onClick: () => handleAction(() => handleTrash()),
+        icon: file.isDeleted ? '/assets/restore.png' : '/assets/trash.png'
       }
     ]
   };

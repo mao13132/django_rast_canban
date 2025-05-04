@@ -48,4 +48,6 @@ export const API_ENDPOINTS = {
   // Ссылки
   LINKS: `${API_BASE_URL}/links/links/`,
   LINK: (id) => `${API_BASE_URL}/links/links/${id}/`,
+  LINK_TOGGLE_FAVORITE: (id) => `${API_BASE_URL}/links/links/${id}/toggle_favorite/`,
+  LINK_TOGGLE_TRASHED: (id) => `${API_BASE_URL}/links/links/${id}/toggle_trashed/`,
 };

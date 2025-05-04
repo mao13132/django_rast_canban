@@ -76,6 +76,54 @@ export const useLinkStore = create((set, get) => ({
         }
     },
 
+    // Переключение избранного
+    toggleFavorite: async (linkId) => {
+        try {
+            set({ isLoading: true });
+            const response = await linksAPI.toggleFavorite(linkId);
+            const updatedLink = LinkDTO.fromBackend(response.data);
+            
+            set(state => ({
+                links: state.links.map(link => 
+                    link.id === linkId ? updatedLink : link
+                ),
+                error: null
+            }));
+            
+            return updatedLink;
+        } catch (err) {
+            console.error('Ошибка при изменении избранного:', err);
+            set({ error: 'Ошибка при изменении избранного' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    // Переключение корзины
+    toggleTrash: async (linkId) => {
+        try {
+            set({ isLoading: true });
+            const response = await linksAPI.toggleTrashed(linkId);
+            const updatedLink = LinkDTO.fromBackend(response.data);
+            
+            set(state => ({
+                links: state.links.map(link => 
+                    link.id === linkId ? updatedLink : link
+                ),
+                error: null
+            }));
+            
+            return updatedLink;
+        } catch (err) {
+            console.error('Ошибка при изменении статуса корзины:', err);
+            set({ error: 'Ошибка при изменении статуса корзины' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
     // Удаление ссылки
     deleteLink: async (id) => {
         try {

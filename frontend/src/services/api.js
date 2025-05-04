@@ -239,20 +239,20 @@ export const folderUploadAPI = {
 
 // API методы для работы со ссылками
 export const linksAPI = {
-  getLinks: (params = {}) =>
-    axiosInstance.get(API_ENDPOINTS.LINKS, { params }),
-
+  getLinks: () =>
+    axiosInstance.get(API_ENDPOINTS.LINKS),
   getLink: (linkId) =>
     axiosInstance.get(API_ENDPOINTS.LINK(linkId)),
-
   createLink: (linkData) =>
     axiosInstance.post(API_ENDPOINTS.LINKS, linkData),
-
   updateLink: (linkId, linkData) =>
-    axiosInstance.put(API_ENDPOINTS.LINK(linkId), linkData),
-
+    axiosInstance.patch(API_ENDPOINTS.LINK(linkId), linkData),
   deleteLink: (linkId) =>
     axiosInstance.delete(API_ENDPOINTS.LINK(linkId)),
+  toggleFavorite: (linkId) =>
+    axiosInstance.post(API_ENDPOINTS.LINK_TOGGLE_FAVORITE(linkId)),
+  toggleTrashed: (linkId) =>
+    axiosInstance.post(API_ENDPOINTS.LINK_TOGGLE_TRASHED(linkId)),
 };
 
 export default axiosInstance;

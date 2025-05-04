@@ -40,10 +40,16 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
   });
 
   const filteredLinks = !folderId && links ? links.filter(link => {
-    // Фильтруем ссылки только по поисковому запросу, так как у них нет типов
+    // Сначала фильтруем по типу, аналогично файлам и папкам
+    const typeFilter = type === 'favorite' ? link.is_favorite :
+      type === 'trash' ? link.is_trashed :
+        !link.is_trashed;
+
+    // Затем фильтруем по поисковому запросу
     const searchFilter = !searchQuery ||
       link.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return searchFilter;
+
+    return typeFilter && searchFilter;
   }) : [];
 
   const isLoading = foldersLoading || filesLoading || linksLoading;
@@ -115,8 +121,8 @@ const FileList = ({ type = 'all', searchQuery = '' }) => {
                 name: link.url,
                 type: 'link',
                 size: '—',
-                isFavorite: false,
-                isDeleted: false
+                isFavorite: link.is_favorite,
+                isDeleted: link.is_trashed
               }}
             />
           </div>
