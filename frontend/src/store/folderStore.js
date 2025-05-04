@@ -59,4 +59,27 @@ export const useFolderStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+
+  // Переключение избранного статуса папки
+  toggleFavorite: async (folderId) => {
+    try {
+      set({ isLoading: true });
+      const response = await foldersAPI.toggleFolderFavorite(folderId);
+      const updatedFolder = FolderDTO.fromBackend(response.data);
+      
+      set(state => ({
+        folders: state.folders.map(folder =>
+          folder.id === folderId ? updatedFolder : folder
+        ),
+        error: null
+      }));
+      return updatedFolder;
+    } catch (err) {
+      console.error('Ошибка при обновлении статуса избранного:', err);
+      set({ error: 'Ошибка при обновлении статуса избранного' });
+      throw err;
+    } finally {
+      set({ isLoading: false });
+    }
+  }
 }));

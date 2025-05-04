@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNotification } from '../../../context/NotificationContext';
+import { useFolderStore } from '../../../store/folderStore';
 
 /**
  * Хук для управления контекстным меню элемента файловой системы
@@ -9,18 +11,39 @@ import { useState } from 'react';
  */
 export const useFileItemMenu = (file) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const { showNotification } = useNotification();
+  const { toggleFavorite } = useFolderStore();
 
   const handleAction = (action) => {
-    // Закрываем меню после любого действия
     setIsMenuVisible(false);
     action();
+  };
+
+  const handleToggleFavorite = async (folderId) => {
+    try {
+      await toggleFavorite(folderId);
+      showNotification(
+        file.isFavorite ? 'Удалено из избранного' : 'Добавлено в избранное',
+        'success',
+        3000,
+        'bottom'
+      );
+    } catch (error) {
+      console.error('Ошибка при изменении статуса избранного:', error);
+      showNotification(
+        'Ошибка при изменении статуса избранного',
+        'error',
+        3000,
+        'bottom'
+      );
+    }
   };
 
   const menuItems = {
     folder: [
       {
         label: file.isFavorite ? 'Удалить из избранного' : 'Добавить в избранное',
-        onClick: () => handleAction(() => console.log('Toggle favorite')),
+        onClick: () => handleAction(() => handleToggleFavorite(file.id)),
         icon: file.isFavorite ? '/assets/star-filled.png' : '/assets/star.png'
       },
       {

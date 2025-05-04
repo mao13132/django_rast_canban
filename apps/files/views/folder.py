@@ -130,3 +130,14 @@ class FolderViewSet(viewsets.ModelViewSet):
             return Response({
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])
+    def toggle_favorite(self, request, pk=None):
+        """
+        Переключает статус избранного для папки
+        """
+        folder = self.get_object()
+        folder.is_favorite = not folder.is_favorite
+        folder.save()
+        serializer = self.get_serializer(folder)
+        return Response(serializer.data)

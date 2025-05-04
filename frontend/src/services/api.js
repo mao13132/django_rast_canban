@@ -179,7 +179,10 @@ export const foldersAPI = {
     axiosInstance.put(API_ENDPOINTS.FOLDER(folderId), folderData),
 
   deleteFolder: (folderId) =>
-    axiosInstance.delete(API_ENDPOINTS.FOLDER(folderId))
+    axiosInstance.delete(API_ENDPOINTS.FOLDER(folderId)),
+    
+  toggleFolderFavorite: (folderId) =>
+    axiosInstance.post(`${API_ENDPOINTS.FOLDER(folderId)}toggle_favorite/`)
 };
 
 export const filesAPI = {
@@ -219,20 +222,20 @@ export const folderUploadAPI = {
 
 // API методы для работы со ссылками
 export const linksAPI = {
-    getLinks: (params = {}) =>
-        axiosInstance.get(API_ENDPOINTS.LINKS, { params }),
-    
-    getLink: (linkId) =>
-        axiosInstance.get(API_ENDPOINTS.LINK(linkId)),
-    
-    createLink: (linkData) =>
-        axiosInstance.post(API_ENDPOINTS.LINKS, linkData),
-    
-    updateLink: (linkId, linkData) =>
-        axiosInstance.put(API_ENDPOINTS.LINK(linkId), linkData),
-    
-    deleteLink: (linkId) =>
-        axiosInstance.delete(API_ENDPOINTS.LINK(linkId))
+  getLinks: (params = {}) =>
+    axiosInstance.get(API_ENDPOINTS.LINKS, { params }),
+
+  getLink: (linkId) =>
+    axiosInstance.get(API_ENDPOINTS.LINK(linkId)),
+
+  createLink: (linkData) =>
+    axiosInstance.post(API_ENDPOINTS.LINKS, linkData),
+
+  updateLink: (linkId, linkData) =>
+    axiosInstance.put(API_ENDPOINTS.LINK(linkId), linkData),
+
+  deleteLink: (linkId) =>
+    axiosInstance.delete(API_ENDPOINTS.LINK(linkId)),
 };
 
 export default axiosInstance;
