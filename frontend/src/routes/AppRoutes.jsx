@@ -13,7 +13,11 @@ import { useAuth } from '../context/AuthContext';
 import Home from '../pages/Home/Home';
 
 const AppRoutes = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
 
   return (
     <Routes>
