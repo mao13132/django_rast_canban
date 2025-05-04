@@ -26,6 +26,13 @@
   gap: 10px;
 }
 
+.name {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .icon {
   font-size: 24px;
 }
