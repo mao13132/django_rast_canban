@@ -3,12 +3,9 @@
   min-height: 100vh;
 }
 
-
-
 .contentWrapper {
   padding: var(--padding-wrapper);
 }
-
 
 .breadcrumbs {
   padding: 10px 0;

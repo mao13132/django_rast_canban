@@ -3,10 +3,8 @@
   min-height: 100vh;
 }
 
-.main {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+.contentWrapper {
+  padding: var(--padding-wrapper);
 }
 
 .title {
@@ -17,3 +15,4 @@
   color: rgba(0, 0, 0, 0.7);
   margin: 0 0 20px 0;
 } 
+

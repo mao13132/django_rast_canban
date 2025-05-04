@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { authAPI } from '../services/api';
+import { authAPI, usersAPI } from '../services/api';
 import UserDTO from '../dto/UserDTO';
 
 // Создаем контекст аутентификации
@@ -155,6 +155,22 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Значение, которое будет доступно в контексте
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    try {
+      const formData = new FormData();
+      formData.append('avatar', file);
+      
+      const response = await usersAPI.updateProfile(formData);
+      setUser(UserDTO.fromAPI(response.data));
+    } catch (error) {
+      console.error('Ошибка при обновлении аватара:', error);
+      setError('Ошибка при обновлении аватара');
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -166,7 +182,8 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     isAuthenticated: !!user,
+    handleAvatarChange,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}; 
+};
