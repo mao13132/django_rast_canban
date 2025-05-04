@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
   FOLDERS: `${API_BASE_URL}/files/folders/`,
   FOLDER: (id) => `${API_BASE_URL}/files/folders/${id}/`,
   FOLDER_UPLOAD: `${API_BASE_URL}/files/folders/upload/`,
+  FOLDER_DOWNLOAD: (id) => `${API_BASE_URL}/files/folders/${id}/download/`,
   
   // Ссылки
   LINKS: `${API_BASE_URL}/links/links/`,

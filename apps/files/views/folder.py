@@ -214,3 +214,100 @@ class FolderViewSet(viewsets.ModelViewSet):
             )
 
         serializer.save(parent_id=parent)
+
+    def get_all_children(self, folder):
+        """
+        Рекурсивно получает все дочерние папки и файлы
+        """
+        result = {
+            'folders': [],
+            'files': []
+        }
+        
+        # Получаем все дочерние папки
+        children = Folder.objects.filter(parent_id=folder)
+        for child in children:
+            result['folders'].append(child)
+            child_content = self.get_all_children(child)
+            result['folders'].extend(child_content['folders'])
+            result['files'].extend(child_content['files'])
+        
+        # Получаем все файлы в текущей папке
+        files = File.objects.filter(folder_id=folder)
+        result['files'].extend(files)
+        
+        return result
+
+    @action(detail=True, methods=['get'])
+    def download(self, request, pk=None):
+        """
+        Скачивает папку со всем содержимым в виде zip-архива с сохранением иерархии
+        """
+        import zipfile
+        import os
+        from django.http import HttpResponse
+        from django.conf import settings
+        import tempfile
+        
+        folder = self.get_folder_by_id(pk)
+        if not folder:
+            return Response(
+                {'error': 'Папка не найдена'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Получаем все содержимое папки
+        content = self.get_all_children(folder)
+        content['folders'].insert(0, folder)  # Добавляем корневую папку
+
+        # Создаем временный файл для архива
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            # Создаем zip архив
+            with zipfile.ZipFile(tmp_file, 'w', zipfile.ZIP_DEFLATED) as archive:
+                # Добавляем папки (создаем структуру)
+                for folder_obj in content['folders']:
+                    # Создаем путь относительно корневой папки
+                    folder_path = []
+                    current = folder_obj
+                    
+                    # Собираем путь от текущей папки до корневой
+                    while current and current != folder:
+                        folder_path.insert(0, current.name)
+                        current = current.parent_id
+                    
+                    # Если это не корневая папка, добавляем её в архив
+                    if folder_obj != folder:
+                        archive_path = os.path.join(folder.name, *folder_path)
+                        archive.writestr(f"{archive_path}/", "")
+
+                # Добавляем файлы
+                for file_obj in content['files']:
+                    # Создаем путь к файлу
+                    file_path = []
+                    current = file_obj.folder_id
+                    
+                    # Собираем путь от папки файла до корневой
+                    while current and current != folder:
+                        file_path.insert(0, current.name)
+                        current = current.parent_id
+                    
+                    # Создаем полный путь в архиве
+                    archive_path = os.path.join(folder.name, *file_path, file_obj.name)
+                    
+                    # Получаем физический путь к файлу
+                    file_full_path = os.path.join(settings.MEDIA_ROOT, str(file_obj.file))
+                    if os.path.exists(file_full_path):
+                        archive.write(file_full_path, archive_path)
+
+        # Читаем архив для отправки
+        with open(tmp_file.name, 'rb') as f:
+            response = HttpResponse(
+                f.read(),
+                content_type='application/zip'
+            )
+            response['Content-Disposition'] = f'attachment; filename="{folder.name}.zip"'
+
+        # Удаляем временный файл
+        os.unlink(tmp_file.name)
+
+        return response

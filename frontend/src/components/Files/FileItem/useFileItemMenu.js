@@ -3,6 +3,7 @@ import { useNotification } from '../../../context/NotificationContext';
 import { useFolderStore } from '../../../store/folderStore';
 import { useFileStore } from '../../../store/fileStore';
 import { useRenamePopup } from '../../../context/RenamePopupContext';
+import { foldersAPI } from '../../../services/api';
 
 export const useFileItemMenu = (file) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -75,6 +76,37 @@ export const useFileItemMenu = (file) => {
       });
   };
 
+  const handleDownload = async () => {
+    try {
+      const response = await foldersAPI.downloadFolder(file.id);
+      
+      // Создаем ссылку для скачивания
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${file.name}.zip`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      showNotification(
+        'Скачивание началось',
+        'success',
+        3000,
+        'bottom'
+      );
+    } catch (error) {
+      console.error('Ошибка при скачивании папки:', error);
+      showNotification(
+        'Ошибка при скачивании папки',
+        'error',
+        3000,
+        'bottom'
+      );
+    }
+  };
+
   const menuItems = {
     folder: [
       {
@@ -88,13 +120,8 @@ export const useFileItemMenu = (file) => {
         icon: '/assets/rename.png'
       },
       {
-        label: 'Копировать',
-        onClick: () => handleAction(() => console.log('Copy')),
-        icon: '/assets/copy.png'
-      },
-      {
         label: 'Скачать',
-        onClick: () => handleAction(() => console.log('Download')),
+        onClick: () => handleAction(() => handleDownload()),
         icon: '/assets/download.png'
       },
       {

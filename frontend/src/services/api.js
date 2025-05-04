@@ -178,7 +178,11 @@ export const foldersAPI = {
   updateFolder: (folderId, folderData) =>
     axiosInstance.put(API_ENDPOINTS.FOLDER(folderId), folderData),
 
-  deleteFolder: (folderId) =>
+  downloadFolder: (folderId) =>
+    axiosInstance.get(API_ENDPOINTS.FOLDER_DOWNLOAD(folderId), {
+      responseType: 'blob'
+    }),
+    deleteFolder: (folderId) =>
     axiosInstance.delete(API_ENDPOINTS.FOLDER(folderId)),
     
   toggleFolderFavorite: (folderId) =>
