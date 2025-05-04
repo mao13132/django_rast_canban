@@ -48,7 +48,7 @@ const FolderUploadPopup = () => {
                                     className={styles.progressBar} 
                                     style={{ width: `${progress}%` }}
                                 />
-                                <span>{progress}%</span>
+                                <span>Идёт загрузка...</span>
                             </div>
                         ) : (
                             'Нажмите для выбора папки'
