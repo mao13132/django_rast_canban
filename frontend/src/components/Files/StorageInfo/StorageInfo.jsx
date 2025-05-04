@@ -4,7 +4,7 @@ import { useFileStore } from '../../../store/fileStore';
 
 const StorageInfo = () => {
   const { totalSize, fetchTotalSize } = useFileStore();
-  
+
   useEffect(() => {
     fetchTotalSize();
   }, []);
@@ -16,15 +16,32 @@ const StorageInfo = () => {
 
   return (
     <div className={styles.storageInfo}>
-      <div className={styles.progressBar}>
-        <div 
-          className={styles.progress} 
-          style={{ width: `${percentage}%` }}
-        />
+      <div className={styles.wrapperContent}>
+        <div className={styles.iconWrapper}>
+          <img src={"/assets/progress.png"} alt="Использованно места" className={styles.icon} />
+        </div>
+
+        <div className={styles.content}>
+
+          <div className={styles.textWrapper}>
+            <p className={styles.text}>
+              Использовано {used} Гб из {total}
+            </p>
+          </div>
+
+          <div className={styles.progressBar}>
+            <div
+              className={styles.progress}
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
+
+        </div>
+
       </div>
-      <p className={styles.text}>
-        Использовано {used} Гб из {total}
-      </p>
+
+
+
     </div>
   );
 };

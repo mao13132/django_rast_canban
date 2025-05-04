@@ -1,16 +1,23 @@
+
+
 .storageInfo {
-  margin-top: 20px;
+  margin-top: 200px;
   padding: 20px;
-  background: #FFFFFF;
-  border: 2px solid #000000;
   border-radius: 8px;
+}
+
+.wrapperContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  gap: 36px;
 }
 
 .progressBar {
   width: 100%;
   height: 20px;
   background: #FFFFFF;
-  border-radius: 10px;
   overflow: hidden;
   margin-bottom: 10px;
 }
@@ -29,4 +36,4 @@
   color: #000000;
   margin: 0;
   text-align: center;
-} 
+}
