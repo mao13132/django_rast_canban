@@ -38,6 +38,7 @@ export const API_ENDPOINTS = {
   // Файлы и папки
   FILES: `${API_BASE_URL}/files/files/`,
   FILE: (id) => `${API_BASE_URL}/files/files/${id}/`,
+  FILE_TOGGLE_FAVORITE: (id) => `${API_BASE_URL}/files/files/${id}/toggle_favorite/`,
   FOLDERS: `${API_BASE_URL}/files/folders/`,
   FOLDER: (id) => `${API_BASE_URL}/files/folders/${id}/`,
   FOLDER_UPLOAD: `${API_BASE_URL}/files/folders/upload/`,

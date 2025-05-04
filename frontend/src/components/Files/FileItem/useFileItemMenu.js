@@ -1,43 +1,43 @@
 import { useState } from 'react';
 import { useNotification } from '../../../context/NotificationContext';
 import { useFolderStore } from '../../../store/folderStore';
+import { useFileStore } from '../../../store/fileStore';
 
-/**
- * Хук для управления контекстным меню элемента файловой системы
- * @param {Object} file - Объект файла/папки/ссылки
- * @param {string} file.type - Тип элемента ('file', 'folder', 'link')
- * @param {boolean} file.isFavorite - Флаг избранного
- * @returns {Object} Объект с методами и данными для управления меню
- */
 export const useFileItemMenu = (file) => {
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const { showNotification } = useNotification();
-  const { toggleFavorite } = useFolderStore();
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const { showNotification } = useNotification();
+    const { toggleFavorite: toggleFolderFavorite } = useFolderStore();
+    const { toggleFavorite: toggleFileFavorite } = useFileStore();
 
-  const handleAction = (action) => {
-    setIsMenuVisible(false);
-    action();
-  };
+    const handleAction = (action) => {
+        setIsMenuVisible(false);
+        action();
+    };
 
-  const handleToggleFavorite = async (folderId) => {
-    try {
-      await toggleFavorite(folderId);
-      showNotification(
-        file.isFavorite ? 'Удалено из избранного' : 'Добавлено в избранное',
-        'success',
-        3000,
-        'bottom'
-      );
-    } catch (error) {
-      console.error('Ошибка при изменении статуса избранного:', error);
-      showNotification(
-        'Ошибка при изменении статуса избранного',
-        'error',
-        3000,
-        'bottom'
-      );
-    }
-  };
+    const handleToggleFavorite = async () => {
+        try {
+            if (file.type === 'folder') {
+                await toggleFolderFavorite(file.id);
+            } else if (file.type === 'file') {
+                await toggleFileFavorite(file.id);
+            }
+            
+            showNotification(
+                file.isFavorite ? 'Удалено из избранного' : 'Добавлено в избранное',
+                'success',
+                3000,
+                'bottom'
+            );
+        } catch (error) {
+            console.error('Ошибка при изменении статуса избранного:', error);
+            showNotification(
+                'Ошибка при изменении статуса избранного',
+                'error',
+                3000,
+                'bottom'
+            );
+        }
+    };
 
   const menuItems = {
     folder: [

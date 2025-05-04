@@ -60,5 +60,28 @@ export const useFileStore = create((set, get) => ({
         } finally {
             set({ isLoading: false });
         }
+    },
+    
+    toggleFavorite: async (fileId) => {
+        try {
+            set({ isLoading: true });
+            const response = await filesAPI.toggleFileFavorite(fileId);
+            const updatedFile = FileDTO.fromBackend(response.data);
+            
+            set(state => ({
+                files: state.files.map(file => 
+                    file.id === fileId ? updatedFile : file
+                ),
+                error: null
+            }));
+            
+            return updatedFile;
+        } catch (err) {
+            console.error('Ошибка при изменении избранного:', err);
+            set({ error: 'Ошибка при изменении избранного' });
+            throw err;
+        } finally {
+            set({ isLoading: false });
+        }
     }
 }));

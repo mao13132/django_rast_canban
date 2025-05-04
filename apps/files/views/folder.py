@@ -141,3 +141,23 @@ class FolderViewSet(viewsets.ModelViewSet):
         folder.save()
         serializer = self.get_serializer(folder)
         return Response(serializer.data)
+
+    def get_folder_by_id(self, folder_id):
+        """
+        Получает папку только по ID, без учета parent_id
+        """
+        return get_object_or_404(
+            Folder.objects.filter(user_id=self.request.user),
+            folder_id=folder_id
+        )
+
+    @action(detail=True, methods=['post'])
+    def toggle_favorite(self, request, pk=None):
+        """
+        Переключает статус избранного для папки
+        """
+        folder = self.get_folder_by_id(pk)
+        folder.is_favorite = not folder.is_favorite
+        folder.save()
+        serializer = self.get_serializer(folder)
+        return Response(serializer.data)
