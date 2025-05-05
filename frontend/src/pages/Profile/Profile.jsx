@@ -10,7 +10,8 @@ const Profile = () => {
         <Header
           navigationLinks={[
             { label: 'Главная страница', path: '/' },
-            { label: 'Доска задач', path: '/dashboard' }
+            { label: 'Доска задач', path: '/dashboard' },
+            { label: 'Файлы', path: '/files' }
           ]}
         />
 

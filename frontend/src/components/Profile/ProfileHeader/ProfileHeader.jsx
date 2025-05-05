@@ -3,7 +3,7 @@ import styles from './ProfileHeader.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 
-const ProfileHeader = () => {
+const ProfileHeader = ({ enableBtn = true }) => {
   const { user, handleAvatarChange } = useAuth();
 
   const navigate = useNavigate();
@@ -36,9 +36,9 @@ const ProfileHeader = () => {
       <div className={styles.info}>
         <h2 className={styles.name}>{`${user?.firstName} ${user?.lastName}` || 'Пользователь'}</h2>
         <p className={styles.email}>{user?.email}</p>
-        <button className={styles.editButton} onClick={handleEdit}>
+        {enableBtn && <button className={styles.editButton} onClick={handleEdit}>
           Редактировать профиль
-        </button>
+        </button>}
       </div>
     </div>
   );

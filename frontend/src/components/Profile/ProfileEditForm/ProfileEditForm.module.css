@@ -1,12 +1,8 @@
 .form {
-  background: #FFFFFF;
-  border: 1px solid #000000;
   border-radius: 15px;
-  padding: 20px;
 }
 
 .title {
-  font-family: 'Karma', serif;
   font-weight: 300;
   font-size: 50px;
   line-height: 1.419;
@@ -20,10 +16,29 @@
   gap: 20px;
 }
 
+.actions {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+}
+
+.submitButton,
+.cancelButton {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 24px;
+}
+
+.submitButton {
+  background-color: #9EA7F5;
+}
+
 .field {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  width: 100%;
 }
 
 .label {
@@ -49,4 +64,11 @@
 
 .input:focus {
   border-color: #9EA7F5;
-} 
+}
+
+.bio {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 100px;
+}

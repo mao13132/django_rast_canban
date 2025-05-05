@@ -35,7 +35,7 @@ const ProfileEditForm = () => {
       ...prev,
       [name]: value
     }));
-    
+
     // Очищаем ошибки при изменении данных
     if (error || formErrors[name]) {
       clearErrors();
@@ -48,7 +48,7 @@ const ProfileEditForm = () => {
     if (e && e.preventDefault) {
       e.preventDefault();
     }
-    
+
     // Проверяем, были ли изменения
     if (
       user.email === formData.email &&
@@ -58,7 +58,7 @@ const ProfileEditForm = () => {
       showNotification('Данные не были изменены', 'info', 3000, 'bottom');
       return;
     }
-    
+
     try {
       const success = await updateProfile(formData);
       if (success) {
@@ -68,6 +68,12 @@ const ProfileEditForm = () => {
       console.error('Ошибка при обновлении профиля:', err);
       showNotification('Ошибка при обновлении профиля', 'error', 3000, 'bottom');
     }
+  };
+
+  // Обработчик отмены изменений - возвращает изначальные данные пользователя
+  const handleCancel = () => {
+    initializeForm();
+    showNotification('Изменения отменены', 'info', 3000, 'bottom');
   };
 
   // Предотвращаем отправку формы при нажатии Enter
@@ -80,19 +86,18 @@ const ProfileEditForm = () => {
 
   return (
     <div className={styles.form} onKeyDown={handleKeyDown}>
-      <h2 className={styles.title}>Данные пользователя</h2>
-      
+
       {error && (
         <div className={styles.errorMessage}>{error}</div>
       )}
-      
+
       <div className={styles.fields}>
         <div className={styles.field}>
           <label className={styles.label}>Логин (email)</label>
-          <input 
-            type="email" 
+          <input
+            type="email"
             name="email"
-            className={styles.input} 
+            className={styles.input}
             value={formData.email}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
@@ -101,46 +106,55 @@ const ProfileEditForm = () => {
             <div className={styles.fieldError}>{formErrors.email}</div>
           )}
         </div>
-        
-        <div className={styles.field}>
-          <label className={styles.label}>Имя</label>
-          <input 
-            type="text" 
-            name="firstName"
-            className={styles.input} 
-            value={formData.firstName}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-          />
-          {formErrors.first_name && (
-            <div className={styles.fieldError}>{formErrors.first_name}</div>
-          )}
-        </div>
-        
-        <div className={styles.field}>
-          <label className={styles.label}>Фамилия</label>
-          <input 
-            type="text" 
-            name="lastName"
-            className={styles.input} 
-            value={formData.lastName}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-          />
-          {formErrors.last_name && (
-            <div className={styles.fieldError}>{formErrors.last_name}</div>
-          )}
+
+        <div className={styles.bio}>
+          <div className={styles.field}>
+            <label className={styles.label}>Имя</label>
+            <input
+              type="text"
+              name="firstName"
+              className={styles.input}
+              value={formData.firstName}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+            />
+            {formErrors.first_name && (
+              <div className={styles.fieldError}>{formErrors.first_name}</div>
+            )}
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Фамилия</label>
+            <input
+              type="text"
+              name="lastName"
+              className={styles.input}
+              value={formData.lastName}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+            />
+            {formErrors.last_name && (
+              <div className={styles.fieldError}>{formErrors.last_name}</div>
+            )}
+          </div>
         </div>
       </div>
-      
+
       <div className={styles.actions}>
-        <button 
+        <button
           type="button"
           className={styles.submitButton}
           disabled={profileUpdateLoading}
           onClick={handleSave}
         >
           {profileUpdateLoading ? 'Сохранение...' : 'Сохранить изменения'}
+        </button>
+        <button
+          type="button"
+          className={styles.cancelButton}
+          onClick={handleCancel}
+        >
+          Отменить
         </button>
       </div>
     </div>

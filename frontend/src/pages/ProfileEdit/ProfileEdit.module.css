@@ -1,6 +1,7 @@
 .container {
   background: #F2F2F2;
   min-height: 100vh;
+  height: 100%;
 }
 
 .contentWrapper {
@@ -21,4 +22,12 @@
   flex-direction: column;
   gap: 30px;
   margin-bottom: 30px;
+}
+
+.subTitle {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  font-weight: normal;
+  font-size: 44px;
 }
