@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Profile.module.css';
 import Header from '../../components/Header';
 import ProfileHeader from '../../components/Profile/ProfileHeader';
-
+ 
 const Profile = () => {
   return (
     <div className={styles.container}>

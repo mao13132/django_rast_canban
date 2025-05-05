@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
   REGISTER: `${API_BASE_URL}/auth/users/`,
   REFRESH_TOKEN: `${API_BASE_URL}/auth/jwt/refresh/`,
   USER: `${API_BASE_URL}/auth/users/me/`,
+  SET_PASSWORD: `${API_BASE_URL}/auth/users/set_password/`,
   
   // Профиль
   PROFILE: `${API_BASE_URL}/users/users/me/`,

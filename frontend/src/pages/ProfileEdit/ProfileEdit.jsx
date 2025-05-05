@@ -9,15 +9,25 @@ import ProfileEditActions from '../../components/Profile/ProfileEditActions';
 const ProfileEdit = () => {
   return (
     <div className={styles.container}>
-      <Header />
       <main className={styles.main}>
-        <h1 className={styles.title}>Профиль пользователя</h1>
-        <ProfileHeader />
-        <div className={styles.forms}>
-          <ProfileEditForm />
-          <ProfilePasswordForm />
+        <Header
+          navigationLinks={[
+            { label: 'Главная страница', path: '/' },
+            { label: 'Доска задач', path: '/dashboard' }
+          ]}
+        />
+
+        <div className={styles.contentWrapper}>
+          <h1 className={styles.title}>Профиль пользователя</h1>
+          <ProfileHeader />
+          <div className={styles.forms}>
+            <ProfileEditForm />
+            <ProfilePasswordForm />
+          </div>
+          <ProfileEditActions />
         </div>
-        <ProfileEditActions />
+
+
       </main>
     </div>
   );

@@ -69,6 +69,12 @@ export const authAPI = {
     }),
   getUser: () =>
     axiosInstance.get(API_ENDPOINTS.USER),
+  changePassword: (currentPassword, newPassword) =>
+    axiosInstance.post(API_ENDPOINTS.SET_PASSWORD, {
+      current_password: currentPassword,
+      new_password: newPassword,
+      re_new_password: newPassword
+    }),
 };
 
 // API методы для работы с пользователями

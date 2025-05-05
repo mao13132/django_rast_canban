@@ -154,6 +154,57 @@ export const AuthProvider = ({ children }) => {
     setFormErrors({});
   };
 
+  // Метод для обновления данных пользователя
+  const updateProfile = async (userData) => {
+    try {
+      setLoading(true);
+      setError(null);
+      setFormErrors({});
+      
+      // Валидация
+      const errors = {};
+      if (userData.email && !/\S+@\S+\.\S+/.test(userData.email)) {
+        errors.email = 'Некорректный email';
+      }
+      
+      if (Object.keys(errors).length > 0) {
+        setFormErrors(errors);
+        setLoading(false);
+        return false;
+      }
+      
+      // Преобразуем данные в FormData, если есть файл аватара
+      let formData;
+      if (userData instanceof FormData) {
+        formData = userData;
+      } else {
+        formData = new FormData();
+        // Добавляем только определенные поля
+        if (userData.email) formData.append('email', userData.email);
+        if (userData.firstName) formData.append('first_name', userData.firstName);
+        if (userData.lastName) formData.append('last_name', userData.lastName);
+        if (userData.avatar) formData.append('avatar', userData.avatar);
+      }
+      
+      const response = await usersAPI.updateProfile(formData);
+      setUser(UserDTO.fromAPI(response.data));
+      
+      return true;
+    } catch (err) {
+      console.error('Ошибка при обновлении профиля:', err);
+      setError(err.response?.data?.detail || 'Ошибка при обновлении профиля');
+      
+      // Обработка ошибок валидации с сервера
+      if (err.response?.data && typeof err.response.data === 'object') {
+        setFormErrors(err.response.data);
+      }
+      
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Значение, которое будет доступно в контексте
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
@@ -171,6 +222,53 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Метод для смены пароля пользователя
+  const changePassword = async (currentPassword, newPassword, confirmPassword) => {
+    try {
+      setLoading(true);
+      setError(null);
+      setFormErrors({});
+      
+      // Валидация
+      const errors = {};
+      if (!currentPassword) {
+        errors.currentPassword = 'Введите текущий пароль';
+      }
+      
+      if (!newPassword) {
+        errors.newPassword = 'Введите новый пароль';
+      } else if (newPassword.length < 8) {
+        errors.newPassword = 'Пароль должен содержать не менее 8 символов';
+      }
+      
+      if (newPassword !== confirmPassword) {
+        errors.confirmPassword = 'Пароли не совпадают';
+      }
+      
+      if (Object.keys(errors).length > 0) {
+        setFormErrors(errors);
+        setLoading(false);
+        return false;
+      }
+      
+      await authAPI.changePassword(currentPassword, newPassword);
+      return true;
+    } catch (err) {
+      console.error('Ошибка при смене пароля:', err);
+      
+      // Обработка ошибок валидации с сервера
+      if (err.response?.data && typeof err.response.data === 'object') {
+        setFormErrors(err.response.data);
+      } else {
+        setError(err.response?.data?.detail || 'Ошибка при смене пароля');
+      }
+      
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -181,8 +279,10 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    changePassword,
     isAuthenticated: !!user,
     handleAvatarChange,
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
