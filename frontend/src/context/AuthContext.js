@@ -14,6 +14,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formErrors, setFormErrors] = useState({});
+  
+  // Добавляем отдельные состояния загрузки для форм профиля
+  const [profileUpdateLoading, setProfileUpdateLoading] = useState(false);
+  const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
 
   // Проверка наличия токена при загрузке приложения
   useEffect(() => {
@@ -157,7 +161,7 @@ export const AuthProvider = ({ children }) => {
   // Метод для обновления данных пользователя
   const updateProfile = async (userData) => {
     try {
-      setLoading(true);
+      setProfileUpdateLoading(true);
       setError(null);
       setFormErrors({});
       
@@ -169,7 +173,7 @@ export const AuthProvider = ({ children }) => {
       
       if (Object.keys(errors).length > 0) {
         setFormErrors(errors);
-        setLoading(false);
+        setProfileUpdateLoading(false);
         return false;
       }
       
@@ -201,7 +205,7 @@ export const AuthProvider = ({ children }) => {
       
       return false;
     } finally {
-      setLoading(false);
+      setProfileUpdateLoading(false);
     }
   };
 
@@ -225,7 +229,7 @@ export const AuthProvider = ({ children }) => {
   // Метод для смены пароля пользователя
   const changePassword = async (currentPassword, newPassword, confirmPassword) => {
     try {
-      setLoading(true);
+      setPasswordChangeLoading(true);
       setError(null);
       setFormErrors({});
       
@@ -247,7 +251,7 @@ export const AuthProvider = ({ children }) => {
       
       if (Object.keys(errors).length > 0) {
         setFormErrors(errors);
-        setLoading(false);
+        setPasswordChangeLoading(false);
         return false;
       }
       
@@ -265,7 +269,7 @@ export const AuthProvider = ({ children }) => {
       
       return false;
     } finally {
-      setLoading(false);
+      setPasswordChangeLoading(false);
     }
   };
 
@@ -283,6 +287,9 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     handleAvatarChange,
     updateProfile,
+    // Добавляем новые состояния в контекст
+    profileUpdateLoading,
+    passwordChangeLoading
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

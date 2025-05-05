@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './ProfileEditForm.module.css';
 import { useAuth } from '../../../context/AuthContext';
+import { useNotification } from '../../../context/NotificationContext';
 
 const ProfileEditForm = () => {
-  const { user, updateProfile, loading, error, formErrors, clearErrors } = useAuth();
+  const { user, updateProfile, profileUpdateLoading, error, formErrors, clearErrors } = useAuth();
+  const { showNotification } = useNotification();
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
     lastName: '',
   });
-  const [successMessage, setSuccessMessage] = useState('');
 
   // Заполняем форму данными пользователя при загрузке
   // Используем useCallback для предотвращения лишних ререндеров
@@ -35,20 +36,18 @@ const ProfileEditForm = () => {
       [name]: value
     }));
     
-    // Сбрасываем сообщение об успехе при изменении данных
-    if (successMessage) {
-      setSuccessMessage('');
-    }
-    
     // Очищаем ошибки при изменении данных
     if (error || formErrors[name]) {
       clearErrors();
     }
   };
 
-  // Обработчик отправки формы с предотвращением перезагрузки страницы
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Предотвращаем стандартное поведение формы
+  // Обработчик отправки данных без использования формы
+  const handleSave = async (e) => {
+    // Предотвращаем стандартное поведение события, если оно есть
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
     
     // Проверяем, были ли изменения
     if (
@@ -56,29 +55,32 @@ const ProfileEditForm = () => {
       user.firstName === formData.firstName &&
       user.lastName === formData.lastName
     ) {
-      setSuccessMessage('Данные не были изменены');
+      showNotification('Данные не были изменены', 'info', 3000, 'bottom');
       return;
     }
     
     try {
       const success = await updateProfile(formData);
       if (success) {
-        setSuccessMessage('Данные успешно обновлены');
-        // Не обновляем форму здесь, так как это вызовет перерисовку
+        showNotification('Данные профиля успешно обновлены', 'success', 3000, 'bottom');
       }
     } catch (err) {
       console.error('Ошибка при обновлении профиля:', err);
-      // Ошибки уже обрабатываются в контексте Auth
+      showNotification('Ошибка при обновлении профиля', 'error', 3000, 'bottom');
+    }
+  };
+
+  // Предотвращаем отправку формы при нажатии Enter
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      return false;
     }
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
+    <div className={styles.form} onKeyDown={handleKeyDown}>
       <h2 className={styles.title}>Данные пользователя</h2>
-      
-      {successMessage && (
-        <div className={styles.successMessage}>{successMessage}</div>
-      )}
       
       {error && (
         <div className={styles.errorMessage}>{error}</div>
@@ -93,6 +95,7 @@ const ProfileEditForm = () => {
             className={styles.input} 
             value={formData.email}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
           {formErrors.email && (
             <div className={styles.fieldError}>{formErrors.email}</div>
@@ -107,6 +110,7 @@ const ProfileEditForm = () => {
             className={styles.input} 
             value={formData.firstName}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
           {formErrors.first_name && (
             <div className={styles.fieldError}>{formErrors.first_name}</div>
@@ -121,6 +125,7 @@ const ProfileEditForm = () => {
             className={styles.input} 
             value={formData.lastName}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
           {formErrors.last_name && (
             <div className={styles.fieldError}>{formErrors.last_name}</div>
@@ -130,14 +135,15 @@ const ProfileEditForm = () => {
       
       <div className={styles.actions}>
         <button 
-          type="submit" 
+          type="button"
           className={styles.submitButton}
-          disabled={loading}
+          disabled={profileUpdateLoading}
+          onClick={handleSave}
         >
-          {loading ? 'Сохранение...' : 'Сохранить изменения'}
+          {profileUpdateLoading ? 'Сохранение...' : 'Сохранить изменения'}
         </button>
       </div>
-    </form>
+    </div>
   );
 };
 

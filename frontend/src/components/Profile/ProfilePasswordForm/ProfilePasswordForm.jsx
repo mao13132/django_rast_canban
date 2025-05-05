@@ -1,25 +1,21 @@
 import React, { useState } from 'react';
 import styles from './ProfilePasswordForm.module.css';
 import { useAuth } from '../../../context/AuthContext';
+import { useNotification } from '../../../context/NotificationContext';
 
 const ProfilePasswordForm = () => {
-  const { changePassword, loading, formErrors, error, clearErrors } = useAuth();
+  const { changePassword, passwordChangeLoading, formErrors, error, clearErrors } = useAuth();
+  const { showNotification } = useNotification();
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
-  const [successMessage, setSuccessMessage] = useState('');
 
   // Обработчик изменения полей формы
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Очищаем сообщения об успехе при изменении формы
-    if (successMessage) {
-      setSuccessMessage('');
-    }
     
     // Очищаем ошибки при изменении формы
     if (error || formErrors) {
@@ -27,32 +23,27 @@ const ProfilePasswordForm = () => {
     }
   };
 
-  // Обработчик отправки формы
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  // Обработчик сохранения пароля без использования формы
+  const handleSave = async () => {
     const { currentPassword, newPassword, confirmPassword } = formData;
     const success = await changePassword(currentPassword, newPassword, confirmPassword);
     
     if (success) {
-      setSuccessMessage('Пароль успешно изменен');
+      showNotification('Пароль успешно изменен', 'success', 3000, 'bottom');
       // Очищаем форму после успешной смены пароля
       setFormData({
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
       });
+    } else {
+      showNotification('Ошибка при изменении пароля', 'error', 3000, 'bottom');
     }
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <div className={styles.form}>
       <h2 className={styles.title}>Изменить пароль</h2>
-      
-      {/* Сообщение об успехе */}
-      {successMessage && (
-        <div className={styles.successMessage}>{successMessage}</div>
-      )}
       
       {/* Общая ошибка */}
       {error && (
@@ -112,14 +103,15 @@ const ProfilePasswordForm = () => {
         </div>
         
         <button 
-          type="submit" 
+          type="button"
           className={styles.submitButton}
-          disabled={loading}
+          disabled={passwordChangeLoading}
+          onClick={handleSave}
         >
-          {loading ? 'Сохранение...' : 'Сохранить'}
+          {passwordChangeLoading ? 'Сохранение...' : 'Сохранить'}
         </button>
       </div>
-    </form>
+    </div>
   );
 };
 
