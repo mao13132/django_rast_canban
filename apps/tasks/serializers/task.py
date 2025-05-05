@@ -94,8 +94,6 @@ class TaskSerializer(serializers.ModelSerializer):
                 status_id = value
 
             status = TaskStatus.objects.get(status_id=status_id)
-            if status.user_id.id != self.context['request'].user.id:
-                raise serializers.ValidationError("Статус не принадлежит текущему пользователю")
             return status  # Возвращаем объект TaskStatus вместо ID
         except TaskStatus.DoesNotExist:
             raise serializers.ValidationError("Статус не найден")

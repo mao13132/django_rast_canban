@@ -93,19 +93,17 @@
 }
 
 .name {
-    
-  max-width: 70%;
-  text-wrap: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    text-align: left;
+    width: 380px;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.email {
-}
+.email {}
 
-.containerBottom {
-}
+.containerBottom {}
 
 .logoutButton {
     font-family: 'Karma', sans-serif;
@@ -136,8 +134,8 @@
     cursor: pointer;
 }
 
-.profileImage {
-}
+.profileImage {}
+
 .title {
     display: flex;
     text-align: center;
